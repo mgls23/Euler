@@ -1,25 +1,24 @@
-import argparse
-
-N = 'N'
-
-
 def fizz_buzz(x):
+    """
+    Finds all multiples of 3s and 5s until the given number
+
+    Parameters
+    ----------
+    x:  Int
+        The upper bound to perform fizz buzz on. See @Doc
+
+    Returns
+    -------
+
+    """
     if x <= 0:
-        return 0
+        return []
 
-    return -1
+    found = []
+    for index in range(x):
+        div3 = index % 3
+        div5 = index % 5
+        if div3 == 0 or div5 == 0:
+            found.append(index)
 
-
-if __name__ == '__main__':
-    # Configure parser
-    parser = argparse.ArgumentParser(description='Finds all the multiples of 3s and 5s below the given number')
-    parser.add_argument(N, metavar='M', type=int, nargs='+', help='The number you wish to supply')
-
-    # Parse the argument and extract the number to use in FizzBuzz
-    args = parser.parse_args()
-
-    # Calculate the result
-    result = fizz_buzz(args.N)
-
-    # Output the result
-    print result
+    return found
