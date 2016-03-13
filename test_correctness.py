@@ -1,6 +1,6 @@
 import unittest
 
-import fizz_buzz
+import maths
 import main
 
 
@@ -25,13 +25,23 @@ class TestMain(unittest.TestCase):
 		self.execute_main(9, 23)
 		self.execute_main(10, 33)
 
+	def test_until_third_5(self):
+		self.execute_main(11, 33)
+		self.execute_main(12, 45)
+		self.execute_main(13, 45)
+		self.execute_main(14, 45)
+		self.execute_main(15, 60)
+
+	def test_extreme_numbers(self):
+		self.execute_main(1000, )
+
 	def test_edge_cases(self):
 		pass
 
 
 class TestFizzBuzz(unittest.TestCase):
 	def execute_fizz_buzz(self, x, expected):
-		self.assertEqual(fizz_buzz.fizz_buzz(x), expected)
+		self.assertEqual(maths.fizz_buzz(x), expected)
 
 	def test_edge_cases(self):
 		# Zero Cases

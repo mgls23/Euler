@@ -1,18 +1,27 @@
 import argparse
 
-from fizz_buzz import fizz_buzz
+from maths import fizz_buzz, guassian_simplification
 
 N = 'N'
 
 
+def use_mathematical_simplification(x):
+	sum3 = guassian_simplification(x, 3)
+	sum5 = guassian_simplification(x, 5)
+	sum15 = guassian_simplification(x, 15)
+
+	return sum3 + sum5 - sum15
+
+
 def find_sum(x):
-	# Calculate the result
-	multiples = fizz_buzz(x)
-
-	# Find the accumulative
-	result = sum(multiples)
-
-	return result
+	# # Calculate the result
+	# multiples = fizz_buzz(x)
+	#
+	# # Find the accumulative
+	# result = sum(multiples)
+	#
+	# return result
+	return use_mathematical_simplification(x)
 
 
 def configure_parser_and_extract():
@@ -32,7 +41,7 @@ if __name__ == '__main__':
 	upper_bound = configure_parser_and_extract()
 
 	# Find the result
-	result = find_sum(upper_bound)
+	result = use_mathematical_simplification(upper_bound)
 
 	# Output the result
 	print result
