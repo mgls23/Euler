@@ -5,79 +5,112 @@ import main
 
 
 class TestMain(unittest.TestCase):
-	def execute_main(self, x, expected):
-		self.assertEqual(main.find_sum(x), expected)
-
-	def test_until_first_3(self):
-		self.execute_main(0, 0)
-		self.execute_main(1, 0)
-		self.execute_main(2, 0)
-		self.execute_main(3, 3)
-
-	def test_until_first_5(self):
-		self.execute_main(4, 3)
-		self.execute_main(5, 8)
-
-	def test_until_second_5(self):
-		self.execute_main(6, 14)
-		self.execute_main(7, 14)
-		self.execute_main(8, 14)
-		self.execute_main(9, 23)
-		self.execute_main(10, 33)
-
-	def test_until_third_5(self):
-		self.execute_main(11, 33)
-		self.execute_main(12, 45)
-		self.execute_main(13, 45)
-		self.execute_main(14, 45)
-		self.execute_main(15, 60)
-
-	def test_extreme_numbers(self):
-		self.execute_main(1000, )
-
-	def test_edge_cases(self):
-		pass
+	pass
 
 
 class TestFizzBuzz(unittest.TestCase):
-	def execute_fizz_buzz(self, x, expected):
-		self.assertEqual(maths.fizz_buzz(x), expected)
+	pass
 
-	def test_edge_cases(self):
-		# Zero Cases
-		self.execute_fizz_buzz(0, [])
-		self.execute_fizz_buzz(1, [])
-		self.execute_fizz_buzz(2, [])
 
-		# Negative Integers
-		self.execute_fizz_buzz(-1, [])
+def create_batch_test(cases, function):
+	def case(self):
+		for key, value in cases:
+			self.assertEqual(function(key), value)
 
-	def test_incompatible_types(self):
-		# Floats
-		pass
+	return case
 
-		# Strings
-		pass
 
-	def test_until_first_5(self):
-		self.execute_fizz_buzz(3, [3])
-		self.execute_fizz_buzz(4, [3])
+def create_individual_test(function, provided, expected):
+	def case(self):
+		self.assertEqual(function(provided), expected)
 
-	def test_until_second_5(self):
-		self.execute_fizz_buzz(5, [3, 5])
-		self.execute_fizz_buzz(6, [3, 5, 6])
-		self.execute_fizz_buzz(8, [3, 5, 6])
-		self.execute_fizz_buzz(7, [3, 5, 6])
-		self.execute_fizz_buzz(9, [3, 5, 6, 9])
+	return case
 
-	def test_until_15(self):
-		self.execute_fizz_buzz(10, [3, 5, 6, 9, 10])
-		self.execute_fizz_buzz(11, [3, 5, 6, 9, 10])
-		self.execute_fizz_buzz(12, [3, 5, 6, 9, 10, 12])
-		self.execute_fizz_buzz(13, [3, 5, 6, 9, 10, 12])
-		self.execute_fizz_buzz(14, [3, 5, 6, 9, 10, 12])
-		self.execute_fizz_buzz(15, [3, 5, 6, 9, 10, 12, 15])
+
+def create_individual_tests(test_unit, cases, function):
+	for key, value in cases.iteritems():
+		test_name = 'test_{}'.format(key)
+		test = create_individual_test(function=function, provided=key, expected=value)
+		setattr(test_unit, test_name, test)
+
+
+def generate_main_tests():
+	until_first_3 = {
+		0: 0,
+		1: 0,
+		2: 0,
+		3: 3,
+	}
+	create_individual_tests(TestMain, until_first_3, function=main.find_sum)
+
+	until_first_5 = {
+		4: 3,
+		5: 8,
+	}
+	create_individual_tests(TestMain, until_first_5, function=main.find_sum)
+
+	until_second_5 = {
+		6: 14,
+		7: 14,
+		8: 14,
+		9: 23,
+		10: 33,
+	}
+	create_individual_tests(TestMain, until_second_5, function=main.find_sum)
+
+	until_15 = {
+		11: 33,
+		12: 45,
+		13: 45,
+		14: 45,
+		15: 60,
+	}
+	create_individual_tests(TestMain, until_15, function=main.find_sum)
 
 
 if __name__ == '__main__':
+	generate_main_tests()
 	unittest.main()
+
+
+def generate_fizz_buzz_tests():
+	edge_cases = {
+		# Negative Integers
+		-1: [],
+
+		# 0s and <3, the smallest
+		0: [],
+		1: [],
+		2: [],
+
+		# Floats
+
+		# String
+
+	}
+	create_batch_test(edge_cases, function=maths.fizz_buzz)
+
+	until_first_5 = {
+		3: [3],
+		4: [3],
+	}
+	create_batch_test(until_first_5, function=maths.fizz_buzz)
+
+	until_second_5 = {
+		5: [3, 5],
+		6: [3, 5, 6],
+		8: [3, 5, 6],
+		7: [3, 5, 6],
+		9: [3, 5, 6, 9],
+	}
+	create_batch_test(until_second_5, function=maths.fizz_buzz)
+
+	until_15 = {
+		10: [3, 5, 6, 9, 10],
+		11: [3, 5, 6, 9, 10],
+		12: [3, 5, 6, 9, 10, 12],
+		13: [3, 5, 6, 9, 10, 12],
+		14: [3, 5, 6, 9, 10, 12],
+		15: [3, 5, 6, 9, 10, 12, 15],
+	}
+	create_batch_test(until_15, function=maths.fizz_buzz)

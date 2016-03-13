@@ -1,26 +1,32 @@
 import argparse
 
-from maths import fizz_buzz, guassian_simplification
+import maths
 
 N = 'N'
 
 
 def use_mathematical_simplification(x):
-	sum3 = guassian_simplification(x, 3)
-	sum5 = guassian_simplification(x, 5)
-	sum15 = guassian_simplification(x, 15)
+	# Find the Sum of 3s, and 5s
+	sum3 = maths.guassian_simplification(x, 3)
+	sum5 = maths.guassian_simplification(x, 5)
 
+	# Find the Sum of 15s
+	sum15 = maths.guassian_simplification(x, 15)
+
+	#
 	return sum3 + sum5 - sum15
 
 
+def infer_from_fizz_buzz(x):
+	# Calculate the result
+	multiples = maths.fizz_buzz(x)
+
+	# Find the accumulative
+	return sum(multiples)
+
+
 def find_sum(x):
-	# # Calculate the result
-	# multiples = fizz_buzz(x)
-	#
-	# # Find the accumulative
-	# result = sum(multiples)
-	#
-	# return result
+	# return infer_from_fizz_buzz(x)
 	return use_mathematical_simplification(x)
 
 
