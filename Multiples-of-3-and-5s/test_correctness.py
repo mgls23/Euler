@@ -1,7 +1,7 @@
 import unittest
 
-import maths
 import main
+import maths
 
 
 class TestMain(unittest.TestCase):
