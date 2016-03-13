@@ -1,4 +1,6 @@
 LOWER_BOUND = 2
+FIZZ = 3
+BUZZ = 5
 
 
 def fizz_buzz(x):
@@ -19,8 +21,8 @@ def fizz_buzz(x):
 
 	found = []
 	for index in range(LOWER_BOUND, x + 1):
-		div3 = index % 3
-		div5 = index % 5
+		div3 = index % FIZZ
+		div5 = index % BUZZ
 		if div3 == 0 or div5 == 0:
 			found.append(index)
 
