@@ -13,31 +13,50 @@ class FibonacciIterator:
 	"""
 
 	def __init__(self):
-		pass
+		self.calculated = []
 
 	def next(self):
-		return -1
+		if len(self.calculated) == 0:
+			current_entry = 1
 
-	def next_jump(self, n=0):
-		return -1
+		elif len(self.calculated) == 1:
+			current_entry = 2
 
-	pass
+		else:
+			last_entry = self.calculated[-1]
+			penultimate = self.calculated[-2]
+
+			current_entry = last_entry + penultimate
+
+		self.calculated.append(current_entry)
+		return current_entry
+
+	def next_jump(self, n=1):
+		current_entry = None
+		while n > 0:
+			current_entry = self.next()
+			n -= 1
+
+		return current_entry
 
 
 def naive_implementation(upper_bound):
 	fibonacci_iterator = FibonacciIterator()
+	# fibonacci_iterator.next()
 	back_trace = []
 
 	while True:
-		# Because we only want even numbers, we would like to jump every iteration
-		current = fibonacci_iterator.next_jump(n=1)
+		# Because we only want even numbers, we would like to retain every second iteration
+		current = fibonacci_iterator.next_jump(n=2)
 
 		# If the value exceed the upper_bound, break the loop
-		if current > upper_bound:
+		if current >= upper_bound:
 			break
 
 		# If
 		back_trace.append(current)
+
+	print back_trace
 
 	# Return the sum of even Fibonacci Numbers
 	cumulative = sum(back_trace)
@@ -65,7 +84,7 @@ if __name__ == '__main__':
 	upper_bound = configure_parser_and_extract()
 
 	# Find the result
-	result = magic(upper_bound)
+	result = naive_implementation(upper_bound)
 
 	# Output the result
 	print result
