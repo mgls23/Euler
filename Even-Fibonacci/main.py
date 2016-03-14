@@ -3,6 +3,49 @@ import argparse
 N = 'N'
 
 
+class OptimisedTwoJumpSumIterator:
+	"""
+		Examining the even iterating sequence, we could see that the nth term is actually the (n-1)th x 3 - (n-2)th
+		If we consider :: x1, x2, x3, x4, x5
+		We wish to derive x5. We have x1 and x3.
+			x4 = x3 + x2 (Fibonacci Progression)
+			x5 = x4 + x3 (Fibonacci Progression)
+		Since we have x1 and x3, we want to express x5 in those terms, which is
+			x4 + x3
+			= 2x3 + x2
+
+		Since we have
+			x3 = x2 + x1
+		We also have
+			x2 = x3 - x1
+
+		Therefore
+			x5 = 2x3 + x2 = 3x3 - x1
+
+		So, we can substitute the actual process by multiplying the last entry by 3 and subtracting the one before to
+		obtain x5
+	"""
+
+	def __init__(self):
+		self.calculate = [2, 5]
+
+	def get(self, n):
+		if self.calculate[-1] > n:
+			offset = 2
+			while self.calculate[offset] > n:
+				offset += 1
+				if offset > len(self.calculate):
+					raise Exception('')
+
+		while self.calculate[-1] < n:
+			last_entry = self.calculate[-1]
+			penultimate = self.calculate[-2]
+			new_entry = last_entry * 3 - penultimate
+			self.calculate.append(new_entry)
+
+		return self.calculate[-1]
+
+
 class FibonacciIterator:
 	"""
 		Special FibonacciIterator that skips the first 1 from conventional Fibonacci sequence
