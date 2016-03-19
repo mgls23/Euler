@@ -14,8 +14,9 @@ class TestFizzBuzz(unittest.TestCase):
 
 def create_batch_test(cases, function):
 	def case(self):
-		for key, value in cases:
-			self.assertEqual(function(key), value)
+		for key, model_value in cases:
+			test_value = function(key)
+			self.assertEqual(test_value, model_value)
 
 	return case
 
@@ -67,50 +68,48 @@ def generate_main_tests():
 	}
 	create_individual_tests(TestMain, until_15, function=main.find_sum)
 
+	if __name__ == '__main__':
+		generate_main_tests()
+		unittest.main()
 
-if __name__ == '__main__':
-	generate_main_tests()
-	unittest.main()
+	def generate_fizz_buzz_tests():
+		edge_cases = {
+			# Negative Integers
+			-1: [],
 
+			# 0s and <3, the smallest
+			0: [],
+			1: [],
+			2: [],
 
-def generate_fizz_buzz_tests():
-	edge_cases = {
-		# Negative Integers
-		-1: [],
+			# Floats
 
-		# 0s and <3, the smallest
-		0: [],
-		1: [],
-		2: [],
+			# String
 
-		# Floats
+		}
+		create_batch_test(edge_cases, function=maths.fizz_buzz)
 
-		# String
+		until_first_5 = {
+			3: [3],
+			4: [3],
+		}
+		create_batch_test(until_first_5, function=maths.fizz_buzz)
 
-	}
-	create_batch_test(edge_cases, function=maths.fizz_buzz)
+		until_second_5 = {
+			5: [3, 5],
+			6: [3, 5, 6],
+			8: [3, 5, 6],
+			7: [3, 5, 6],
+			9: [3, 5, 6, 9],
+		}
+		create_batch_test(until_second_5, function=maths.fizz_buzz)
 
-	until_first_5 = {
-		3: [3],
-		4: [3],
-	}
-	create_batch_test(until_first_5, function=maths.fizz_buzz)
-
-	until_second_5 = {
-		5: [3, 5],
-		6: [3, 5, 6],
-		8: [3, 5, 6],
-		7: [3, 5, 6],
-		9: [3, 5, 6, 9],
-	}
-	create_batch_test(until_second_5, function=maths.fizz_buzz)
-
-	until_15 = {
-		10: [3, 5, 6, 9, 10],
-		11: [3, 5, 6, 9, 10],
-		12: [3, 5, 6, 9, 10, 12],
-		13: [3, 5, 6, 9, 10, 12],
-		14: [3, 5, 6, 9, 10, 12],
-		15: [3, 5, 6, 9, 10, 12, 15],
-	}
-	create_batch_test(until_15, function=maths.fizz_buzz)
+		until_15 = {
+			10: [3, 5, 6, 9, 10],
+			11: [3, 5, 6, 9, 10],
+			12: [3, 5, 6, 9, 10, 12],
+			13: [3, 5, 6, 9, 10, 12],
+			14: [3, 5, 6, 9, 10, 12],
+			15: [3, 5, 6, 9, 10, 12, 15],
+		}
+		create_batch_test(until_15, function=maths.fizz_buzz)

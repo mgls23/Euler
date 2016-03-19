@@ -13,20 +13,18 @@ def create_individual_test(x, expected):
 	return case
 
 
-def create_batch_tests():
-	def case(self):
-		pass
-
-	return case
-
-
 def create_fibonacci_tests():
-	fibonacci_sequence = [1, 2, 3, 5, 8, 13, 21, 34, 55, ]
+	correct_sequence = [1, 2, 3, 5, 8, 13, 21, 34, 55, ]
 	iterator = main.FibonacciIterator()
-	for index, value in enumerate(fibonacci_sequence):
-		test_case = create_individual_test(iterator.next(), value)
+
+	for index in range(len(correct_sequence)):
+		correct_value = correct_sequence[index]
+		test_value = iterator.get_nth_fibonacci(index + 1)
+
+		test_case = create_individual_test(correct_value, test_value)
 		test_name = 'test_fibonacci_{}'.format(index)
 		setattr(TestFibonacciIterator, test_name, test_case)
+
 
 if __name__ == '__main__':
 	create_fibonacci_tests()

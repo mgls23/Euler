@@ -46,9 +46,13 @@ class OptimisedTwoJumpSumIterator:
 		return self.calculate[-1]
 
 
+class NotSupportedException(Exception):
+	pass
+
+
 class FibonacciIterator:
 	"""
-		Special FibonacciIterator that skips the first 1 from conventional Fibonacci sequence
+		FibonacciIterator that calculates and stores fibonacci sequence values. N.B. This excludes the 0th 1
 
 		(x) 1, 2, 3, 5, 8, 13, ...
 		( ) 1, 1, 2, 3, 5, 8, 13, ...
@@ -56,54 +60,61 @@ class FibonacciIterator:
 	"""
 
 	def __init__(self):
-		self.calculated = []
+		self.sequence = [1, 2]
 
-	def next(self):
-		if len(self.calculated) == 0:
-			current_entry = 1
+	def __calculate_next__(self):
+		"""
+		Calculates and stores the next Fibonacci Sequence
+		"""
+		self.sequence.append(self.sequence[-1] + self.sequence[-2])
 
-		elif len(self.calculated) == 1:
-			current_entry = 2
+	def get_nth_fibonacci(self, n):
+		"""
+		Calculates and returns nth fibonacci sequence
 
-		else:
-			last_entry = self.calculated[-1]
-			penultimate = self.calculated[-2]
+		Parameters
+		----------
+		n
 
-			current_entry = last_entry + penultimate
+		Returns
+		-------
 
-		self.calculated.append(current_entry)
-		return current_entry
+		"""
+		#
+		if n < 1:
+			raise NotSupportedException('')
 
-	def next_jump(self, n=1):
-		current_entry = None
-		while n > 0:
-			current_entry = self.next()
-			n -= 1
+		# There is no need to recalculate a fibonacci value that has already been calculated
+		while len(self.sequence) < n:
+			self.__calculate_next__()
 
-		return current_entry
+		# Return the last entry
+		return self.sequence[n - 1]
+
+	def peek(self):
+		return self.sequence[-1]
+
+	def calculate_with_upper_bound(self, upper_bound):
+		pass
 
 
-def naive_implementation(upper_bound):
-	fibonacci_iterator = FibonacciIterator()
-	# fibonacci_iterator.next()
-	back_trace = []
+class NFibonacciIterator(FibonacciIterator):
+	"""
+		Fibonacci Iterator that only contains nth progression
 
-	while True:
-		# Because we only want even numbers, we would like to retain every second iteration
-		current = fibonacci_iterator.next_jump(n=2)
+		For example, for N=3
+		(x)     (x)
+		1, 2, 3, 5, 8, 13, ...
+	"""
 
-		# If the value exceed the upper_bound, break the loop
-		if current >= upper_bound:
-			break
+	def __init__(self, N=1):
+		FibonacciIterator.__init__(self)
+		self.n = N
+		self.before = []
+		self.after = []
 
-		# If
-		back_trace.append(current)
-
-	print back_trace
-
-	# Return the sum of even Fibonacci Numbers
-	cumulative = sum(back_trace)
-	return cumulative
+	def calculate_next(self):
+		pass
 
 
 def better_solution(x):
@@ -127,7 +138,7 @@ if __name__ == '__main__':
 	upper_bound = configure_parser_and_extract()
 
 	# Find the result
-	result = naive_implementation(upper_bound)
+	result = NFibonacciIterator(N=2).get_nth_fibonacci(upper_bound)
 
 	# Output the result
 	print result
