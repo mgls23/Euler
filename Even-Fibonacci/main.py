@@ -88,22 +88,23 @@ class NFibonacciIterator(FibonacciIterator):
 		      N        2N
 	"""
 
-	def __init__(self, N=1, fib_generator=FibonacciIterator(1, 2)):
+	def __init__(self, N=1, offset=0, fib_generator=FibonacciIterator(1, 2)):
 		FibonacciIterator.__init__(
 				self,
-				first=fib_generator.calculate_nth_fibonacci(N),
-				second=fib_generator.calculate_nth_fibonacci(N * 2),
+				first=fib_generator.calculate_nth_fibonacci(N + offset),
+				second=fib_generator.calculate_nth_fibonacci(N * 2 + offset),
 		)
-		self.prev = fib_generator.calculate_nth_fibonacci(N * 2 - 1)
+		self.prev = fib_generator.calculate_nth_fibonacci(N * 2 - 1 + offset)
 		self.N = N
+		self.offset = offset
 
 	def __calculate_next__(self):
 		# Create a new iterator with the saved term and the new
 		iterator = FibonacciIterator(self.prev, self.__sequence__[-1])
 
 		# Update the entries and previous
-		self.prev = iterator.calculate_nth_fibonacci(self.N * 2 - 1)
-		self.__sequence__.append(iterator.calculate_nth_fibonacci(self.N * 2))
+		self.prev = iterator.calculate_nth_fibonacci(self.N * 2 - 1 + self.offset)
+		self.__sequence__.append(iterator.calculate_nth_fibonacci(self.N * 2 + self.offset))
 
 
 class N2FibonacciIterator(FibonacciIterator):
@@ -136,6 +137,11 @@ class N2FibonacciIterator(FibonacciIterator):
 		self.__sequence__.append(self.__sequence__[-1] * 3 - self.__sequence__[-2])
 
 
+class EvenFibonacciIterator(NFibonacciIterator):
+	def __init__(self):
+		NFibonacciIterator.__init__(self, N=3, offset=-1)
+
+
 def configure_parser_and_extract():
 	# Configure parser
 	parser = argparse.ArgumentParser(description='Finds all the multiples of 3s and 5s below the given number')
@@ -159,4 +165,13 @@ if __name__ == '__main__':
 	# answer = sum(back_trace)
 
 	print back_trace
-# print answer
+	# print answer
+
+	#
+	fib_generator = EvenFibonacciIterator()
+	fib_generator.set_upper_bound(upper_bound)
+	back_trace = fib_generator.back_trace()
+	answer = sum(back_trace)
+
+	print back_trace
+	print answer
