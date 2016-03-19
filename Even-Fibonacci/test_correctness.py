@@ -6,6 +6,10 @@ class TestFibonacciIterator(unittest.TestCase):
 	pass
 
 
+class TestEvenFibonacciIterator(unittest.TestCase):
+	pass
+
+
 def create_individual_test(x, expected):
 	def case(self):
 		self.assertEquals(x, expected)
@@ -19,7 +23,20 @@ def create_fibonacci_tests():
 
 	for index in range(len(correct_sequence)):
 		correct_value = correct_sequence[index]
-		test_value = iterator.get_nth_fibonacci(index + 1)
+		test_value = iterator.calculate_nth_fibonacci(index + 1)
+
+		test_case = create_individual_test(correct_value, test_value)
+		test_name = 'test_fibonacci_{}'.format(index)
+		setattr(TestFibonacciIterator, test_name, test_case)
+
+
+def create_even_fibonacci_tests():
+	correct_sequence = [2, 5, 13, 34, 89]
+	iterator = main.NFibonacciIterator(N=2)
+
+	for index in range(len(correct_sequence)):
+		correct_value = correct_sequence[index]
+		test_value = iterator.calculate_nth_fibonacci(index + 1)
 
 		test_case = create_individual_test(correct_value, test_value)
 		test_name = 'test_fibonacci_{}'.format(index)
@@ -28,4 +45,5 @@ def create_fibonacci_tests():
 
 if __name__ == '__main__':
 	create_fibonacci_tests()
+	create_even_fibonacci_tests()
 	unittest.main()

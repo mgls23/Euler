@@ -3,7 +3,110 @@ import argparse
 N = 'N'
 
 
-class OptimisedTwoJumpSumIterator:
+class NotSupportedException(Exception):
+	pass
+
+
+class FibonacciIterator:
+	"""
+		FibonacciIterator that calculates and stores fibonacci sequence values. N.B. This excludes the 0th 1
+
+		(x) 1, 2, 3, 5, 8, 13, ...
+		( ) 1, 1, 2, 3, 5, 8, 13, ...
+
+	"""
+
+	def __init__(self, first=1, second=2):
+		self.__sequence__ = [first, second]
+
+	def __calculate_next__(self):
+		"""
+			Calculates and stores the next Fibonacci Sequence
+		"""
+		self.__sequence__.append(self.__sequence__[-1] + self.__sequence__[-2])
+
+	def calculate_nth_fibonacci(self, n):
+		"""
+			Calculates and returns nth fibonacci sequence
+
+			Parameters
+			----------
+			n
+
+			Returns
+			-------
+			nth fibonacci sequencen number
+		"""
+		#
+		if n < 1:
+			raise NotSupportedException('')
+
+		# There is no need to recalculate a fibonacci value that has already been calculated
+		while len(self.__sequence__) < n:
+			self.__calculate_next__()
+
+		# Return the last entry
+		return self.__sequence__[n - 1]
+
+	def peek(self):
+		"""
+			Returns and shows the last entry of the fibonacci sequence
+
+			Returns
+			-------
+			The last fibonacci sequence generated
+		"""
+		return self.__sequence__[-1]
+
+	def back_trace(self):
+		return self.__sequence__[:]
+
+	def set_upper_bound(self, upper_bound):
+		if upper_bound < 1:
+			raise NotSupportedException('')
+
+		# There is no need to recalculate a fibonacci value that has already been calculated
+		while self.peek() < upper_bound:
+			self.__calculate_next__()
+
+		# Discard any entries that are bigger than the upper bound
+		while self.peek() > upper_bound:
+			self.__sequence__.pop(-1)
+
+		# Return the last entry
+		return self.peek()
+
+
+class NFibonacciIterator(FibonacciIterator):
+	"""
+		Fibonacci Iterator that only contains nth progression
+
+		For example, for N=3
+
+		     (x)       (x)
+		1, 2, 3, 5, 8, 13, ...
+		      N        2N
+	"""
+
+	def __init__(self, N=1, fib_generator=FibonacciIterator(1, 2)):
+		FibonacciIterator.__init__(
+				self,
+				first=fib_generator.calculate_nth_fibonacci(N),
+				second=fib_generator.calculate_nth_fibonacci(N * 2),
+		)
+		self.prev = fib_generator.calculate_nth_fibonacci(N * 2 - 1)
+		self.N = N
+
+	def __calculate_next__(self):
+		# Create a new iterator with the saved term and the new
+		iterator = FibonacciIterator(self.prev, self.__sequence__[-1])
+
+		# Update the entries and previous
+		self.prev = iterator.calculate_nth_fibonacci(self.N * 2 - 1)
+		self.__sequence__.append(iterator.calculate_nth_fibonacci(self.N * 2))
+
+
+class N2FibonacciIterator(FibonacciIterator):
 	"""
 		Examining the even iterating sequence, we could see that the nth term is actually the (n-1)th x 3 - (n-2)th
 		If we consider :: x1, x2, x3, x4, x5
@@ -27,98 +130,10 @@ class OptimisedTwoJumpSumIterator:
 	"""
 
 	def __init__(self):
-		self.calculate = [2, 5]
-
-	def get(self, n):
-		if self.calculate[-1] > n:
-			offset = 2
-			while self.calculate[offset] > n:
-				offset += 1
-				if offset > len(self.calculate):
-					raise Exception('')
-
-		while self.calculate[-1] < n:
-			last_entry = self.calculate[-1]
-			penultimate = self.calculate[-2]
-			new_entry = last_entry * 3 - penultimate
-			self.calculate.append(new_entry)
-
-		return self.calculate[-1]
-
-
-class NotSupportedException(Exception):
-	pass
-
-
-class FibonacciIterator:
-	"""
-		FibonacciIterator that calculates and stores fibonacci sequence values. N.B. This excludes the 0th 1
-
-		(x) 1, 2, 3, 5, 8, 13, ...
-		( ) 1, 1, 2, 3, 5, 8, 13, ...
-
-	"""
-
-	def __init__(self):
-		self.sequence = [1, 2]
+		FibonacciIterator.__init__(self, first=2, second=5)
 
 	def __calculate_next__(self):
-		"""
-		Calculates and stores the next Fibonacci Sequence
-		"""
-		self.sequence.append(self.sequence[-1] + self.sequence[-2])
-
-	def get_nth_fibonacci(self, n):
-		"""
-		Calculates and returns nth fibonacci sequence
-
-		Parameters
-		----------
-		n
-
-		Returns
-		-------
-
-		"""
-		#
-		if n < 1:
-			raise NotSupportedException('')
-
-		# There is no need to recalculate a fibonacci value that has already been calculated
-		while len(self.sequence) < n:
-			self.__calculate_next__()
-
-		# Return the last entry
-		return self.sequence[n - 1]
-
-	def peek(self):
-		return self.sequence[-1]
-
-	def calculate_with_upper_bound(self, upper_bound):
-		pass
-
-
-class NFibonacciIterator(FibonacciIterator):
-	"""
-		Fibonacci Iterator that only contains nth progression
-
-		For example, for N=3
-		(x)     (x)
-		1, 2, 3, 5, 8, 13, ...
-	"""
-
-	def __init__(self, N=1):
-		FibonacciIterator.__init__(self)
-		self.n = N
-		self.before = []
-		self.after = []
-
-	def calculate_next(self):
-		pass
-
-
-def better_solution(x):
-	return -1
+		self.__sequence__.append(self.__sequence__[-1] * 3 - self.__sequence__[-2])
 
 
 def configure_parser_and_extract():
@@ -137,8 +152,11 @@ if __name__ == '__main__':
 	# Configure Parser and extract upper bound we need
 	upper_bound = configure_parser_and_extract()
 
-	# Find the result
-	result = NFibonacciIterator(N=2).get_nth_fibonacci(upper_bound)
+	#
+	fib_generator = FibonacciIterator()
+	fib_generator.calculate_nth_fibonacci(200)
+	back_trace = [(index, x) for index, x in enumerate(fib_generator.back_trace()) if x % 2 == 0]
+	# answer = sum(back_trace)
 
-	# Output the result
-	print result
+	print back_trace
+# print answer
