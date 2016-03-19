@@ -137,11 +137,6 @@ class N2FibonacciIterator(FibonacciIterator):
 		self.__sequence__.append(self.__sequence__[-1] * 3 - self.__sequence__[-2])
 
 
-class EvenFibonacciIterator(NFibonacciIterator):
-	def __init__(self):
-		NFibonacciIterator.__init__(self, N=3, offset=-1)
-
-
 def configure_parser_and_extract():
 	# Configure parser
 	parser = argparse.ArgumentParser(description='Finds all the multiples of 3s and 5s below the given number')
@@ -160,7 +155,7 @@ if __name__ == '__main__':
 
 	#
 	fib_generator = FibonacciIterator()
-	fib_generator.calculate_nth_fibonacci(200)
+	fib_generator.set_upper_bound(upper_bound)
 	back_trace = [(index, x) for index, x in enumerate(fib_generator.back_trace()) if x % 2 == 0]
 	# answer = sum(back_trace)
 
