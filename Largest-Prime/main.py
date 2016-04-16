@@ -5,7 +5,7 @@ def find_primes(x):
 
 		Parameters
 		----------
-			x: int
+			xcopy: int
 				the number to conduct the search on primes on
 
 		Returns
@@ -15,10 +15,12 @@ def find_primes(x):
 	"""
 	prime_factors = []
 	prime_iterator = PrimeGenerator()
-	while x > 1:
+
+	xcopy = x
+	while xcopy > 1:
 		prime_number = prime_iterator.next()
-		if x % prime_number == 0:
-			x /= prime_number
+		if xcopy % prime_number == 0:
+			xcopy /= prime_number
 			prime_factors.append(prime_number)
 
 		if prime_number > x:
@@ -49,11 +51,12 @@ class PrimeGenerator:
 	def iterative(self):
 		candidate = self.prime_entries[-1] + 2
 		while True:
-			for index in range(2, candidate):
-				if candidate % index == 0:
+			for prime_number in self.prime_entries:
+				if candidate % prime_number == 0:
 					candidate += 2
 					break
 			else:
+				self.prime_entries.append(candidate)
 				return candidate
 
 	def next(self):
