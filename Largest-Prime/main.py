@@ -1,3 +1,5 @@
+from common import prime_generator
+
 def find_primes(x):
 	"""
 		Finds prime factors* of a given number
@@ -14,7 +16,7 @@ def find_primes(x):
 				prime numbers that make up the
 	"""
 	prime_factors = []
-	prime_iterator = PrimeGenerator()
+	prime_iterator = prime_generator.PrimeGenerator()
 
 	xcopy = x
 	while xcopy > 1:
@@ -28,44 +30,9 @@ def find_primes(x):
 
 	return prime_factors
 
-class PrimeGenerator:
-	def __init__(self):
-		self.prime_entries = []
-		self.generate_method = self.first
-
-	def first(self):
-		prime_number = None
-		if len(self.prime_entries) == 0:
-			prime_number = 2
-
-		if len(self.prime_entries) == 1:
-			prime_number = 3
-			self.generate_method = self.iterative
-
-		if prime_number:
-			self.prime_entries.append(prime_number)
-			return prime_number
-		else:
-			raise Exception('')
-
-	def iterative(self):
-		candidate = self.prime_entries[-1] + 2
-		while True:
-			for prime_number in self.prime_entries:
-				if candidate % prime_number == 0:
-					candidate += 2
-					break
-			else:
-				self.prime_entries.append(candidate)
-				return candidate
-
-	def next(self):
-		return self.generate_method()
-
-
 if __name__ == '__main__':
 	sample = 13195
-	input = 600851475143
+	desired = 600851475143
 
 	print find_primes(sample)
-	print max(find_primes(input))
+	print max(find_primes(desired))
