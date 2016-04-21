@@ -13,8 +13,15 @@ class PrimeGenerator:
 				self._prime_entries.append(candidate)
 				return candidate
 
-	def generate_to(self, x):
-		while self._prime_entries[-1] < x:
+	def generate_to(self, n):
+		while self._prime_entries[-1] < n:
 			self.next()
 
-		return self._prime_entries[:-1]
+		return self._prime_entries[-1]
+
+	def generate_nth(self, n):
+		a = n - len(self._prime_entries)
+		for _ in range(a + 1):
+			self.next()
+
+		return self._prime_entries[n - 1]
