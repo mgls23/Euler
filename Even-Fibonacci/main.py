@@ -9,7 +9,7 @@ class NotSupportedException(Exception):
 
 class FibonacciIterator:
 	"""
-		FibonacciIterator that calculates and stores fibonacci sequence values. N.B. This excludes the 0th 1
+		FibonacciIterator that calculates and stores fibonacci sequence values. N.B. This excludes the 1st 1
 
 		(x) 1, 2, 3, 5, 8, 13, ...
 		( ) 1, 1, 2, 3, 5, 8, 13, ...
@@ -163,7 +163,7 @@ if __name__ == '__main__':
 	# print answer
 
 	#
-	fib_generator = EvenFibonacciIterator()
+	fib_generator = N2FibonacciIterator()
 	fib_generator.set_upper_bound(upper_bound)
 	back_trace = fib_generator.back_trace()
 	answer = sum(back_trace)

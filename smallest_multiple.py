@@ -1,6 +1,6 @@
 import sys
 
-from common import prime_generator
+from common import prime
 
 
 def foo(x):
@@ -8,8 +8,7 @@ def foo(x):
 		return {}
 
 	prime_dictionaries = []
-	prime = prime_generator.PrimeGenerator()
-	primes = prime.generate_to(x)
+	primes = prime.PrimeGenerator().generate_to(x)
 
 	for index in range(primes[0], x):
 		prime_dictionaries.append(generate_prime_dictionary(index, primes))
@@ -27,14 +26,13 @@ def generate_prime_dictionary(something, primes):
 	for prime in primes:
 		while not something % prime:
 			if prime_dictionary.has_key(prime):
-				prime_dictionary[prime] += 1#
+				prime_dictionary[prime] += 1  #
 			else:
 				prime_dictionary[prime] = 1
 
 			something /= prime
 			if something == 1:
 				return prime_dictionary
-
 
 	return prime_dictionary
 
@@ -47,6 +45,6 @@ def bar(prime_dict):
 	return cumulative
 
 
-if __name__ == '__main__':
-	print bar(foo(10))
-	print bar(foo(20))
+def smallest_multiple(n):
+	return bar(foo(n))
+
