@@ -90,6 +90,27 @@ def adjacent(x, window_size=13):
 	return max(y)
 
 
+# Q16 :: Digit of 2^1000
+def power_digit_sum(power=15):
+	assert power > 0, "Please provide a cool number we can run some maths on"
+
+	number_array_repr = [1]
+	for i in range(power):
+
+		for j in range(len(number_array_repr)):
+			number_array_repr[j] *= 2
+
+		for index in range(len(number_array_repr)):
+			while number_array_repr[index] >= 10:
+				number_array_repr[index] -= 10
+				try:
+					number_array_repr[index + 1] += 1
+				except IndexError:
+					number_array_repr.append(1)
+
+	return sum(number_array_repr)
+
+
 problemHandler = \
 	{
 		# 1: fizz_buzz,
@@ -98,6 +119,8 @@ problemHandler = \
 		6: square_difference,
 		7: q_10001th_prime,
 		8: adjacent,
+
+		16: power_digit_sum,
 	}
 
 if __name__ == '__main__':
