@@ -92,6 +92,18 @@ def adjacent(x, window_size=13):
 
 # Q16 :: Digit of 2^1000
 def power_digit_sum(power=15):
+	"""
+	1, 2, 4, 8, 16, 32, 64, 128, ...
+
+
+	Parameters
+	----------
+	power
+
+	Returns
+	-------
+
+	"""
 	assert power > 0, "Please provide a cool number we can run some maths on"
 
 	number_array_repr = [1]
