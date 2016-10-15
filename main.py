@@ -2,7 +2,7 @@ import argparse
 
 from smallest_multiple import smallest_multiple
 from common import prime
-from const import problemArgs
+from const import problemArgs, ANSWERS
 
 
 # Q3 :: Largest Prime Factor
@@ -133,14 +133,31 @@ problemHandler = \
 		8: adjacent,
 
 		16: power_digit_sum,
+
+		23: non_abundant_sum,
 	}
 
 if __name__ == '__main__':
 	# Configure Parser + Parse
-	parser = argparse.ArgumentParser(description='Project Euler, dyxogus implementation')
-	parser.add_argument('n', metavar='n', type=int, help='The Problem that needs to be solved')
+	parser = argparse.ArgumentParser(
+		description='Project Euler, dyxogus implementation')
+	parser.add_argument('n', metavar='n', type=int,
+	                    help='The Problem that needs to be solved')
 	args = parser.parse_args()
 
+	# Hack
+	index = args.n
+	index = 23
+
 	# Execute Problem
-	result = problemHandler[args.n](**problemArgs[args.n])
-	print result
+	computed = problemHandler[index](**problemArgs[index])
+
+	try:
+		expected = ANSWERS[index]
+		assert (computed == expected), \
+			'Computed Answer for Problem %(index)s is %(computed)s ' \
+			'and does not match the expect, which is %(expected)s' % locals()
+
+	except KeyError:
+		print 'This problem has not been solved yet'
+		print 'Computed Answer for Problem %(index)s is %(computed)s' % locals()
