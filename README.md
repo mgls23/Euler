@@ -1,5 +1,6 @@
 # Project Euler
-My own implementation of Project Euler, where you can get a new exciting programming question every week!
+My own implementation of Project Euler, a set of mathematical computational
+challenges.
 
 See more Info at ::
   https://projecteuler.net/archives
