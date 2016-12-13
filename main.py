@@ -90,6 +90,68 @@ def adjacent(x, window_size=13):
 	return max(y)
 
 
+def calculate_sum_of_first_n_digits(first_digits_count, *numbers):
+	"""
+
+	Parameters
+	----------
+		first_digits_count: the digits of the sum that needs to be added
+
+		numbers
+	"""
+	# Digits Representations are
+	digits_lists = []
+	for number in numbers:
+		# Convert a number like 123456 into [1, 2, 3, 4, 5, 6]
+		single_digits = list(str(number))
+
+		# Int conversion
+		single_digit_list = [int(digit) for digit in single_digits]
+		digits_lists.append(single_digit_list)
+
+	answers = []
+	queues = [[]]
+
+	#
+	for _ in range(first_digits_count):
+
+		#
+		for digits_list in digits_lists:
+
+			# Be sure to pop the last one in the list
+			# (which is the last digit of the given list)
+			digit = digits_list.pop(-1)
+
+			# Queues may not have a corresponding list for the particular digits
+			if len(queues) == 0:
+				queues.append([digit])
+			else:
+				queues[-1].append(digit)
+
+		# Final answer (for that particular digit)
+		queue = queues.pop(-1)
+		current_digit = sum(queue)
+
+		# Cover the case that the current_digit is above 10 (could be 100 even)
+		current_digit_broken_down = list(str(current_digit))
+		current_digit_answer = current_digit_broken_down.pop(-1)
+
+		for offset, next_digit in enumerate(current_digit_broken_down, 1):
+			if len(queues) <= offset:
+				queues.insert(0, next_digit)
+			else:
+				queues[offset].append(next_digit)
+
+		answers.append(current_digit_answer)
+
+	# Since we have been appending rather than inserting on the 0th index,
+	# Reverse the order of the list
+	answers.reverse()
+	answer = ''.join([str(answer_digit) for answer_digit in answers])
+	int_format = int(answer)
+	return answer
+
+
 # Q16 :: Digit of 2^1000
 def power_digit_sum(power=15):
 	"""
@@ -132,6 +194,7 @@ problemHandler = \
 		7: q_10001th_prime,
 		8: adjacent,
 
+		13: calculate_sum_of_first_n_digits,
 		16: power_digit_sum,
 
 		23: non_abundant_sum,
