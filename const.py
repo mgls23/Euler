@@ -11,7 +11,7 @@ problemArgs = \
 		16: {'power': 1000}
 	}
 
-confirmedSolution = \
+ANSWERS = \
 	{
 		1: 233168,
 		2: 4613732,
