@@ -1,6 +1,9 @@
 import argparse
 
-from smallest_multiple import smallest_multiple
+import sys
+import traceback
+
+from smallest_multiple import smallest_multiple_up_to
 from common import prime
 from const import problemArgs, ANSWERS
 
@@ -131,7 +134,7 @@ problemHandler = \
         # 1: fizz_buzz,
         3: find_primes,
 
-        5: smallest_multiple,
+        5: smallest_multiple_up_to,
         6: square_difference,
         7: q_10001th_prime,
         8: adjacent_multiplicand,
@@ -140,18 +143,29 @@ problemHandler = \
     }
 
 
-def run():
-    # Configure Parser + Parse
-    parser = argparse.ArgumentParser(description='Project Euler')
-    parser.add_argument(
-        'n', type=int, help='The Problem Number'
-        'p', type=
-    )
-    args = parser.parse_args()
+def test():
+    print 'Testing All Problems'
 
-    # Hack
-    index = args.n
+    exceptions = []
 
+    for problem_number, problem_handler in problemHandler.iteritems():
+        try:
+            problem_handler(**problemArgs[problem_number])
+
+        except Exception as e:
+            failed_case = 'Number: %(problem_number)s,' \
+                          ' Handler: %(problem_handler)s' % locals()
+            exceptions.append((failed_case, e))
+
+    for case, exception in exceptions:
+        print case
+        traceback.print_exc(exception, file=sys.stdout)
+
+    if not exceptions:
+        print 'Everything is fine!'
+
+
+def solve_problem(index):
     # Execute Problem
     result = problemHandler[index](**problemArgs[index])
 
@@ -164,6 +178,20 @@ def run():
     except KeyError:
         print 'This problem has not been solved yet'
         print 'Output [for problem %(index)s] is %(result)s' % locals()
+
+
+def run():
+    # Configure Parser + Parse
+    parser = argparse.ArgumentParser(description='Project Euler')
+    parser.add_argument('n', nargs='?', type=int, help='Problem Number')
+    args = parser.parse_args()
+
+    if args.n:
+        index = args.n
+        solve_problem(index)
+
+    else:
+        test()
 
 
 if __name__ == '__main__':
