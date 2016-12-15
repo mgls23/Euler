@@ -127,14 +127,13 @@ problemHandler = \
 	{
 		# 1: fizz_buzz,
 
+		#
 		5: smallest_multiple,
 		6: square_difference,
 		7: q_10001th_prime,
 		8: adjacent,
 
 		16: power_digit_sum,
-
-		23: non_abundant_sum,
 	}
 
 if __name__ == '__main__':
@@ -147,7 +146,6 @@ if __name__ == '__main__':
 
 	# Hack
 	index = args.n
-	index = 23
 
 	# Execute Problem
 	computed = problemHandler[index](**problemArgs[index])
