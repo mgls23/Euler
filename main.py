@@ -1,17 +1,16 @@
 import argparse
-
-import sys
 import traceback
 
-from smallest_multiple import smallest_multiple_up_to
-from common import prime
-from const import problemArgs, ANSWERS
+from core.finished.multiples_of_3_and_5s import fizz_buzz
+from core.finished.smallest_multiple import pi_of_factors_with_power, \
+    cumulative_lcm_in_prime_powers
+from core.util import prime
+from tests.const import problemArgs, ANSWERS
 
 
 # Q3 :: Largest Prime Factor
 def find_primes(n=600851475143):
-    """
-    Finds prime factors* of a given number
+    """Finds prime factors* of a given number
         * prime factors :: prime numbers that make up the given number
                            once multiplied together
 
@@ -39,6 +38,11 @@ def find_primes(n=600851475143):
     return max(prime_factors)
 
 
+# Q5 ::
+def smallest_multiple_up_to(n):
+    return pi_of_factors_with_power(cumulative_lcm_in_prime_powers(n))
+
+
 # Q6 :: Sum Square Difference
 def square_difference(n=100):
     """
@@ -62,7 +66,7 @@ def square_difference(n=100):
 
 
 # Q7 :: 10001st prime
-def q_10001th_prime(n=10001):
+def nth_prime(n=10001):
     return prime.PrimeGenerator().generate_nth(n)
 
 
@@ -129,23 +133,57 @@ def power_digit_sum(power=15):
     return sum(number_array_repr)
 
 
+# Q23 :: Calculating the name scores
+def name_scores():
+    names_text = open('data/p022_names.txt', 'r').readlines()[0]
+
+    names = names_text.replace('"', '').split(',')
+    names.sort()
+
+    cumulative = 0
+    for index, name in enumerate(names):
+        coefficient = index + 1
+        cumulative += coefficient * calculate_score(name)
+
+    return cumulative
+
+
+base = ord('A') - 1
+
+
+def calculate_score(string):
+    """Calculates the numerical score of a given string
+    Each character the string are awarded with a scroe based on its
+    ordinal value
+
+        a = 1
+        triangle_number = 2
+        ...
+        z = 26
+    """
+    cumulative = sum([ord(char) for char in string])
+    return cumulative - (base * len(string))
+
+
 problemHandler = \
     {
-        # 1: fizz_buzz,
+        1: fizz_buzz,
         3: find_primes,
 
         5: smallest_multiple_up_to,
         6: square_difference,
-        7: q_10001th_prime,
+        7: nth_prime,
         8: adjacent_multiplicand,
 
         16: power_digit_sum,
+        22: name_scores,
     }
 
 
 def test():
     print 'Testing All Problems'
 
+    failed_tests = []
     exceptions = []
 
     for problem_number, problem_handler in problemHandler.iteritems():
@@ -153,15 +191,21 @@ def test():
             problem_handler(**problemArgs[problem_number])
 
         except Exception as e:
-            failed_case = 'Number: %(problem_number)s,' \
-                          ' Handler: %(problem_handler)s' % locals()
-            exceptions.append((failed_case, e))
+            failed_tests.append(str(problem_number))
+            failed_case = 'Number: {}, Handler: {}'.format(
+                problem_number, problem_handler.__name__
+            )
+            exceptions.append((failed_case, traceback.format_exc()))
 
-    for case, exception in exceptions:
-        print case
-        traceback.print_exc(exception, file=sys.stdout)
+    if len(exceptions):
+        failed_tests.sort()
+        exceptions.sort()
 
-    if not exceptions:
+        print 'Failed Tests:: ' + ', '.join(failed_tests)
+        for case, exception in exceptions:
+            print '\n'.join(['%(case)s', '%(exception)s', '']) % locals()
+
+    else:
         print 'Everything is fine!'
 
 

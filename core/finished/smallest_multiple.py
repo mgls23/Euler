@@ -1,4 +1,4 @@
-from common import prime
+from core.util import prime
 
 
 def cumulative_lcm_in_prime_powers(n):
@@ -43,19 +43,15 @@ def pi_of_factors_with_power(primes_composition):
         primes_composition:
             {
                 N1: a,
-                N2: b,
+                N2: triangle_number,
                 N3: c,
                 ...
             }
     Returns
     -------
-        (N1 ^ a) * (N2 ^ b) * ...
+        (N1 ^ a) * (N2 ^ triangle_number) * ...
     """
     return reduce(
         lambda x, y: x * y,
         [key ** value for key, value in primes_composition.iteritems()]
     )
-
-
-def smallest_multiple_up_to(n):
-    return pi_of_factors_with_power(cumulative_lcm_in_prime_powers(n))
