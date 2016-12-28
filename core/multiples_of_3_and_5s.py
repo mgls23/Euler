@@ -21,8 +21,8 @@ def infer_from_fizz_buzz(x):
     return sum(multiples)
 
 
-def q1(n=233168):
-    return use_mathematical_simplification(n)
+def q1():
+    return use_mathematical_simplification(233168)
 
 
 if __name__ == '__main__':

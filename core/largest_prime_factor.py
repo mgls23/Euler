@@ -1,21 +1,14 @@
 from core.util import prime
 
 
-# Q3 :: Largest Prime Factor
-def q3(n=600851475143):
-    """Finds prime factors* of a given number
-        * prime factors :: prime numbers that make up the given number
-                           once multiplied together
+def largest_prime_factor(n):
+    """ Finds a set of prime numbers [prime factors] returns the original
+    number once multiplied together
 
-        Args
-        ----
-            n: int
-                the number to conduct the search on primes on
-
-        Returns
-        -------
-            prime_factors: [int]
-                prime numbers that make up the
+    Args
+    ----
+        :param n: int
+            the number to conduct the search on primes on
     """
     prime_factors = []
     prime_iterator = prime.PrimeGenerator()
@@ -29,3 +22,8 @@ def q3(n=600851475143):
             prime_factors.append(prime_number)
 
     return max(prime_factors)
+
+
+# Q3 :: Largest Prime Factor of 600851475143
+def q3():
+    return largest_prime_factor(600851475143)

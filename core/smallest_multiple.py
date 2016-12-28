@@ -54,8 +54,6 @@ def decompose_to_prime_powers(number, primes):
 
             number /= prime_number
             if number == 1:
-                assert number == multiply_out_numbers_in_powers(
-                    prime_composition)
                 return prime_composition
 
     assert False, "Bad Programmer Error"
@@ -86,12 +84,12 @@ def multiply_out_numbers_in_powers(number_in_powers):
     )
 
 
-def q5(n=20):
-    cumulative_lcm = cumulative_lcm_in_prime_powers(n)
-    smallest_multiple_up_to_n = multiply_out_numbers_in_powers(
-        cumulative_lcm
-    )
-    return smallest_multiple_up_to_n
+def smallest_multiple_up_to(n):
+    return multiply_out_numbers_in_powers(cumulative_lcm_in_prime_powers(n))
+
+
+def q5():
+    return smallest_multiple_up_to(20)
 
 
 if __name__ == '__main__':

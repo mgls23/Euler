@@ -11,7 +11,7 @@ class Tree:
                 self._structure.append(numbers)
 
         validate_tree(self._structure)
-        print tree_to_string(self._structure)
+        # print tree_to_string(self._structure)
 
     def find_path(self):
         while len(self._structure) > 1:
@@ -25,8 +25,8 @@ class Tree:
 
             self._structure.append(new_line)
 
-            print
-            print tree_to_string(self._structure)
+            # print
+            # print tree_to_string(self._structure)
 
         self._structure.reverse()
 
@@ -78,18 +78,23 @@ def convert_to_list_of(input_list, type):
     return [type(element) for element in input_list]
 
 
+DATA_LOCATION = 'data/'
+
+
 def q18():
-    tree = Tree('../data/p018_tree.txt')
+    tree = Tree(DATA_LOCATION + 'p018_tree.txt')
     spam = tree.find_path()
     return spam
 
 
 def q67():
-    tree = Tree('../data/p067_triangle.txt')
+    tree = Tree(DATA_LOCATION + 'p067_triangle.txt')
     spam = tree.find_path()
     return spam
 
 
 if __name__ == '__main__':
-    # print q18()
-    print q67()
+    DATA_LOCATION = '../data/'
+
+    print q18()  #
+    print q67()  # 7273

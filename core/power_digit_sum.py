@@ -1,16 +1,15 @@
-# Q16 :: Digit of 2^1000
-def q16(power=15):
+def digit_of_2_to_power_of(power):
     """
-    1, 2, 4, 8, 16, 32, 64, 128, ...
+        1, 2, 4, 8, 16, 32, 64, 128, ...
 
 
-        Args
-        ----
-            power
+            Args
+            ----
+                power
 
-        Returns
-        -------
-    """
+            Returns
+            -------
+        """
     assert power > 0, "Please provide a number bigger than 0 " \
                       "so we can do some cool maths"
 
@@ -29,3 +28,8 @@ def q16(power=15):
                     number_array_repr.append(1)
 
     return sum(number_array_repr)
+
+
+# Q16 :: Digit of 2^1000
+def q16():
+    return digit_of_2_to_power_of(1000)
