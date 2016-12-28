@@ -1,7 +1,7 @@
 class Tree:
-    def __init__(self):
+    def __init__(self, file_path):
         self._structure = []
-        with open('../data/p018_tree.txt', 'r') as text_file:
+        with open(file_path, 'r') as text_file:
             lines = text_file.readlines()
 
             for index, line in enumerate(lines, 1):
@@ -79,10 +79,17 @@ def convert_to_list_of(input_list, type):
 
 
 def q18():
-    tree = Tree()
+    tree = Tree('../data/p018_tree.txt')
+    spam = tree.find_path()
+    return spam
+
+
+def q67():
+    tree = Tree('../data/p067_triangle.txt')
     spam = tree.find_path()
     return spam
 
 
 if __name__ == '__main__':
-    print q18()
+    # print q18()
+    print q67()
