@@ -12,10 +12,7 @@ from core.smallest_multiple import q5
 from core.sum_square_difference import q6
 from core.name_scores import q22
 
-from tests.const import (
-    ANSWERS,
-    problemArgs
-)
+from tests.const import ANSWERS
 
 problemHandler = \
     {
@@ -44,13 +41,13 @@ def test():
     failed_tests = []
     exceptions = []
 
-    for problem_number, problem_handler in problemHandler.iteritems():
+    for problem_number in problemHandler.iterkeys():
         try:
-            problem_handler(**problemArgs[problem_number])
+            solve_problem(problem_number)
 
         except Exception as e:
             failed_tests.append(str(problem_number))
-            failed_case = 'Number: {}'.format(problem_number)
+            failed_case = 'Number: {}\n'.format(problem_number)
             exceptions.append((failed_case, traceback.format_exc()))
 
     if len(exceptions):
@@ -58,8 +55,9 @@ def test():
         exceptions.sort()
 
         print 'Failed Tests:: ' + ', '.join(failed_tests)
+        print
         for case, exception in exceptions:
-            print '\n'.join(['%(case)s', '%(exception)s', '']) % locals()
+            print ''.join(['%(case)s', '%(exception)s', '']) % locals()
 
     else:
         print 'Everything is fine!'
@@ -67,17 +65,17 @@ def test():
 
 def solve_problem(index):
     # Execute Problem
-    result = problemHandler[index](**problemArgs[index])
+    result = problemHandler[index]()
 
     try:
         answer = ANSWERS[index]
         assert (result == answer), \
             'Result for Problem %(index)s is %(result)s ' \
-            'and does not match the expect, which is %(answer)s' % locals()
+            'which is not the expected, %(answer)s' % locals()
 
     except KeyError:
-        print 'This problem has not been solved yet'
-        print 'Output [for problem %(index)s] is %(result)s' % locals()
+        print '\nThis problem has not been solved yet'
+        print 'Output [for problem %(index)s] is %(result)s\n' % locals()
 
 
 def run():

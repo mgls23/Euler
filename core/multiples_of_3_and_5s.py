@@ -22,7 +22,7 @@ def infer_from_fizz_buzz(x):
 
 
 def q1():
-    return use_mathematical_simplification(233168)
+    return use_mathematical_simplification(999)
 
 
 if __name__ == '__main__':
