@@ -3,6 +3,7 @@ import traceback
 
 from core.largest_prime_factor import q3
 from core.largest_product_in_a_series import q8
+from core.largest_sum import q13
 from core.lattice_paths import q15
 from core.maximum_path_sum import q18, q67
 from core.multiples_of_3_and_5s import q1
