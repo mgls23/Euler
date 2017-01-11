@@ -1,7 +1,5 @@
 from core.util import maths
 
-N = 'N'
-
 
 def use_mathematical_simplification(x):
     # Find the Sum of 3s, and 5s
@@ -23,9 +21,9 @@ def infer_from_fizz_buzz(x):
     return sum(multiples)
 
 
-def fizz_buzz(n=233168):
-    return use_mathematical_simplification(n)
+def q1():
+    return use_mathematical_simplification(999)
 
 
 if __name__ == '__main__':
-    fizz_buzz()
+    print q1()
