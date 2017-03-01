@@ -1,9 +1,8 @@
 import unittest
 
 import main
-import maths
-
-from util import test_util
+from core.util import maths
+from tests import test_util
 
 
 class TestMain(unittest.TestCase):

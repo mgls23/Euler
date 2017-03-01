@@ -1,95 +1,49 @@
 import argparse
+import traceback
 
-from smallest_multiple import smallest_multiple
-from common import prime
-from const import problemArgs, ANSWERS
+from core.largest_prime_factor import q3
+from core.largest_product_in_a_series import q8
+from core.lattice_paths import q15
+from core.maximum_path_sum import q18, q67
+from core.multiples_of_3_and_5s import q1
+from core.nth_prime import q7
+from core.power_digit_sum import q16
+from core.smallest_multiple import q5
+from core.sum_square_difference import q6
+from core.name_scores import q22
 
+from tests.const import ANSWERS
 
-# Q3 :: Largest Prime Factor
-def find_primes(x=600851475143):
-	"""
-		Finds prime factors* of a given number
-		* prime factors :: prime numbers that make up the given number once multiplied together
+problemHandler = \
+    {
+        1 : q1,
+        3 : q3,
 
-		Parameters
-		----------
-			x: int
-				the number to conduct the search on primes on
+        5 : q5,
+        6 : q6,
+        7 : q7,
+        8 : q8,
 
-		Returns
-		-------
-			prime_factors: [int]
-				prime numbers that make up the
-	"""
-	prime_factors, prime_iterator, prime_number, x_copy = [], prime.PrimeGenerator(), 1, x
+        13: q13,
 
-	while x_copy > 1 and prime_number < x:
-		prime_number = prime_iterator.next()
-		if x_copy % prime_number == 0:
-			x_copy /= prime_number
-			prime_factors.append(prime_number)
+        15: q15,
+        16: q16,
 
-	return max(prime_factors)
+        18: q18,
 
+        22: q22,
 
-# Q6 :: Sum Square Difference
-def square_difference(n=100):
-	"""
-	(1 + 2 + 3 + ... n)^2
-	 = ((n * (n + 1)) / 2) ^ 2
-
-	1^2 + 2^2 + 3^2 + ... n^2
-     [BRUTE FORCE]
-
-	Args
-	----
-		n: int
-
-	Returns
-	-------
-
-	"""
-	square_of_sum = ((n + 1) * n / 2) ** 2
-	sum_of_square = sum([i ** 2 for i in range(n + 1)])
-	return square_of_sum - sum_of_square
+        67: q67,
+    }
 
 
-# Q7 :: 10001st prime
-def q_10001th_prime(n=10001):
-	return prime.PrimeGenerator().generate_nth(n)
+def test():
+    print 'Testing All Problems'
 
+    failed_tests = []
+    exceptions = []
 
-# Q8 :: Adjacent Multiplicand
-def adjacent(x, window_size=13):
-	"""
-
-	Parameters
-	----------
-	x
-	window_size
-
-	Returns
-	-------
-
-	"""
-	assert x and window_size, "Please provide a number that we could run some cool maths on"
-
-	# Break down x into a list
-	x = [int(strx) for strx in (type(x) == int) and str(x) or x]
-	y = x[:-1]
-	# z = len(x) - window_size
-	for iteration_count in range(1, window_size):
-		for index in range(len(y) - 1):
-			y[index] *= x[index + iteration_count]
-
-		y.pop(-1)
-
-	# if iteration_count == z:
-	# 	break
-
-	return max(y)
-
-
+<<<<<<< HEAD
 def calculate_sum_of_first_n_digits(first_digits_count, *numbers):
 	"""
 
@@ -156,71 +110,63 @@ def calculate_sum_of_first_n_digits(first_digits_count, *numbers):
 def power_digit_sum(power=15):
 	"""
 	1, 2, 4, 8, 16, 32, 64, 128, ...
+=======
+    for problem_number in problemHandler.iterkeys():
+        try:
+            solve_problem(problem_number)
+>>>>>>> 55877bdd0f7f44101380cd5bbbe2e7bc492760f3
+
+        except Exception as e:
+            failed_tests.append(str(problem_number))
+            failed_case = 'Number: {}\n'.format(problem_number)
+            exceptions.append((failed_case, traceback.format_exc()))
+
+    if len(exceptions):
+        failed_tests.sort()
+        exceptions.sort()
+
+        print 'Failed Tests:: ' + ', '.join(failed_tests)
+        print
+        for case, exception in exceptions:
+            print ''.join(['%(case)s', '%(exception)s', '']) % locals()
+
+    else:
+        print 'Everything is fine!'
 
 
-	Parameters
-	----------
-	power
+def solve_problem(index):
+    # Execute Problem
+    result = problemHandler[index]()
 
-	Returns
-	-------
+    try:
+        answer = ANSWERS[index]
+        assert (result == answer), \
+            'Result for Problem %(index)s is %(result)s ' \
+            'which is not the expected, %(answer)s' % locals()
 
-	"""
-	assert power > 0, "Please provide a cool number we can run some maths on"
-
-	number_array_repr = [1]
-	for i in range(power):
-
-		for j in range(len(number_array_repr)):
-			number_array_repr[j] *= 2
-
-		for index in range(len(number_array_repr)):
-			while number_array_repr[index] >= 10:
-				number_array_repr[index] -= 10
-				try:
-					number_array_repr[index + 1] += 1
-				except IndexError:
-					number_array_repr.append(1)
-
-	return sum(number_array_repr)
+    except KeyError:
+        print '\nThis problem has not been solved yet'
+        print 'Output [for problem %(index)s] is %(result)s\n' % locals()
 
 
-problemHandler = \
-	{
-		# 1: fizz_buzz,
+def run():
+    # Configure Parser + Parse
+    parser = argparse.ArgumentParser(description='Project Euler')
+    parser.add_argument('n', nargs='?', type=int, help='Problem Number')
+    args = parser.parse_args()
 
-		5: smallest_multiple,
-		6: square_difference,
-		7: q_10001th_prime,
-		8: adjacent,
+    if args.n:
+        index = args.n
+        solve_problem(index)
 
+<<<<<<< HEAD
 		13: calculate_sum_of_first_n_digits,
 		16: power_digit_sum,
+=======
+    else:
+        test()
+>>>>>>> 55877bdd0f7f44101380cd5bbbe2e7bc492760f3
 
-		23: non_abundant_sum,
-	}
 
 if __name__ == '__main__':
-	# Configure Parser + Parse
-	parser = argparse.ArgumentParser(
-		description='Project Euler, dyxogus implementation')
-	parser.add_argument('n', metavar='n', type=int,
-	                    help='The Problem that needs to be solved')
-	args = parser.parse_args()
-
-	# Hack
-	index = args.n
-	index = 23
-
-	# Execute Problem
-	computed = problemHandler[index](**problemArgs[index])
-
-	try:
-		expected = ANSWERS[index]
-		assert (computed == expected), \
-			'Computed Answer for Problem %(index)s is %(computed)s ' \
-			'and does not match the expect, which is %(expected)s' % locals()
-
-	except KeyError:
-		print 'This problem has not been solved yet'
-		print 'Computed Answer for Problem %(index)s is %(computed)s' % locals()
+    run()
