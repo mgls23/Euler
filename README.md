@@ -22,12 +22,12 @@ Branch off from branch copyable
 
 # Coding Standard
 
-Not a hard limit by any means, but it should give a good idea
+Not something set to stone, so some broad concepts
 
 * PEP8, PEP8, PEP8
 * Asserts, lots of them
-* Right Margin [76]
+* Right Margin [90]
 * Spaces [4]
-* Function Line [10]
-* Objects when possible
+* Function Line [30]
+* Functional > Objects when possible
 * Descriptive variable names
