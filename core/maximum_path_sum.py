@@ -1,81 +1,48 @@
 class Tree:
     def __init__(self, file_path):
-        self._structure = []
+        self.rows = []
         with open(file_path, 'r') as text_file:
-            lines = text_file.readlines()
+            for line in text_file.readlines():
+                numbers_string = line.split(' ')
+                numbers = [int(element) for element in numbers_string]
 
-            for index, line in enumerate(lines, 1):
-                numbers = line.split(' ')
-                numbers = convert_to_list_of(numbers, int)
+                self.rows.append(numbers)
 
-                self._structure.append(numbers)
+        self.validate_tree()
 
-        validate_tree(self._structure)
-        # print tree_to_string(self._structure)
+    def find_maximum_path_sum(self):
+        maximums = self.rows[-1]
+        for row in reversed(self.rows[:-1]):
+            for index, cost in enumerate(row):
+                maximums[index] = cost + max(maximums[index],
+                                             maximums[index + 1])
 
-    def find_path(self):
-        while len(self._structure) > 1:
-            spam = self._structure.pop(-1)
-            spam2 = self._structure.pop(-1)
-            new_line = []
+        return maximums[0]
 
-            for index in range(len(spam) - 1):
-                egg = spam2[index] + max(spam[index], spam[index + 1])
-                new_line.append(egg)
+    def validate_tree(self):
+        for index, array in enumerate(self.rows, 1):
+            if len(array) != index:
+                raise Exception(self.rows)
 
-            self._structure.append(new_line)
+    @staticmethod
+    def find_max_digit():
+        # TODO (P5) :: Make this detect from self.rows
+        return 4
 
-            # print
-            # print tree_to_string(self._structure)
+    def __str__(self):
+        max_digit = self.find_max_digit()
+        maximum_length = len(self.rows[-1]) * max_digit * 2
 
-        self._structure.reverse()
+        rows_string = [
+            pad_numbers(array, max_digit).center(maximum_length)
+            for index, array in enumerate(self.rows)
+        ]
 
-        return self._structure[-1][-1]
-
-
-class Node:
-    def __init__(self, **kwargs):
-        self._children = []
-
-    def add_child(self, *children):
-        self._children += list(children)
-
-
-def validate_tree(double_array):
-    for index, array in enumerate(double_array, 1):
-        if len(array) != index:
-            raise Exception(double_array)
+        return '\n'.join(rows_string)
 
 
-def tree_to_string(tree, max_digit=None):
-    if max_digit is None:
-        max_digit = find_max_digit(tree)
-
-    def spam(list, max_digit):
-        return (' ' * max_digit).join(
-            [str(string).zfill(max_digit) for string in list])
-
-    string_list = []
-    index = 0
-
-    for array in reversed(tree):
-        string = spam(array, max_digit)
-        string = ' ' * index * max_digit + string
-        string_list.append(string)
-        index += 1
-
-    string_list.reverse()
-    string = '\n'.join(string_list)
-
-    return string
-
-
-def find_max_digit(tree):
-    return 4
-
-
-def convert_to_list_of(input_list, type):
-    return [type(element) for element in input_list]
+def pad_numbers(list_, max_digit):
+    return (' ' * max_digit).join([str(element).zfill(max_digit) for element in list_])
 
 
 DATA_LOCATION = 'data/'
@@ -83,18 +50,18 @@ DATA_LOCATION = 'data/'
 
 def q18():
     tree = Tree(DATA_LOCATION + 'p018_tree.txt')
-    spam = tree.find_path()
-    return spam
+    maximum_path_sum = tree.find_maximum_path_sum()
+    return maximum_path_sum
 
 
 def q67():
     tree = Tree(DATA_LOCATION + 'p067_triangle.txt')
-    spam = tree.find_path()
-    return spam
+    maximum_path_sum = tree.find_maximum_path_sum()
+    return maximum_path_sum
 
 
 if __name__ == '__main__':
     DATA_LOCATION = '../data/'
 
-    print q18()  #
+    print q18()  # 1074
     print q67()  # 7273
