@@ -5,8 +5,13 @@ challenges.
 See more Info at ::
   https://projecteuler.net/archives
 
-# New Starters
-Branch off from branch copyable
+# About this project
+I invested quite some time trying to minimise the time it takes to 
+1. Solve a question
+2. Tests for refactoring/updating content
+
+Feel free to use this in any ways you see fit, if you happen to come across this project.
+
 
 ## Pycharm Plugins
 * Quick start
@@ -14,20 +19,15 @@ Branch off from branch copyable
         def spam($KWARGS$):
             return -1
 
-        def q$NAME$():
+        def q$QUESTION_NUMBER$():
             return spam($KWARGS$)
 
         if __name__ == '__main__':
-            print q$NAME$()
+            print(q$QUESTION_NUMBER$())
 
 # Coding Standard
-
-Not something set to stone, so some broad concepts
-
 * PEP8, PEP8, PEP8
 * Asserts, lots of them
 * Right Margin [90]
 * Spaces [4]
-* Function Line [30]
-* Functional > Objects when possible
 * Descriptive variable names
