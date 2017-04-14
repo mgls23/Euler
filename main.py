@@ -1,29 +1,30 @@
 import argparse
 import traceback
 
-from core.largest_prime_factor import q3
-from core.largest_product_in_a_series import q8
-from core.largest_sum import q13
-from core.lattice_paths import q15
-from core.maximum_path_sum import q18, q67
-from core.multiples_of_3_and_5s import q1
-from core.nth_prime import q7
-from core.power_digit_sum import q16
-from core.smallest_multiple import q5
-from core.sum_square_difference import q6
-from core.name_scores import q22
-
-from tests.const import ANSWERS
+from euler.even_fibonacci import q2
+from euler.largest_prime_factor import q3
+from euler.largest_product_in_a_series import q8
+from euler.largest_sum import q13
+from euler.lattice_paths import q15
+from euler.maximum_path_sum import q18, q67
+from euler.multiples_of_3_and_5s import q1
+from euler.name_scores import q22
+from euler.nth_prime import q7
+from euler.power_digit_sum import q16
+from euler.smallest_multiple import q5
+from euler.sum_square_difference import q6
+from euler.unittests import ANSWERS
 
 problemHandler = \
     {
-        1 : q1,
-        3 : q3,
+        1: q1,
+        2: q2,
+        3: q3,
 
-        5 : q5,
-        6 : q6,
-        7 : q7,
-        8 : q8,
+        5: q5,
+        6: q6,
+        7: q7,
+        8: q8,
 
         13: q13,
 
@@ -39,12 +40,12 @@ problemHandler = \
 
 
 def test():
-    print 'Testing All Problems'
+    print('Testing All Problems')
 
     failed_tests = []
     exceptions = []
 
-    for problem_number in problemHandler.iterkeys():
+    for problem_number in problemHandler:
         try:
             solve_problem(problem_number)
 
@@ -57,13 +58,13 @@ def test():
         failed_tests.sort()
         exceptions.sort()
 
-        print 'Failed Tests:: ' + ', '.join(failed_tests)
-        print
+        print('Failed Tests:: ' + ', '.join(failed_tests))
+        print()
         for case, exception in exceptions:
-            print ''.join(['%(case)s', '%(exception)s', '']) % locals()
+            print(''.join(['%(case)s', '%(exception)s', '']) % locals())
 
     else:
-        print 'Everything is fine!'
+        print('Everything is fine!')
 
 
 def solve_problem(index):
@@ -77,8 +78,8 @@ def solve_problem(index):
             'which is not the expected, %(answer)s' % locals()
 
     except KeyError:
-        print '\nThis problem has not been solved yet'
-        print 'Output [for problem %(index)s] is %(result)s\n' % locals()
+        print('\nThis problem has not been solved yet')
+        print('Output [for problem %(index)s] is %(result)s\n' % locals())
 
 
 def run():

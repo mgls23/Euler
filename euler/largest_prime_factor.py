@@ -1,4 +1,4 @@
-from core.util import prime
+from euler.util import prime
 
 
 def largest_prime_factor(number):

@@ -1,4 +1,4 @@
-from core.util import prime
+from euler.util import prime
 
 
 # Q7 :: 10001st prime

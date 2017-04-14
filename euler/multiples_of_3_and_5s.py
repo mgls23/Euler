@@ -1,4 +1,4 @@
-from core.util import maths
+from euler.util import maths
 
 
 def use_mathematical_simplification(x):

@@ -1,6 +1,6 @@
 import functools
 
-from core.util import prime
+from euler.util import prime
 
 
 def cumulative_lcm_in_prime_powers(n):
