@@ -14,8 +14,7 @@ class Tree:
         maximums = self.rows[-1]
         for row in reversed(self.rows[:-1]):
             for index, cost in enumerate(row):
-                maximums[index] = cost + max(maximums[index],
-                                             maximums[index + 1])
+                maximums[index] = cost + max(maximums[index], maximums[index + 1])
 
         return maximums[0]
 
@@ -63,5 +62,5 @@ def q67():
 if __name__ == '__main__':
     DATA_LOCATION = '../data/'
 
-    print q18()  # 1074
-    print q67()  # 7273
+    print(q18())  # 1074
+    print(q67())  # 7273

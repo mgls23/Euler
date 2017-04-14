@@ -1,35 +1,32 @@
-def digit_of_2_to_power_of(power):
-    """
-        1, 2, 4, 8, 16, 32, 64, 128, ...
+def power_digit_sum(power, starting_number=1, multiplier=2):
+    """ Finds the sum of the digits 
+    :power: int
+    :starting_number: int
+    :multiplier: int"""
+    assert power > 0, "Please provide a number bigger than 0 as the power"
 
+    decimal_digits = [starting_number]
+    for _ in range(power):
+        for index in range(len(decimal_digits)):
+            decimal_digits[index] *= multiplier
 
-            Args
-            ----
-                power
-
-            Returns
-            -------
-        """
-    assert power > 0, "Please provide a number bigger than 0 " \
-                      "so we can do some cool maths"
-
-    number_array_repr = [1]
-    for i in range(power):
-        for j in range(len(number_array_repr)):
-            number_array_repr[j] *= 2
-
-        for index in range(len(number_array_repr)):
-            while number_array_repr[index] >= 10:
-                number_array_repr[index] -= 10
+        for index in range(len(decimal_digits)):
+            while decimal_digits[index] >= 10:
+                decimal_digits[index] -= 10
                 try:
-                    number_array_repr[index + 1] += 1
+                    decimal_digits[index + 1] += 1
 
                 except IndexError:
-                    number_array_repr.append(1)
+                    decimal_digits.append(1)
 
-    return sum(number_array_repr)
+    decimal_digits.reverse()
+    return sum(decimal_digits)
 
 
 # Q16 :: Digit of 2^1000
 def q16():
-    return digit_of_2_to_power_of(1000)
+    return power_digit_sum(1000)
+
+
+if __name__ == '__main__':
+    print(q16())

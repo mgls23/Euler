@@ -14,7 +14,7 @@ def sum_square_difference(n):
         -------
 
     """
-    square_of_sum = ((n + 1) * n / 2) ** 2
+    square_of_sum = int((n + 1) * n / 2) ** 2
     sum_of_square = sum([i ** 2 for i in range(n + 1)])
     return square_of_sum - sum_of_square
 
@@ -25,4 +25,4 @@ def q6():
 
 
 if __name__ == '__main__':
-    print q6()
+    print(q6())

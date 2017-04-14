@@ -1,27 +1,33 @@
-class PrimeGenerator:
-    def __init__(self):
-        self._prime_entries = [2, 3]
+PRIME_ENTRIES = [2, 3]
 
-    def next(self):
-        candidate = self._prime_entries[-1] + 2
-        while True:
-            for prime_number in self._prime_entries:
-                if candidate % prime_number == 0:
-                    candidate += 2
-                    break
-            else:
-                self._prime_entries.append(candidate)
-                return candidate
 
-    def generate_to(self, n):
-        while self._prime_entries[-1] < n:
-            self.next()
+def iterator():
+    for prime_entry in PRIME_ENTRIES:
+        yield prime_entry
 
-        return self._prime_entries
 
-    def generate_nth(self, n):
-        a = n - len(self._prime_entries)
-        for _ in range(a + 1):
-            self.next()
+def _generate_next_prime():
+    candidate = PRIME_ENTRIES[-1] + 2
+    while True:
+        for prime_number in PRIME_ENTRIES:
+            if candidate % prime_number == 0:
+                candidate += 2
+                break
+        else:
+            PRIME_ENTRIES.append(candidate)
+            return candidate
 
-        return self._prime_entries[n - 1]
+
+def prime_numbers_smaller_than(number):
+    while PRIME_ENTRIES[-1] < number:
+        _generate_next_prime()
+
+    return PRIME_ENTRIES
+
+
+def nth_prime_number(n):
+    primes_to_generate = n - len(PRIME_ENTRIES)
+    for _ in range(primes_to_generate + 1):
+        _generate_next_prime()
+
+    return PRIME_ENTRIES[n - 1]

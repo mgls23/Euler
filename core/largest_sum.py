@@ -1,3 +1,4 @@
+# TODO :: Refactor
 def first_n_digits_of_sum(first_digits, numbers, desired_type=str):
     """
     Assumes that the lengh of numbers are equal
@@ -5,33 +6,32 @@ def first_n_digits_of_sum(first_digits, numbers, desired_type=str):
     :param first_digits:
     :param numbers:
     :param desired_type:
-    :return:
     """
     final_accumulated_in_reverse = []
     current_sum = 0
 
     for index in range(len(numbers[0]) - 1, -1, -1):
         for number in numbers:
-            print 'Before :: current_sum=%(current_sum)s' % locals()
-            print 'index  :: {}'.format(number[index])
+            print('Before :: current_sum=%(current_sum)s' % locals())
+            print('index  :: {}'.format(number[index]))
             current_sum += int(number[index])
-            print 'After  :: current_sum=%(current_sum)s' % locals()
+            print('After  :: current_sum=%(current_sum)s' % locals())
 
         if current_sum != 0:
             current_digit = current_sum % 10
-            print 'Before :: ' \
+            print('Before :: ' \
                   'current_digit=%(current_digit)s, ' \
-                  'current_sum=%(current_sum)s' % locals()
+                  'current_sum=%(current_sum)s' % locals())
             final_accumulated_in_reverse.append(str(current_digit))
 
         current_sum /= 10
-        print 'After  :: ' \
+        print('After  :: ' \
               'current_digit=%(current_digit)s, ' \
-              'current_sum=%(current_sum)s' % locals()
+              'current_sum=%(current_sum)s' % locals())
 
     remaining = list(str(current_sum))
-    print 'current_sum=%(current_sum)s, ' \
-          'remaining=%(remaining)s' % locals()
+    print('current_sum=%(current_sum)s, ' \
+          'remaining=%(remaining)s' % locals())
 
     if len(remaining) > 0 and current_sum > 0:
         remaining.reverse()
@@ -49,10 +49,10 @@ def q13():
             number.replace('\n', '')
             for number in numbers_file.readlines()
         ]
-        print len(numbers)
+        print(len(numbers))
 
         return first_n_digits_of_sum(10, numbers)
 
 
 if __name__ == '__main__':
-    print q13()
+    print(q13())

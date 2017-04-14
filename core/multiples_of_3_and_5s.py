@@ -26,4 +26,4 @@ def q1():
 
 
 if __name__ == '__main__':
-    print q1()
+    print(q1())
