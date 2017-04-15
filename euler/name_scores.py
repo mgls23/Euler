@@ -12,21 +12,3 @@ def calculate_score(string):
     """
     cumulative = sum([ord(character) for character in string])
     return cumulative - BASE_SCORES[len(string)]
-
-
-def q22():
-    names_text = open('../data/p022_names.txt', 'r').readlines()[0]
-
-    names = names_text.replace('"', '').split(',')
-    names.sort()
-
-    cumulative = sum(
-        coefficient * calculate_score(name)
-            for coefficient, name in enumerate(names, 1)
-    )
-
-    return cumulative
-
-
-if __name__ == '__main__':
-    print(q22())

@@ -1,5 +1,6 @@
 # TODO :: Refactor
 import argparse
+
 from euler.util.fibonacci import FibonacciIterator
 
 N = 'N'
@@ -72,24 +73,6 @@ def configure_parser_and_extract():
     return args.N[0]
 
 
-def q2():
-    upper_bound = 4000000
-
-    #
-    fib_generator = FibonacciIterator()
-    fib_generator.set_upper_bound(upper_bound)
-    even_sequence = [
-        (index, x)
-        for index, x in enumerate(fib_generator.sequence)
-        if x % 2 == 0
-    ]
-
-    #
-    fib_generator = N2FibonacciIterator()
-    fib_generator.set_upper_bound(upper_bound)
-    return sum(fib_generator.sequence)
-
-
 def run():
     # Configure Parser and extract upper bound we need
     upper_bound = configure_parser_and_extract()
@@ -110,8 +93,3 @@ def run():
 
     print(fib_generator.sequence)
     print(answer)
-
-
-if __name__ == '__main__':
-    print(q2())
-    run()

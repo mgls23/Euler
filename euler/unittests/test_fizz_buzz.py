@@ -1,6 +1,6 @@
 import unittest
 
-import main
+import test_all_solutions
 from euler.unittests import test_util
 from euler.util import maths
 
@@ -20,13 +20,13 @@ def generate_main_tests():
         2: 0,
         3: 3,
     }
-    test_util.create_individual_tests(TestMain, until_first_3, function=main.find_sum)
+    test_util.create_individual_tests(TestMain, until_first_3, function=test_all_solutions.find_sum)
 
     until_first_5 = {
         4: 3,
         5: 8,
     }
-    test_util.create_individual_tests(TestMain, until_first_5, function=main.find_sum)
+    test_util.create_individual_tests(TestMain, until_first_5, function=test_all_solutions.find_sum)
 
     until_second_5 = {
         6: 14,
@@ -35,7 +35,7 @@ def generate_main_tests():
         9: 23,
         10: 33,
     }
-    test_util.create_individual_tests(TestMain, until_second_5, function=main.find_sum)
+    test_util.create_individual_tests(TestMain, until_second_5, function=test_all_solutions.find_sum)
 
     until_15 = {
         11: 33,
@@ -44,7 +44,7 @@ def generate_main_tests():
         14: 45,
         15: 60,
     }
-    test_util.create_individual_tests(TestMain, until_15, function=main.find_sum)
+    test_util.create_individual_tests(TestMain, until_15, function=test_all_solutions.find_sum)
 
 
 def generate_fizz_buzz_tests():

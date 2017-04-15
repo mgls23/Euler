@@ -1,3 +1,5 @@
+# TODO :: Refactoring
+# TODO :: Refactor reading inputs to a separate module
 class Tree:
     def __init__(self, file_path):
         self.rows = []
@@ -25,7 +27,7 @@ class Tree:
 
     @staticmethod
     def find_max_digit():
-        # TODO (P5) :: Make this detect from self.rows
+        # COULD DO :: Make this detect from self.rows
         return 4
 
     def __str__(self):
@@ -42,25 +44,3 @@ class Tree:
 
 def pad_numbers(list_, max_digit):
     return (' ' * max_digit).join([str(element).zfill(max_digit) for element in list_])
-
-
-DATA_LOCATION = 'data/'
-
-
-def q18():
-    tree = Tree(DATA_LOCATION + 'p018_tree.txt')
-    maximum_path_sum = tree.find_maximum_path_sum()
-    return maximum_path_sum
-
-
-def q67():
-    tree = Tree(DATA_LOCATION + 'p067_triangle.txt')
-    maximum_path_sum = tree.find_maximum_path_sum()
-    return maximum_path_sum
-
-
-if __name__ == '__main__':
-    DATA_LOCATION = '../data/'
-
-    print(q18())  # 1074
-    print(q67())  # 7273

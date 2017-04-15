@@ -21,12 +21,3 @@ def power_digit_sum(power, starting_number=1, multiplier=2):
 
     decimal_digits.reverse()
     return sum(decimal_digits)
-
-
-# Q16 :: Digit of 2^1000
-def q16():
-    return power_digit_sum(1000)
-
-
-if __name__ == '__main__':
-    print(q16())

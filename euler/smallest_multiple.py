@@ -1,5 +1,4 @@
 import functools
-
 from euler.util import prime
 
 
@@ -76,9 +75,3 @@ def smallest_multiple_up_to(n):
     return multiply_out_numbers_in_powers(cumulative_lcm_in_prime_powers(n))
 
 
-def q5():
-    return smallest_multiple_up_to(20)
-
-
-if __name__ == '__main__':
-    print(q5())

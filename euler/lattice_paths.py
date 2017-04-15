@@ -1,4 +1,4 @@
-def q15(n=20):
+def lattice_paths(n):
     """ Triangle number with 'various degrees'
 
     Memory :: n
@@ -17,6 +17,3 @@ def q15(n=20):
 
     return initial_list[-1]
 
-
-if __name__ == '__main__':
-    print(q15())

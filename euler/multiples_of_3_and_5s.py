@@ -19,11 +19,3 @@ def infer_from_fizz_buzz(x):
 
     # Find the accumulative
     return sum(multiples)
-
-
-def q1():
-    return use_mathematical_simplification(999)
-
-
-if __name__ == '__main__':
-    print(q1())

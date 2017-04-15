@@ -22,12 +22,3 @@ def largest_prime_factor(number):
             prime._generate_next_prime()
 
     return max(prime_factors)
-
-
-# Q3 :: Largest Prime Factor of 600851475143
-def q3():
-    return largest_prime_factor(600851475143)
-
-
-if __name__ == '__main__':
-    print(q3())
