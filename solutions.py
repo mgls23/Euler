@@ -15,6 +15,7 @@ from euler.smallest_multiple import smallest_multiple_up_to
 from euler.sum_square_difference import sum_square_difference
 from euler.util import prime
 from euler.util.fibonacci import FibonacciIterator
+from euler.nth_digit_fibonacci import slow_attempt
 
 
 def q1():
@@ -115,10 +116,16 @@ def q22():
 
     cumulative = sum(
         coefficient * calculate_score(name)
-            for coefficient, name in enumerate(names, 1)
+        for coefficient, name in enumerate(names, 1)
     )
 
     return cumulative
+
+
+def q25():
+    digit = 1000
+    answer = slow_attempt(digit)
+    return answer
 
 
 def q67():
@@ -129,5 +136,5 @@ def q67():
 
 if __name__ == '__main__':
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
-    print(q13())
+    print(q25())
     pass
