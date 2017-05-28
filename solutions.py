@@ -128,6 +128,10 @@ def q24():
     return lexilogical_ordering(nth, zero_to)
 
 
+def q48():
+    return str(sum(map(lambda x: x ** x, range(1, 1000))))[-10:]
+
+
 def q67():
     tree = Tree('data/p067_triangle.txt')
     maximum_path_sum = tree.find_maximum_path_sum()
