@@ -18,12 +18,7 @@ def lexilogical_ordering(nth, zero_to):
     return ''.join(map(str, answer_digits))
 
 
-def q24():
-    nth = 1000000
-    zero_to = 9
-
-    return lexilogical_ordering(nth, zero_to)
-
-
 if __name__ == '__main__':
+    from solutions import q24
+
     print(q24())

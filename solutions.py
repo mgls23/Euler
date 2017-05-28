@@ -1,5 +1,4 @@
 import logging
-
 import sys
 
 from euler.even_fibonacci import N2FibonacciIterator
@@ -7,6 +6,7 @@ from euler.largest_prime_factor import largest_prime_factor
 from euler.largest_product_in_a_series import adjacent_multiplicand
 from euler.largest_sum import first_n_digits_of_sum
 from euler.lattice_paths import lattice_paths
+from euler.lexographical_permutations import lexilogical_ordering
 from euler.maximum_path_sum import Tree
 from euler.multiples_of_3_and_5s import use_mathematical_simplification
 from euler.name_scores import calculate_score
@@ -115,10 +115,17 @@ def q22():
 
     cumulative = sum(
         coefficient * calculate_score(name)
-            for coefficient, name in enumerate(names, 1)
+        for coefficient, name in enumerate(names, 1)
     )
 
     return cumulative
+
+
+def q24():
+    nth = 1000000
+    zero_to = 9
+
+    return lexilogical_ordering(nth, zero_to)
 
 
 def q67():
