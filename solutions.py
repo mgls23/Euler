@@ -11,6 +11,7 @@ from euler.maximum_path_sum import Tree
 from euler.multiples_of_3_and_5s import use_mathematical_simplification
 from euler.name_scores import calculate_score
 from euler.power_digit_sum import power_digit_sum
+from euler.reciprocal_cycles import string_division
 from euler.smallest_multiple import smallest_multiple_up_to
 from euler.sum_square_difference import sum_square_difference
 from euler.util import prime
@@ -126,6 +127,12 @@ def q24():
     zero_to = 9
 
     return lexilogical_ordering(nth, zero_to)
+
+
+def q26():
+    calculated = map(string_division, range(2, 1000 + 1))
+    n, _ = max(enumerate(calculated, 2), key=lambda x: x[1])
+    return n
 
 
 def q48():
