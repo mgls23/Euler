@@ -108,6 +108,11 @@ def q18():
     return maximum_path_sum
 
 
+def q20():
+    import math
+    return sum(map(int, str(math.factorial(100))))
+
+
 def q22():
     names_text = open('data/p022_names.txt', 'r').readlines()[0]
 
