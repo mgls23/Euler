@@ -35,7 +35,7 @@ ANSWERS = {
 }
 
 FLAGGED = set()
-IGNORE_FLAG = set(q.__name__.capitalize() for q in (q26,))
+IGNORE_FLAG = set(q.__name__.capitalize() for q in (q14, q26,))
 
 for question, answer in ANSWERS.items():
     question_name = question.__name__.capitalize()
@@ -47,7 +47,7 @@ for question, answer in ANSWERS.items():
     assert solution == answer, "{}::{} != {}".format(question_name, solution, answer)
 
     time_taken = (time.time() - start_time) * 1000
-    print('Done: this took {}ms\n'.format(time_taken))
+    print('Done: this took {:4.2f}ms\n'.format(time_taken))
 
     if time_taken > 500:
         FLAGGED.add((question_name, time_taken))
