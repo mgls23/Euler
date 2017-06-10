@@ -8,18 +8,23 @@ from euler.largest_sum import first_n_digits_of_sum
 from euler.lattice_paths import lattice_paths
 from euler.lexographical_permutations import lexilogical_ordering
 from euler.maximum_path_sum import Tree
-from euler.multiples_of_3_and_5s import use_mathematical_simplification
 from euler.name_scores import calculate_score
 from euler.power_digit_sum import power_digit_sum
 from euler.reciprocal_cycles import string_division
 from euler.smallest_multiple import smallest_multiple_up_to
 from euler.sum_square_difference import sum_square_difference
-from euler.util import prime
+from euler.util import maths, prime
 from euler.util.fibonacci import FibonacciIterator
 
 
 def q1():
-    return use_mathematical_simplification(999)
+    upper_bound = 999
+
+    sum3 = maths.guassian_sum(upper_bound, 3)
+    sum5 = maths.guassian_sum(upper_bound, 5)
+    sum15 = maths.guassian_sum(upper_bound, 15)
+
+    return sum3 + sum5 - sum15
 
 
 def q2():
@@ -151,4 +156,3 @@ def q67():
 if __name__ == '__main__':
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
     print(q13())
-

@@ -1,5 +1,5 @@
 import functools
-from euler.util import prime
+from euler.util.prime import prime_numbers_smaller_than
 
 
 def cumulative_lcm_in_prime_powers(n):
@@ -11,7 +11,7 @@ def cumulative_lcm_in_prime_powers(n):
         return {}
 
     max_prime_factors = {}
-    primes = prime.generate_to(n)
+    primes = prime_numbers_smaller_than(n)
 
     for number in range(primes[0], n):
         prime_powers = decompose_to_prime_powers(number, primes)
