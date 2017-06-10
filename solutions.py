@@ -151,5 +151,4 @@ def q67():
 if __name__ == '__main__':
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
     print(q13())
-    # assert q22() == 871198282
-    # assert q26() == 26
+

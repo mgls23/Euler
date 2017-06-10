@@ -1,3 +1,6 @@
+import math
+
+
 def fizz_buzz(x, lower_bound=2, fizz=3, buzz=5):
     """ Finds all multiples of 3s and 5s until the given number
 
@@ -22,6 +25,11 @@ def guassian_sum(upper_bound, multiplicand):
         = 3 x 1 + 3 x 2 + 3 x 3 + ... 3 x n
         = 3 x (1 + 2 + 3 + ... n)
         = 3 x (n + 1) x n/2
+        = m * (n + 1) x n/2
+         [m being the multiplicand]
+
+    Do note that n will be the highest multiple of multiplicand smaller than upper bound
+        :: n = math.floor(upper_bound / multiplicand
 
     :param upper_bound :int
     :param multiplicand :int
@@ -31,8 +39,5 @@ def guassian_sum(upper_bound, multiplicand):
         return 0
 
     #
-    modulo = upper_bound / multiplicand
-    total_multiplier = (1 + modulo) * modulo / 2
-    multiplicative_sum = total_multiplier * multiplicand
-
-    return multiplicative_sum
+    n = math.floor(upper_bound / multiplicand)
+    return multiplicand * (n + 1) * n / 2
