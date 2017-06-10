@@ -28,11 +28,6 @@ def q2():
     #
     fib_generator = FibonacciIterator()
     fib_generator.set_upper_bound(upper_bound)
-    even_sequence = [
-        (index, x)
-        for index, x in enumerate(fib_generator.sequence)
-        if x % 2 == 0
-    ]
 
     #
     fib_generator = N2FibonacciIterator()
@@ -114,15 +109,14 @@ def q20():
 
 
 def q22():
-    names_text = open('data/p022_names.txt', 'r').readlines()[0]
+    with open('data/p022_names.txt', 'r') as file:
+        names_text = file.readlines()[0]
 
-    names = names_text.replace('"', '').split(',')
-    names.sort()
+        names = names_text.replace('"', '').split(',')
+        names.sort()
 
-    cumulative = sum(
-        coefficient * calculate_score(name)
-        for coefficient, name in enumerate(names, 1)
-    )
+        name_scores = map(calculate_score, names)
+        cumulative = sum(map(lambda x: x[0] * x[1], enumerate(name_scores, 1)))
 
     return cumulative
 
@@ -135,6 +129,10 @@ def q24():
 
 
 def q26():
+    """ Q26 :: Reciprocal cycles [https://projecteuler.net/problem=26]
+
+    Find value of d for which 1/d contains the longest recurring cycle
+        in its decimal fraction part"""
     calculated = map(string_division, range(2, 1000 + 1))
     n, _ = max(enumerate(calculated, 2), key=lambda x: x[1])
     return n
@@ -153,4 +151,5 @@ def q67():
 if __name__ == '__main__':
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
     print(q13())
-    pass
+    # assert q22() == 871198282
+    # assert q26() == 26

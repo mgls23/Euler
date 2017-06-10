@@ -1,6 +1,3 @@
-from solutions import q26
-
-
 def string_division(divisor, dividend=1):
     dividends = []
     quotients = []
@@ -25,4 +22,6 @@ def string_division(divisor, dividend=1):
 
 
 if __name__ == '__main__':
+    from solutions import q26
+
     print(q26())

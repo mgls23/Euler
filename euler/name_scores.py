@@ -1,7 +1,7 @@
 MAX_LENGTH = 12
 
 BASE_SCORE = ord('A') - 1
-BASE_SCORES = [BASE_SCORE * index for index in range(MAX_LENGTH)]
+BASE_SCORES = list(map(lambda x: x * BASE_SCORE, range(MAX_LENGTH)))
 
 
 def calculate_score(string):
@@ -10,5 +10,5 @@ def calculate_score(string):
 
     a=1, b=2, z=26
     """
-    cumulative = sum([ord(character) for character in string])
+    cumulative = sum(map(ord, string))
     return cumulative - BASE_SCORES[len(string)]
