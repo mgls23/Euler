@@ -83,6 +83,11 @@ def q8():
 
 
 def q13():
+    """ Q13 :: Large Sum [https://projecteuler.net/problem=13]
+    
+    Work out the first ten digits of the sum of the following 
+        one-hundred 50-digit numbers.
+    """
     with open('data/p013_numbers.txt') as numbers_file:
         numbers = [
             number.replace('\n', '')
@@ -109,6 +114,12 @@ def q18():
 
 
 def q20():
+    """ Q20 :: Factorial digit sum [https://projecteuler.net/problem=20]
+    
+    Find the sum of the digits in the number 100!
+        For example, 10! = 10 × 9 × ... × 3 × 2 × 1 = 3628800,
+        The sum of the digits for 10! = 3 + 6 + 2 + 8 + 8 + 0 + 0 = 27.
+    """
     import math
     return sum(map(int, str(math.factorial(100))))
 
@@ -137,13 +148,18 @@ def q26():
     """ Q26 :: Reciprocal cycles [https://projecteuler.net/problem=26]
 
     Find value of d for which 1/d contains the longest recurring cycle
-        in its decimal fraction part"""
+        in its decimal fraction part
+    """
     calculated = map(string_division, range(2, 1000 + 1))
     n, _ = max(enumerate(calculated, 2), key=lambda x: x[1])
     return n
 
 
 def q48():
+    """ Q48 :: Self Powers [https://projecteuler.net/problem=48]
+    
+    Find the last ten digits of the series, 1^1 + 2^2 + 3^3 + ... + 1000^1000
+    """
     return str(sum(map(lambda x: x ** x, range(1, 1000))))[-10:]
 
 
