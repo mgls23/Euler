@@ -34,7 +34,8 @@ ANSWERS = {
     q67: 7273,
 }
 
-FLAGGED = []
+FLAGGED = set()
+IGNORE_FLAG = set(q.__name__.capitalize() for q in (q26,))
 
 for question, answer in ANSWERS.items():
     question_name = question.__name__.capitalize()
@@ -49,7 +50,9 @@ for question, answer in ANSWERS.items():
     print('Done: this took {}ms\n'.format(time_taken))
 
     if time_taken > 500:
-        FLAGGED.append((question_name, time_taken))
+        FLAGGED.add((question_name, time_taken))
 
 print('FLAGGED')
-for flagged in FLAGGED: print(flagged)
+for flagged in FLAGGED:
+    if flagged[0] not in IGNORE_FLAG:
+        print(flagged)
