@@ -103,10 +103,6 @@ def q14():
     """ Q14 :: Longest Collatz sequence [https://projecteuler.net/problem=14]
 
     Which starting number, under one million, produces the longest chain?"""
-    # Mapping makes it about 0.2s slower: sticking with the for-loop
-    # collatz_lengths = map(collatz_length, range(1, 1000000))
-    # number, _ = max(enumerate(collatz_lengths, 1), key=lambda x: x[1])
-
     max_collatz_len = 0
     max_collatz_number = 0
 
