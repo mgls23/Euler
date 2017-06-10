@@ -7,6 +7,7 @@ from euler.largest_product_in_a_series import adjacent_multiplicand
 from euler.largest_sum import first_n_digits_of_sum
 from euler.lattice_paths import lattice_paths
 from euler.lexographical_permutations import lexilogical_ordering
+from euler.longest_collatz_sequence import collatz_length
 from euler.maximum_path_sum import Tree
 from euler.name_scores import calculate_score
 from euler.power_digit_sum import power_digit_sum
@@ -98,6 +99,26 @@ def q13():
         return first_n_digits_of_sum(10, numbers)
 
 
+def q14():
+    """ Q14 :: Longest Collatz sequence [https://projecteuler.net/problem=14]
+
+    Which starting number, under one million, produces the longest chain?"""
+    # Mapping makes it about 0.2s slower: sticking with the for-loop
+    # collatz_lengths = map(collatz_length, range(1, 1000000))
+    # number, _ = max(enumerate(collatz_lengths, 1), key=lambda x: x[1])
+
+    max_collatz_len = 0
+    max_collatz_number = 0
+
+    for number in range(1, 1000000):
+        collatz = collatz_length(number)
+        if max_collatz_len < collatz:
+            max_collatz_len = collatz
+            max_collatz_number = number
+
+    return max_collatz_number
+
+
 def q15():
     return lattice_paths(20)
 
@@ -170,5 +191,12 @@ def q67():
 
 
 if __name__ == '__main__':
+    import time
+
+    start_time = time.time()
+
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
-    print(q13())
+    print(q14())
+
+    time_taken = (time.time() - start_time) * 1000
+    print('Done: this took {}ms\n'.format(time_taken))
