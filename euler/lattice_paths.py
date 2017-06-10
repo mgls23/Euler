@@ -17,3 +17,8 @@ def lattice_paths(n):
 
     return initial_list[-1]
 
+
+if __name__ == '__main__':
+    from solutions import q15
+
+    print(q15())
