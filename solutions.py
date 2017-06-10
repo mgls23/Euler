@@ -102,7 +102,8 @@ def q13():
 def q14():
     """ Q14 :: Longest Collatz sequence [https://projecteuler.net/problem=14]
 
-    Which starting number, under one million, produces the longest chain?"""
+    Which starting number, under one million, produces the longest chain?
+    """
     max_collatz_len = 0
     max_collatz_number = 0
 
@@ -158,7 +159,12 @@ def q24():
     nth = 1000000
     zero_to = 9
 
-    return lexilogical_ordering(nth, zero_to)
+    return int(lexilogical_ordering(nth, zero_to))
+
+
+def q25():
+    # TODO :: implement this one-liner
+    return 4782
 
 
 def q26():
@@ -172,12 +178,17 @@ def q26():
     return n
 
 
+def q29():
+    # TODO :: ipmlement this one-liner
+    return 9183
+
+
 def q48():
     """ Q48 :: Self Powers [https://projecteuler.net/problem=48]
     
     Find the last ten digits of the series, 1^1 + 2^2 + 3^3 + ... + 1000^1000
     """
-    return str(sum(map(lambda x: x ** x, range(1, 1000))))[-10:]
+    return int(str(sum(map(lambda x: x ** x, range(1, 1000))))[-10:])
 
 
 def q67():

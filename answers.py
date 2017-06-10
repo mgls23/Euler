@@ -1,9 +1,12 @@
+import logging
+import sys
 import time
 
 from solutions import (
     q1, q13, q14, q15, q16, q18,
-    q22, q26,
+    q20, q22, q24, q25, q26, q29,
     q3,
+    q48,
     q5,
     q6, q67,
     q7,
@@ -27,32 +30,43 @@ ANSWERS = {
 
     q18: 1074,
 
+    q20: 648,
+
     q22: 871198282,
 
+    q24: 2783915460,
+    q25: 4782,
     q26: 983,
+
+    q29: 9183,
+
+    q48: 9110846700,
 
     q67: 7273,
 }
+
+logging.basicConfig(format="[%(asctime)s] %(levelname)6s   %(message)s",
+    stream=sys.stderr, level=logging.DEBUG)
 
 FLAGGED = set()
 IGNORE_FLAG = set(q.__name__.capitalize() for q in (q14, q26,))
 
 for question, answer in ANSWERS.items():
     question_name = question.__name__.capitalize()
-    print('Solving {}'.format(question_name))
-
     start_time = time.time()
 
     solution = question()
     assert solution == answer, "{}::{} != {}".format(question_name, solution, answer)
 
     time_taken = (time.time() - start_time) * 1000
-    print('Done: this took {:4.2f}ms\n'.format(time_taken))
+    logging.debug('Solved {} in {:4.2f}ms'.format(question_name, time_taken))
 
     if time_taken > 500:
         FLAGGED.add((question_name, time_taken))
 
-print('FLAGGED')
+logging.info('{} Problems solved'.format(len(ANSWERS)))
+
+logging.warning('FLAGGED')
 for flagged in FLAGGED:
     if flagged[0] not in IGNORE_FLAG:
-        print(flagged)
+        logging.warning(flagged)
