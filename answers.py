@@ -3,7 +3,7 @@ import sys
 import time
 
 from solutions import (
-    q1, q13, q14, q15, q16, q18,
+    q1, q10, q13, q14, q15, q16, q18,
     q20, q22, q24, q25, q26, q29,
     q3,
     q4, q48,
@@ -22,6 +22,8 @@ ANSWERS = {
     q6: 25164150,
     q7: 104743,
     q8: 23514624000,
+
+    q10: 142913828922,
 
     q13: 5537376230,
     q14: 837799,
