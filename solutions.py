@@ -2,6 +2,7 @@ import logging
 import sys
 
 from euler.even_fibonacci import N2FibonacciIterator
+from euler.largest_palindrome_product import find_largest_palindrome
 from euler.largest_prime_factor import largest_prime_factor
 from euler.largest_product_in_a_series import adjacent_multiplicand
 from euler.largest_sum import first_n_digits_of_sum
@@ -44,6 +45,10 @@ def q2():
 def q3():
     # Q3 :: Largest Prime Factor of 600851475143
     return largest_prime_factor(600851475143)
+
+
+def q4():
+    return find_largest_palindrome(3)
 
 
 def q5():
