@@ -26,7 +26,7 @@ def generate_to_sie(upper_bound):
 
     considered = [True] * upper_bound
 
-    for number in range(upper_bound):
+    for number in range(2, upper_bound):
         if considered[number]:
             PRIME_ENTRIES.append(number)
 
