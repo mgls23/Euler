@@ -104,7 +104,6 @@ def q13():
             number.replace('\n', '')
             for number in numbers_file.readlines()
         ]
-        logging.debug(len(numbers))
 
         return first_n_digits_of_sum(10, numbers)
 
