@@ -32,22 +32,6 @@ def is_palindrome(number):
     return True
 
 
-# def test_is_palindrome():
-#     is_palindrome_check = {
-#         1: True,
-#         10: False,
-#         11: True,
-#         121: True,
-#         1231: False,
-#     }
-#
-#     for number, is_palindrome_ in is_palindrome_check.items():
-#         assert is_palindrome_ == is_palindrome(number), \
-#             "{} is not {}".format(number, is_palindrome_)
-
-
 if __name__ == '__main__':
-    # test_is_palindrome()
     # print(largest_palindrome(3))
     print(find_largest_palindrome(3))
-#
