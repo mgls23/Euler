@@ -6,7 +6,7 @@ from solutions import (
     q1, q13, q14, q15, q16, q18,
     q20, q22, q24, q25, q26, q29,
     q3,
-    q48,
+    q4, q48,
     q5,
     q6, q67,
     q7,
@@ -17,7 +17,7 @@ ANSWERS = {
     q1: 233168,
     # q2: 4613732,
     q3: 6857,
-
+    q4: 906609,
     q5: 232792560,
     q6: 25164150,
     q7: 104743,
@@ -46,7 +46,7 @@ ANSWERS = {
 }
 
 logging.basicConfig(format="[%(asctime)s] %(levelname)6s   %(message)s",
-    stream=sys.stderr, level=logging.DEBUG)
+                    stream=sys.stderr, level=logging.DEBUG)
 
 FLAGGED = set()
 IGNORE_FLAG = set(q.__name__.capitalize() for q in (q14, q26,))
