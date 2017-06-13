@@ -1,7 +1,7 @@
 import unittest
 
-from core.util.even_fibonacci import *
-
+from euler.util.fibonacci import FibonacciIterator
+from euler.even_fibonacci import NFibonacciIterator
 
 class TestFibonacciIterator(unittest.TestCase):
     pass
@@ -24,7 +24,7 @@ def create_fibonacci_tests():
 
     for index in range(len(correct_sequence)):
         correct_value = correct_sequence[index]
-        test_value = iterator.calculate_nth_fibonacci(index + 1)
+        test_value = iterator.calculate_nth(index + 1)
 
         test_case = create_individual_test(correct_value, test_value)
         test_name = 'test_fibonacci_{}'.format(index)
@@ -33,11 +33,11 @@ def create_fibonacci_tests():
 
 def create_even_fibonacci_tests():
     correct_sequence = [2, 5, 13, 34, 89]
-    iterator = NFibonacciIterator(N=2)
+    iterator = NFibonacciIterator(every_nth=2)
 
     for index in range(len(correct_sequence)):
         correct_value = correct_sequence[index]
-        test_value = iterator.calculate_nth_fibonacci(index + 1)
+        test_value = iterator.calculate_nth(index + 1)
 
         test_case = create_individual_test(correct_value, test_value)
         test_name = 'test_fibonacci_{}'.format(index)
