@@ -88,10 +88,15 @@ def q8():
     )
 
 
+def q10():
+    primes = prime.generate_to_sie(2000000)
+    return sum(primes)
+
+
 def q13():
     """ Q13 :: Large Sum [https://projecteuler.net/problem=13]
-    
-    Work out the first ten digits of the sum of the following 
+
+    Work out the first ten digits of the sum of the following
         one-hundred 50-digit numbers.
     """
     with open('data/p013_numbers.txt') as numbers_file:
@@ -138,7 +143,7 @@ def q18():
 
 def q20():
     """ Q20 :: Factorial digit sum [https://projecteuler.net/problem=20]
-    
+
     Find the sum of the digits in the number 100!
         For example, 10! = 10 × 9 × ... × 3 × 2 × 1 = 3628800,
         The sum of the digits for 10! = 3 + 6 + 2 + 8 + 8 + 0 + 0 = 27.
@@ -190,7 +195,7 @@ def q29():
 
 def q48():
     """ Q48 :: Self Powers [https://projecteuler.net/problem=48]
-    
+
     Find the last ten digits of the series, 1^1 + 2^2 + 3^3 + ... + 1000^1000
     """
     return int(str(sum(map(lambda x: x ** x, range(1, 1000))))[-10:])

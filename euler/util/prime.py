@@ -18,6 +18,24 @@ def _generate_next_prime():
             return candidate
 
 
+def generate_to_sie(upper_bound):
+    """ Prime numbers generation using Sieve of Eratosthenes
+    https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes"""
+    global PRIME_ENTRIES
+    PRIME_ENTRIES = []
+
+    considered = [True] * upper_bound
+
+    for number in range(upper_bound):
+        if considered[number]:
+            PRIME_ENTRIES.append(number)
+
+            considered[number * 2::number] = \
+                [False] * (((upper_bound - 1) // number) - 1)
+
+    return PRIME_ENTRIES
+
+
 def prime_numbers_smaller_than(number):
     while PRIME_ENTRIES[-1] < number:
         _generate_next_prime()
