@@ -1,6 +1,9 @@
 import logging
 import sys
 
+from numpy import product
+
+from euler.champernownes_constant import champernownes_constant
 from euler.even_fibonacci import N2FibonacciIterator
 from euler.largest_palindrome_product import find_largest_palindrome
 from euler.largest_prime_factor import largest_prime_factor
@@ -202,6 +205,10 @@ def q26():
 def q29():
     # TODO :: ipmlement this one-liner
     return 9183
+
+
+def q40():
+    return product([champernownes_constant(10 ** power) for power in range(7)])
 
 
 def q48():
