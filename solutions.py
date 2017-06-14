@@ -88,6 +88,18 @@ def q8():
     )
 
 
+def q9():
+    upper_bound = 1000
+    for a in range(upper_bound // 2):
+        for b in range(a):
+            c = upper_bound - a - b
+
+            if a * a + b * b == c * c:
+                return a * b * c
+
+    raise Exception('NOTHING_FOUND')
+
+
 def q10():
     primes = prime.generate_to_sie(2000000)
     return sum(primes)
