@@ -4,7 +4,7 @@ import time
 
 from solutions import (
     q1, q10, q13, q14, q15, q16, q18,
-    q20, q22, q24, q25, q26, q29,
+    q20, q22, q24, q25, q26, q28, q29,
     q3,
     q4, q48,
     q5,
@@ -41,6 +41,7 @@ ANSWERS = {
     q25: 4782,
     q26: 983,
 
+    q28: 669171001,
     q29: 9183,
 
     q40: 210,

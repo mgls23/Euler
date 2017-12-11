@@ -1,6 +1,7 @@
 import logging
 import sys
 
+import math
 from numpy import product
 
 from euler.champernownes_constant import champernownes_constant
@@ -202,8 +203,20 @@ def q26():
     return n
 
 
+def q28():
+    """ Q28 :: Number spiral diagonals [https://projecteuler.net/problem=28]
+
+    What is the sum of the numbers on the diagonals in a 1001 by 1001 spiral?
+    """
+    input_ = 1001
+    n = int(math.floor(input_ / 2))
+
+    answer = int(((16 * (n ** 3) + 30 * (n ** 2) + 26 * n) / 3) + 1)
+    return answer
+
+
 def q29():
-    # TODO :: ipmlement this one-liner
+    # TODO :: implement this one-liner
     return 9183
 
 
@@ -231,7 +244,7 @@ if __name__ == '__main__':
     start_time = time.time()
 
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
-    print(q14())
+    print(q28())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
