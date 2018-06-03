@@ -18,7 +18,7 @@ def find_max(list_, w=4):
         if value > last:
             if s < w:
                 if s == 0:
-                    max_ = (max_ // last) * value
+                    max_ = (max_ // last) * value if last else sigma(list_, s, s + w)
                 else:
                     left = sigma(list_, i - w - s, i - w + 1)
                     right = sigma(list_, i - s, i + 1)
