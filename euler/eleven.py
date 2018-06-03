@@ -36,6 +36,9 @@ def find_max(list_, w=4):
                 else:
                     s += 1
 
+        else:
+            s += 1
+
         last = list_[i - w + 1]
 
     return max_
