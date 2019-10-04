@@ -1,0 +1,61 @@
+import logging
+
+
+def stairs(number):
+    print('Permutations')
+    for i in range(number):
+        print(f'{i}: {_stairs(i)}')
+
+
+def _stairs(number):
+    if number < 0: return 0
+    if number == 0: return 1
+
+    return _stairs(number - 1) + _stairs(number - 2) + _stairs(number - 3)
+
+
+RESULTS = {}
+
+
+def _permutations(number, coins_available, paths=None):
+    if paths is None: paths = [[]]
+
+    if number < 0: return False, None
+    if number == 0: return True, []
+    if number in RESULTS: return True, RESULTS[number]
+
+    result = []
+    for coin in coins_available:
+        valid, path_generated = _permutations(number - coin, coins_available, paths)
+        if not valid: break
+        for path in path_generated: result.append(path + [coin])
+        if not path_generated: result.append([coin])
+
+    logging.info(f'Finished {number}')
+    RESULTS[number] = result
+    return True, result
+
+
+# noinspection PyDefaultArgument
+def combinations(number, coins_available=[1, 2, 5, 10, 20, 50, 100, 200]):
+    coins_available.sort()
+    _, paths = _permutations(number, coins_available)
+
+    sets = set()
+
+    # print(f'Number={number}')
+    for path in paths:
+        if path:
+            print(f'Original={path}')
+            path.sort()
+            sets.add(tuple(path))
+
+    return len(sets)
+
+
+def q31(number, **kwargs):
+    print('Combinations')
+    print(f'{number}: {combinations(number, **kwargs)}')
+
+
+q31(25)
