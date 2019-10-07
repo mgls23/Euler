@@ -1,14 +1,24 @@
 from enum import Enum
+from itertools import groupby
 
 
 class ShorthandEnum(Enum):
     @classmethod
-    def from_string(cls, string_):
+    def match_by_value(cls, value):
         for enum_entry in cls:
-            if enum_entry.name[0] == string_[0]:
+            if enum_entry.value == value:
                 return enum_entry
 
-        raise Exception(f'No match for {string_} in class={cls} found')
+        raise Exception(f'No match for {value} in class={cls} found')
+
+    @classmethod
+    def match_by_first_name(cls, string_):
+        matches = []
+        for enum_entry in cls:
+            if enum_entry.name[0] == string_:
+                matches.append(enum_entry)
+
+        return matches[-1]
 
 
 class HandValue(ShorthandEnum):
@@ -29,9 +39,12 @@ class HandValue(ShorthandEnum):
     @classmethod
     def from_string(cls, string_):
         try:
-            return cls[int(string_)]
+            return cls.match_by_value(int(string_))
         except ValueError as e:
-            return ShorthandEnum.from_string(string_)
+            return cls.match_by_first_name(string_)
+
+    def numerical_value(self):
+        return self.value
 
 
 class Suit(ShorthandEnum):
@@ -46,13 +59,13 @@ class Card:
         self.value = value
         self.suit = suit
 
-        for k, v in kwargs: setattr(self, k, v)
+        for k, v in kwargs.items(): setattr(self, k, v)
 
     @classmethod
     def from_string(cls, string_):
         hand_value = HandValue.from_string(string_[0])
-        suit = Suit.from_string(string_[1])
-        return cls(suit, hand_value, debug_input=string_)
+        suit = Suit.match_by_first_name(string_[1])
+        return cls(hand_value, suit, debug_input=string_)
 
     def __str__(self):
         return f'Value={self.value}, Suit={self.suit}'
@@ -74,13 +87,13 @@ class Hand:
         for card in self.cards: card.debug_validate()
 
     def solve(self):
-        self.cards.sort(key=lambda card: card.numerical_value())
+        self.cards.sort(key=HandValue.numerical_value)
+        groups = groupby(self.cards, key=HandValue.numerical_value)
 
         is_straight = True
         first = self.cards[0].numerical_value()
         for offset, card in enumerate(self.cards[1:], 1):
             is_straight = is_straight and card.numerical_value() + offset == first
-
 
 
 class PokerGame:
@@ -117,8 +130,11 @@ class PokerGame:
 def q54():
     number_of_times_player_1_wins = 0
 
-    with open('') as input_file:
+    with open('../data/p054_poker.txt') as input_file:
         for line in input_file:
-            game = PokerGame.from_string(line)
+            game = PokerGame.from_string(line.strip('\n'))
             game.solve(show_workings=True)
             number_of_times_player_1_wins += game.has_player_1_won() and 1 or 0
+
+
+q54()
