@@ -1,6 +1,3 @@
-from euler.util.multiplications import decompose_to_prime_powers, multiply, gcd_powers, multiply_out_numbers_in_powers
-
-
 def generate_s():
     answer = set()
     for a in range(1, 10):
@@ -25,21 +22,3 @@ def generate_s():
                                     answer.add((original, denominator))
 
     return answer
-
-
-def q33():
-    answers = generate_s()
-    # print(answers)
-
-    top_decomposed, bottom_composed = {}, {}
-    for a, b in answers:
-        top, bottom = min(a, b), max(a, b)
-
-        top_decomposed = multiply(top_decomposed, decompose_to_prime_powers(top))
-        bottom_composed = multiply(bottom_composed, decompose_to_prime_powers(bottom))
-
-    gcd = gcd_powers(top_decomposed, bottom_composed)
-    return multiply_out_numbers_in_powers(bottom_composed) / multiply_out_numbers_in_powers(gcd)
-
-
-print(q33())

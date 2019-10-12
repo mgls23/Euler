@@ -35,15 +35,6 @@ def multiply(*prime_powers):
     return multiplied
 
 
-def multiply(*prime_powers):
-    multiplied = {}
-    for prime_power in prime_powers:
-        for prime, power in prime_power.items():
-            multiplied[prime] = multiplied.get(prime, 0) + power
-
-    return multiplied
-
-
 def decompose_to_prime_powers(number, primes=None):
     """ Decomposes a given number into a set of prime number paired with
     powers which multiplied out, gives the original number

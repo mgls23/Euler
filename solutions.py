@@ -5,6 +5,9 @@ import math
 from numpy import product
 
 from euler.champernownes_constant import champernownes_constant
+from euler.coin_sums import combinations_debug, coin_sums
+from euler.digit_cancelling_fractions import generate_s
+from euler.digit_factorials import digit_factorials
 from euler.even_fibonacci import N2FibonacciIterator
 from euler.largest_palindrome_product import find_largest_palindrome
 from euler.largest_prime_factor import largest_prime_factor
@@ -21,6 +24,7 @@ from euler.smallest_multiple import smallest_multiple_up_to
 from euler.sum_square_difference import sum_square_difference
 from euler.util import maths, prime
 from euler.util.fibonacci import FibonacciIterator
+from euler.util.multiplications import multiply, decompose_to_prime_powers, gcd_powers, multiply_out_numbers_in_powers
 
 
 def q1():
@@ -218,6 +222,30 @@ def q28():
 def q29():
     # TODO :: implement this one-liner
     return 9183
+
+
+# noinspection PyDefaultArgument
+def q31():
+    return coin_sums(coin_total=200, coins_available=[1, 2, 5, 10, 20, 50, 100, 200])
+
+
+def q33():
+    answers = generate_s()
+    # print(answers)
+
+    top_decomposed, bottom_composed = {}, {}
+    for a, b in answers:
+        top, bottom = min(a, b), max(a, b)
+
+        top_decomposed = multiply(top_decomposed, decompose_to_prime_powers(top))
+        bottom_composed = multiply(bottom_composed, decompose_to_prime_powers(bottom))
+
+    gcd = gcd_powers(top_decomposed, bottom_composed)
+    return multiply_out_numbers_in_powers(bottom_composed) / multiply_out_numbers_in_powers(gcd)
+
+
+def q34():
+    return digit_factorials()
 
 
 def q40():

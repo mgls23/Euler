@@ -79,11 +79,10 @@ def better(number, coins, max_coin=None):
 
 
 # noinspection PyDefaultArgument
-def combinations(number, coins_available):
-    _, paths = _permutations(number, sorted(coins_available))
+def coin_sums(coin_total, coins_available):
+    _, paths = better(coin_total, sorted(coins_available))
 
     unique_combinations = set(tuple(sorted(path)) for path in paths)
-    # for path in sorted(unique_combinations): print(path)
 
     return len(unique_combinations)
 
@@ -95,15 +94,3 @@ def combinations_debug(number, coins_available, reverse=True):
     for path in sorted(unique_combinations, reverse=reverse): print(path)
 
     return len(unique_combinations), sorted(unique_combinations, reverse=reverse)
-
-
-# noinspection PyDefaultArgument
-def q31(number=200, coins_available=[1, 2, 5, 10, 20, 50, 100, 200]):
-    return combinations_debug(number, coins_available)
-
-
-# for i in range(21):
-#     print(f'{i}: {q31(number=i)}')
-
-i = 200
-print(f'{i}: {q31(number=i)}')
