@@ -1,4 +1,5 @@
 import functools
+
 from euler.util.prime import prime_numbers_smaller_than
 
 
@@ -23,7 +24,7 @@ def cumulative_lcm_in_prime_powers(n):
     return max_prime_factors
 
 
-def decompose_to_prime_powers(number, primes):
+def decompose_to_prime_powers(number, primes=None):
     """ Decomposes a given number into a set of prime number paired with
     powers which multiplied out, gives the original number
 
@@ -45,15 +46,12 @@ def decompose_to_prime_powers(number, primes):
                 Nm, Pm,
             } ... (N1 ^ P1) * (N2 ^ P2) * ... = number
     """
+    if primes is None: primes = prime_numbers_smaller_than(number)
+
     prime_composition = {}
     for prime_number in primes:
         while not number % prime_number:
-            if prime_number in prime_composition:
-                prime_composition[prime_number] += 1
-
-            else:
-                prime_composition[prime_number] = 1
-
+            prime_composition[prime_number] = prime_composition.get(prime_number, 0) + 1
             number /= prime_number
             if number == 1:
                 return prime_composition
@@ -73,5 +71,3 @@ def multiply_out_numbers_in_powers(number_in_powers):
 
 def smallest_multiple_up_to(n):
     return multiply_out_numbers_in_powers(cumulative_lcm_in_prime_powers(n))
-
-
