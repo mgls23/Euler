@@ -1,4 +1,4 @@
-from euler.smallest_multiple import decompose_to_prime_powers
+from euler.util.multiplications import decompose_to_prime_powers, multiply, gcd_powers, multiply_out_numbers_in_powers
 
 
 def generate_s():
@@ -28,20 +28,18 @@ def generate_s():
 
 
 def q33():
-    bottoms = 0
     answers = generate_s()
     # print(answers)
+
+    top_decomposed, bottom_composed = {}, {}
     for a, b in answers:
         top, bottom = min(a, b), max(a, b)
 
-        top_decomposed = decompose_to_prime_powers(top)
-        for b_number, b_powers in decompose_to_prime_powers(bottom).items():
-            powers = (b_powers - top_decomposed.get(b_number, 0))
-            bottoms += powers and b_number ** powers
+        top_decomposed = multiply(top_decomposed, decompose_to_prime_powers(top))
+        bottom_composed = multiply(bottom_composed, decompose_to_prime_powers(bottom))
 
-        # print(top, bottom, bottoms)
-
-    return bottoms
+    gcd = gcd_powers(top_decomposed, bottom_composed)
+    return multiply_out_numbers_in_powers(bottom_composed) / multiply_out_numbers_in_powers(gcd)
 
 
 print(q33())
