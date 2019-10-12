@@ -28,7 +28,7 @@ def q34():
     answer.remove(1)
     answer.remove(2)
 
-    return answer
+    return sum(answer)
 
 
 print(q34())
