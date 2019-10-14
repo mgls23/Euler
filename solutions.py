@@ -1,10 +1,11 @@
 import logging
+import math
 import sys
 
-import math
 from numpy import product
 
 from euler.champernownes_constant import champernownes_constant
+from euler.circular_prime import find_circular_primes
 from euler.even_fibonacci import N2FibonacciIterator
 from euler.largest_palindrome_product import find_largest_palindrome
 from euler.largest_prime_factor import largest_prime_factor
@@ -220,6 +221,12 @@ def q29():
     return 9183
 
 
+def q35():
+    circular_primes = find_circular_primes(number=1000000)
+    # print(sorted(circular_primes))
+    return len(circular_primes)
+
+
 def q40():
     return product([champernownes_constant(10 ** power) for power in range(7)])
 
@@ -244,7 +251,7 @@ if __name__ == '__main__':
     start_time = time.time()
 
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
-    print(q28())
+    print(q35())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
