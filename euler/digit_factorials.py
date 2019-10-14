@@ -1,7 +1,7 @@
 import math
 
 
-def q34():
+def digit_factorials():
     factorial_memoize_dict = {}
     answer = []
 
@@ -28,7 +28,8 @@ def q34():
     answer.remove(1)
     answer.remove(2)
 
-    return answer
+    return sum(answer)
 
 
-print(q34())
+if __name__ == '__main__':
+    print(digit_factorials())

@@ -1,6 +1,3 @@
-from euler.smallest_multiple import decompose_to_prime_powers
-
-
 def generate_s():
     answer = set()
     for a in range(1, 10):
@@ -25,23 +22,3 @@ def generate_s():
                                     answer.add((original, denominator))
 
     return answer
-
-
-def q33():
-    bottoms = 0
-    answers = generate_s()
-    # print(answers)
-    for a, b in answers:
-        top, bottom = min(a, b), max(a, b)
-
-        top_decomposed = decompose_to_prime_powers(top)
-        for b_number, b_powers in decompose_to_prime_powers(bottom).items():
-            powers = (b_powers - top_decomposed.get(b_number, 0))
-            bottoms += powers and b_number ** powers
-
-        # print(top, bottom, bottoms)
-
-    return bottoms
-
-
-print(q33())
