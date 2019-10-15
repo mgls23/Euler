@@ -9,6 +9,7 @@ from euler.circular_prime import find_circular_primes
 from euler.coin_sums import coin_sums
 from euler.digit_cancelling_fractions import generate_s
 from euler.digit_factorials import digit_factorials
+from euler.digit_fifth_sum import digit_sum
 from euler.even_fibonacci import N2FibonacciIterator
 from euler.largest_palindrome_product import find_largest_palindrome
 from euler.largest_prime_factor import largest_prime_factor
@@ -22,6 +23,7 @@ from euler.name_scores import calculate_score
 from euler.power_digit_sum import power_digit_sum
 from euler.reciprocal_cycles import string_division
 from euler.smallest_multiple import smallest_multiple_up_to
+from euler.square_root_convergents import square_root_2
 from euler.sum_square_difference import sum_square_difference
 from euler.util import maths, prime
 from euler.util.fibonacci import FibonacciIterator
@@ -231,6 +233,10 @@ def q31():
     return coin_sums(coin_total=200, coins_available=[1, 2, 5, 10, 20, 50, 100, 200])
 
 
+def q32():
+    return digit_sum()
+
+
 def q33():
     answers = generate_s()
     # print(answers)
@@ -243,7 +249,8 @@ def q33():
         bottom_composed = multiply(bottom_composed, decompose_to_prime_powers(bottom))
 
     gcd = gcd_powers(top_decomposed, bottom_composed)
-    return multiply_out_numbers_in_powers(bottom_composed) / multiply_out_numbers_in_powers(gcd)
+    return multiply_out_numbers_in_powers(
+        bottom_composed) / multiply_out_numbers_in_powers(gcd)
 
 
 def q34():
@@ -268,6 +275,10 @@ def q48():
     return int(str(sum(map(lambda x: x ** x, range(1, 1000))))[-10:])
 
 
+def q57():
+    return square_root_2(1000)
+
+
 def q67():
     tree = Tree('data/p067_triangle.txt')
     maximum_path_sum = tree.find_maximum_path_sum()
@@ -280,7 +291,7 @@ if __name__ == '__main__':
     start_time = time.time()
 
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
-    print(q35())
+    print(q57())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))

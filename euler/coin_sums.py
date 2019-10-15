@@ -39,7 +39,7 @@ def _permutations(number, coins_available, paths=None):
 HEY = {}
 
 
-def something(number, coins, max_coin):
+def digit_sum(number, coins, max_coin):
     available_coins = sorted(list(filter(lambda coin_: coin_ <= max_coin, coins)))
 
     result = []
@@ -71,7 +71,7 @@ def better(number, coins, max_coin=None):
     memoization_key = (number, max_coin)
     if memoization_key in HEY: return True, HEY[memoization_key]
 
-    result = something(number, coins, max_coin)
+    result = digit_sum(number, coins, max_coin)
     # print(f'(number, max_coin)={memoization_key}, result={result}')
 
     HEY[memoization_key] = result
