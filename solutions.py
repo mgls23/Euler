@@ -27,9 +27,8 @@ from euler.square_root_convergents import square_root_2
 from euler.sum_square_difference import sum_square_difference
 from euler.util import maths, prime
 from euler.util.fibonacci import FibonacciIterator
-from euler.util.multiplications import multiply, decompose_to_prime_powers, gcd_powers, \
-    multiply_out_numbers_in_powers
-from spiral_primes import q58
+from euler.util.multiplications import find_gcd
+from spiral_primes import spiral_primes
 
 
 def q1():
@@ -240,18 +239,13 @@ def q32():
 
 def q33():
     answers = generate_s()
-    # print(answers)
 
-    top_decomposed, bottom_composed = {}, {}
+    top, bottom = 1, 1
     for a, b in answers:
-        top, bottom = min(a, b), max(a, b)
+        top *= min(a, b)
+        bottom *= max(a, b)
 
-        top_decomposed = multiply(top_decomposed, decompose_to_prime_powers(top))
-        bottom_composed = multiply(bottom_composed, decompose_to_prime_powers(bottom))
-
-    gcd = gcd_powers(top_decomposed, bottom_composed)
-    return multiply_out_numbers_in_powers(
-        bottom_composed) / multiply_out_numbers_in_powers(gcd)
+    return int(bottom / find_gcd(top, bottom))
 
 
 def q34():
@@ -281,7 +275,7 @@ def q57():
 
 
 def q58():
-    return q58()
+    return spiral_primes()
 
 
 def q67():
@@ -296,7 +290,7 @@ if __name__ == '__main__':
     start_time = time.time()
 
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
-    print(q58())
+    print(q33())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))

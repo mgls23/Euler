@@ -18,14 +18,16 @@ def _check_prime_entries(number):
 
 
 def _generate_next_prime():
-    i = math.ceil((PRIME_ENTRIES[-1] - 1) / 6) + 1
-    while True:
-        k = i * 6
-        kp1, km1 = k + 1, k - 1
-        if _check_prime_entries(km1) or _check_prime_entries(kp1):
-            return PRIME_ENTRIES[-1]
+    starting_length = len(PRIME_ENTRIES)
+    i = math.ceil((PRIME_ENTRIES[-1] - 1) / 6)
 
+    while starting_length == len(PRIME_ENTRIES):
         i += 1
+        k = i * 6
+        _check_prime_entries(k - 1)
+        _check_prime_entries(k + 1)
+
+    return PRIME_ENTRIES[-1]
 
 
 def generate_to_sie(upper_bound):

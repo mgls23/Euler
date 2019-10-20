@@ -1,29 +1,16 @@
-import copy
 import functools
 
 from euler.util.prime import prime_numbers_smaller_than
 
 
-def lcm_numbers(n1, n2):
-    return lcm_powers(decompose_to_prime_powers(n1), decompose_to_prime_powers(n2))
+def find_gcd(number1, number2):
+    bigger, smaller = max(number1, number2), min(number1, number2)
+    mod = bigger % smaller
+    while mod > 1:
+        bigger, smaller = smaller, mod
+        mod = bigger % smaller
 
-
-def lcm_powers(prime_powers_1, prime_powers_2):
-    lcm_ = copy.deepcopy(prime_powers_2)
-    for prime1, power1 in prime_powers_1.items():
-        lcm_[prime1] = power1 + lcm_.get(prime1, 0)
-
-    return lcm_
-
-
-def gcd_powers(prime_powers_1, prime_powers_2):
-    gcd_ = {}
-    for prime, power1 in prime_powers_1.items():
-        if prime in prime_powers_2:
-            power2 = prime_powers_2[prime]
-            gcd_[prime] = min(power2, power1)
-
-    return gcd_
+    return mod == 0 and smaller or mod
 
 
 def multiply(*prime_powers):

@@ -1,7 +1,7 @@
 from euler.util.prime import is_prime
 
 
-def q58():
+def spiral_primes():
     primes_encountered = 0
     none_primes = 0
 

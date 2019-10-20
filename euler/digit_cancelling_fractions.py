@@ -18,7 +18,6 @@ def generate_s():
                         if ((a * c) + (bc // 10)) == (df + (ef // 10)):
                             if (bc % 10) == (ef % 10):
                                 if bc == df:
-                                    # print((original, c, denominator, f))
                                     answer.add((original, denominator))
 
     return answer
