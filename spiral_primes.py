@@ -7,7 +7,7 @@ def spiral_primes():
 
     number = 1
     one_side = 1
-    while True:
+    while none_primes > primes_encountered * 9:
         add_by = one_side * 2
 
         for _ in range(4):
@@ -18,7 +18,6 @@ def spiral_primes():
             else:
                 none_primes += 1
 
-        if none_primes > primes_encountered * 9:
-            return one_side * 2 - 1
-        else:
             one_side += 1
+
+    return (one_side - 1) * 2 - 1

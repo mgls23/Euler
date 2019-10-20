@@ -216,11 +216,10 @@ def q28():
 
     What is the sum of the numbers on the diagonals in a 1001 by 1001 spiral?
     """
-    input_ = 1001
-    n = int(math.floor(input_ / 2))
+    side_length = 1001
+    one_side = (side_length - 1) // 2
 
-    answer = int(((16 * (n ** 3) + 30 * (n ** 2) + 26 * n) / 3) + 1)
-    return answer
+    return int(((16 * (one_side ** 3) + 30 * (one_side ** 2) + 26 * one_side) / 3) + 1)
 
 
 def q29():
