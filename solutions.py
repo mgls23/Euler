@@ -270,8 +270,7 @@ def q48():
     return int(str(sum(map(lambda x: x ** x, range(1, 1000))))[-10:])
 
 
-def q50():
-    upper_limit = 10 ** 6
+def q50(upper_limit=10 ** 6):
     prime_numbers = generate_to_sie(upper_limit)
     all_added = sum(prime_numbers)
 
