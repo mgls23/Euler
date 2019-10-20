@@ -18,8 +18,7 @@ def spiral_primes():
             else:
                 none_primes += 1
 
-        one_side += 1
         if none_primes > primes_encountered * 9:
-            break
-
-    return one_side * 2 - 1
+            return one_side * 2 - 1
+        else:
+            one_side += 1
