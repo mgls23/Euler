@@ -29,6 +29,7 @@ from euler.util import maths, prime
 from euler.util.fibonacci import FibonacciIterator
 from euler.util.multiplications import multiply, decompose_to_prime_powers, gcd_powers, \
     multiply_out_numbers_in_powers
+from spiral_primes import q58
 
 
 def q1():
@@ -279,6 +280,10 @@ def q57():
     return square_root_2(1000)
 
 
+def q58():
+    return q58()
+
+
 def q67():
     tree = Tree('data/p067_triangle.txt')
     maximum_path_sum = tree.find_maximum_path_sum()
@@ -291,7 +296,7 @@ if __name__ == '__main__':
     start_time = time.time()
 
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
-    print(q57())
+    print(q58())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))

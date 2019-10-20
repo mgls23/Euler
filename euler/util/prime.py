@@ -1,4 +1,6 @@
-PRIME_ENTRIES = [2, 3]
+import math
+
+PRIME_ENTRIES = [2, 3, 5, 7]
 
 
 def iterator():
@@ -6,16 +8,24 @@ def iterator():
         yield prime_entry
 
 
+def _check_prime_entries(number):
+    for prime_number in PRIME_ENTRIES:
+        if number % prime_number == 0:
+            return False
+
+    PRIME_ENTRIES.append(number)
+    return True
+
+
 def _generate_next_prime():
-    candidate = PRIME_ENTRIES[-1] + 2
+    i = math.ceil((PRIME_ENTRIES[-1] - 1) / 6) + 1
     while True:
-        for prime_number in PRIME_ENTRIES:
-            if candidate % prime_number == 0:
-                candidate += 2
-                break
-        else:
-            PRIME_ENTRIES.append(candidate)
-            return candidate
+        k = i * 6
+        kp1, km1 = k + 1, k - 1
+        if _check_prime_entries(km1) or _check_prime_entries(kp1):
+            return PRIME_ENTRIES[-1]
+
+        i += 1
 
 
 def generate_to_sie(upper_bound):
@@ -37,15 +47,26 @@ def generate_to_sie(upper_bound):
 
 
 def prime_numbers_smaller_than(number):
-    while PRIME_ENTRIES[-1] < number:
-        _generate_next_prime()
+    while _generate_next_prime() < number:
+        pass
 
     return PRIME_ENTRIES
 
 
 def nth_prime_number(n):
-    primes_to_generate = n - len(PRIME_ENTRIES)
-    for _ in range(primes_to_generate + 1):
+    while len(PRIME_ENTRIES) < n:
         _generate_next_prime()
 
     return PRIME_ENTRIES[n - 1]
+
+
+def is_prime(number):
+    if number <= 1: return False
+    if number <= 3: return True
+    if (number % 2 == 0) or (number % 3 == 0): return False
+
+    for i in range(5, math.floor(math.sqrt(number)) + 1, 6):
+        if (number % i) == 0 or (number % (i + 2)) == 0:
+            return False
+
+    return True
