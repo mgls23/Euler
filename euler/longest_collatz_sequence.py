@@ -1,10 +1,7 @@
 import math
 
 # If the number is a power of 2, we know how this would be
-COLLATZ_SEQUENCE = {
-    int(math.pow(2, index - 1)): index
-    for index in range(1, 1000)
-}
+collatz_sequence = {int(math.pow(2, index - 1)): index for index in range(1, 1000)}
 
 
 def collatz_length(number):
@@ -13,7 +10,7 @@ def collatz_length(number):
     count = 0
     sequence = []
 
-    while number not in COLLATZ_SEQUENCE:
+    while number not in collatz_sequence:
         sequence.append(number)
 
         if number == 1: break
@@ -26,9 +23,9 @@ def collatz_length(number):
 
         count += 1
 
-    length = COLLATZ_SEQUENCE[number] + count
+    sequence_length = collatz_sequence[number] + count
 
     for index, starting_number in enumerate(sequence[1:], 1):
-        COLLATZ_SEQUENCE[starting_number] = length - index
+        collatz_sequence[starting_number] = sequence_length - index
 
-    return length
+    return sequence_length

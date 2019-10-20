@@ -5,31 +5,21 @@ import sys
 from numpy import product
 
 from euler.champernownes_constant import champernownes_constant
-from euler.circular_prime import find_circular_primes
 from euler.coin_sums import coin_sums
-from euler.digit_cancelling_fractions import generate_s
-from euler.digit_factorials import digit_factorials
-from euler.digit_fifth_sum import digit_sum
 from euler.even_fibonacci import N2FibonacciIterator
-from euler.largest_palindrome_product import find_largest_palindrome
-from euler.largest_prime_factor import largest_prime_factor
 from euler.largest_product_in_a_series import adjacent_multiplicand
 from euler.largest_sum import first_n_digits_of_sum
-from euler.lattice_paths import lattice_paths
 from euler.lexographical_permutations import lexilogical_ordering
 from euler.longest_collatz_sequence import collatz_length
 from euler.maximum_path_sum import Tree
-from euler.name_scores import calculate_score
 from euler.power_digit_sum import power_digit_sum
 from euler.reciprocal_cycles import string_division
 from euler.smallest_multiple import smallest_multiple_up_to
-from euler.square_root_convergents import square_root_2
-from euler.sum_square_difference import sum_square_difference
 from euler.util import maths, prime
 from euler.util.fibonacci import FibonacciIterator
 from euler.util.multiplications import find_gcd
 from euler.util.prime import generate_to_sie, is_prime
-from spiral_primes import spiral_primes
+from euler.util.strings import is_palindrome
 
 
 def q1():
@@ -55,22 +45,37 @@ def q2():
     return sum(fib_generator.sequence)
 
 
-def q3():
+def q3(number=600851475143):
     # Q3 :: Largest Prime Factor of 600851475143
-    return largest_prime_factor(600851475143)
+    for index, prime_number in enumerate(prime.iterator(), 1):
+        while number % prime_number == 0:
+            number /= prime_number
+
+        if number <= 1:
+            return prime_number
+
+        if index >= len(prime.PRIME_ENTRIES):
+            prime._generate_next_prime()
 
 
-def q4():
-    return find_largest_palindrome(3)
+def q4(digit=3):
+    def all_range(digit):
+        for x in range(10 ** digit, 10 ** (digit - 1), -1):
+            for y in range(10 ** digit - 1, 10 ** (digit - 1), -1):
+                yield str(x * y)
+
+    return max(map(int, filter(is_palindrome, all_range(digit))))
 
 
 def q5():
     return smallest_multiple_up_to(20)
 
 
-def q6():
+def q6(n=100):
     # Q6 :: Sum Square Difference
-    return sum_square_difference(100)
+    square_of_sum = int((n + 1) * n / 2) ** 2
+    sum_of_square = sum([i ** 2 for i in range(n + 1)])
+    return square_of_sum - sum_of_square
 
 
 def q7():
@@ -138,20 +143,35 @@ def q14():
 
     Which starting number, under one million, produces the longest chain?
     """
-    max_collatz_len = 0
-    max_collatz_number = 0
+    max_sequence_length = max_collatz_number = 0
 
     for number in range(1, 1000000):
-        collatz = collatz_length(number)
-        if max_collatz_len < collatz:
-            max_collatz_len = collatz
+        sequence_length = collatz_length(number)
+        if max_sequence_length < sequence_length:
+            max_sequence_length = sequence_length
             max_collatz_number = number
 
     return max_collatz_number
 
 
-def q15():
-    return lattice_paths(20)
+def q15(n=20):
+    """ Triangle number with 'various degrees'
+
+    Memory :: n
+    Complexity :: n^2
+
+    TODO :: extend for max(n, m) where it supports a rectangle rather than
+    a square
+
+    :param n: int
+    :return:
+    """
+    paths = [1] * (n + 1)
+    for _ in range(n):
+        for index in range(1, n + 1):
+            paths[index] += paths[index - 1]
+
+    return paths[-1]
 
 
 def q16():
@@ -177,16 +197,27 @@ def q20():
 
 
 def q22():
+    max_length = 12
+
+    base_score = ord('A') - 1
+    base_scores = list(map(lambda x: x * base_score, range(max_length)))
+
+    def calculate_score(string):
+        """Calculates the numerical score of a given string
+        The score of each character the string is its ordinal value
+
+        a=1, b=2, z=26
+        """
+        score = sum(map(ord, string))
+        return score - base_scores[len(string)]
+
     with open('data/p022_names.txt', 'r') as file:
         names_text = file.readlines()[0]
-
-        names = names_text.replace('"', '').split(',')
-        names.sort()
-
+        names = sorted(names_text.replace('"', '').split(','))
         name_scores = map(calculate_score, names)
-        cumulative = sum(map(lambda x: x[0] * x[1], enumerate(name_scores, 1)))
+        score_sum = sum(map(lambda score: score[0] * score[1], enumerate(name_scores, 1)))
 
-    return cumulative
+    return score_sum
 
 
 def q24():
@@ -228,17 +259,52 @@ def q29():
     return 9183
 
 
+def q30(power=5):
+    memoised = {}
+    answers = []
+    upper_limit = 354294
+
+    for number in range(2, upper_limit):
+        powers = []
+        for digit in [int(digit) for digit in str(number)]:
+            if digit not in memoised:
+                memoised[digit] = math.pow(digit, power)
+
+            powers.append(memoised[digit])
+
+        sum_ = sum(powers)
+        if sum_ == number:
+            answers.append(number)
+
+    return sum(answers)
+
+
 # noinspection PyDefaultArgument
 def q31():
     return coin_sums(coin_total=200, coins_available=[1, 2, 5, 10, 20, 50, 100, 200])
 
 
-def q32():
-    return digit_sum()
-
-
 def q33():
-    answers = generate_s()
+    answers = set()
+    for a in range(1, 10):
+        for b in range(1, 10):
+            original = a * 10 + b
+            for d in range(1, 10):
+                e = a
+                denominator = d * 10 + e
+
+                for c in range(1, 10):
+                    for f in range(1, 10):
+                        if c == f: continue
+
+                        bc = b * c
+                        df = d * f
+                        ef = e * f
+
+                        if ((a * c) + (bc // 10)) == (df + (ef // 10)):
+                            if (bc % 10) == (ef % 10):
+                                if bc == df:
+                                    answers.add((original, denominator))
 
     top, bottom = 1, 1
     for a, b in answers:
@@ -249,13 +315,59 @@ def q33():
 
 
 def q34():
-    return digit_factorials()
+    factorial_memoize_dict = {}
+    answer = []
+
+    # factorial(9) = 362880
+    # factorial(9) * 8 = 2903040 < 10,000,000
+    # factorial(9) * 7 = 2540160
+    # factorial(9) * 6 + 2 = 2177282
+    # Therefore upper range is 2177282 - we could go further
+    for number in range(2177282):
+        digits = [int(digit_str) for digit_str in str(number)]
+        factorial_sum = 0
+        for digit in digits:
+            if digit in factorial_memoize_dict:
+                factorial = factorial_memoize_dict[digit]
+            else:
+                factorial = math.factorial(digit)
+                factorial_memoize_dict[digit] = factorial
+
+            factorial_sum += factorial
+
+        if factorial_sum == number:
+            answer.append(number)
+
+    answer.remove(1)
+    answer.remove(2)
+
+    return sum(answer)
 
 
 def q35():
-    circular_primes = find_circular_primes(number=1000000)
-    # print(sorted(circular_primes))
-    return len(circular_primes)
+    number = 1000000
+
+    circular_prime_numbers = []
+    prime_numbers = generate_to_sie(number + 1)
+    prime_number_set = set(prime_numbers)
+    lowests = set()
+
+    for prime in prime_numbers:
+        digits = [character for character in str(prime)]
+        circular_primes = set()
+        for i in range(len(digits)):
+            circular_prime_digits = digits[i:len(digits)] + digits[0:i]
+            circular_primes.add(int(''.join(circular_prime_digits)))
+
+        lowest_circular_primes = min(circular_primes)
+        if lowest_circular_primes not in lowests:
+            lowests.add(lowest_circular_primes)
+
+            if all(circular_prime in prime_number_set for circular_prime in
+                   circular_primes):
+                circular_prime_numbers += circular_primes
+
+    return circular_prime_numbers
 
 
 def q40():
@@ -293,12 +405,35 @@ def q50(upper_limit=10 ** 6):
     return longest_prime_sum
 
 
-def q57():
-    return square_root_2(1000)
+def q57(number=1000):
+    count = 0
+    small, big = 0, 1
+    for i in range(number):
+        small, big = big, big * 2 + small
+        if len(str(small + big)) > len(str(big)):
+            count += 1
+
+    return count
 
 
 def q58():
-    return spiral_primes()
+    primes_encountered, none_primes = 0, 0
+    number, one_side = 1, 1
+
+    while none_primes <= primes_encountered * 9 or primes_encountered == 0 or none_primes == 0:
+        add_by = one_side * 2
+
+        for _ in range(4):
+            number += add_by
+
+            if is_prime(number):
+                primes_encountered += 1
+            else:
+                none_primes += 1
+
+        one_side += 1
+
+    return ((one_side - 1) * 2) - 1
 
 
 def q67():
@@ -313,7 +448,7 @@ if __name__ == '__main__':
     start_time = time.time()
 
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
-    print(q50())
+    print(q3())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
