@@ -28,6 +28,7 @@ from euler.sum_square_difference import sum_square_difference
 from euler.util import maths, prime
 from euler.util.fibonacci import FibonacciIterator
 from euler.util.multiplications import find_gcd
+from euler.util.prime import generate_to_sie, is_prime
 from spiral_primes import spiral_primes
 
 
@@ -269,6 +270,30 @@ def q48():
     return int(str(sum(map(lambda x: x ** x, range(1, 1000))))[-10:])
 
 
+def q50():
+    upper_limit = 10 ** 6
+    prime_numbers = generate_to_sie(upper_limit)
+    all_added = sum(prime_numbers)
+
+    longest_prime_sum, longest_sequence_length = 0, 0
+    for index, prime_number in enumerate(prime_numbers):
+        if index > 5: break
+
+        consecutive_sum = all_added
+        for sequence_length, current in reversed(list(enumerate(prime_numbers[index + 1:]))):
+            consecutive_sum -= current
+
+            if consecutive_sum > upper_limit: continue
+            if sequence_length < longest_sequence_length: break
+            if is_prime(consecutive_sum) and longest_sequence_length < sequence_length:
+                longest_prime_sum = consecutive_sum
+                longest_sequence_length = sequence_length
+
+        all_added -= prime_number
+
+    return longest_prime_sum
+
+
 def q57():
     return square_root_2(1000)
 
@@ -289,7 +314,7 @@ if __name__ == '__main__':
     start_time = time.time()
 
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
-    print(q58())
+    print(q50())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
