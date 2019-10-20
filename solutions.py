@@ -367,7 +367,7 @@ def q35():
                    circular_primes):
                 circular_prime_numbers += circular_primes
 
-    return circular_prime_numbers
+    return len(circular_prime_numbers)
 
 
 def q40():
