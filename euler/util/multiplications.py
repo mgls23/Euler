@@ -3,7 +3,11 @@ import functools
 from euler.util.prime import prime_numbers_smaller_than
 
 
-def find_gcd(number1, number2):
+def lowest_common_multiple(number1, number2):
+    return number1 * number2 / greatest_common_denominator(number1, number2)
+
+
+def greatest_common_denominator(number1, number2):
     bigger, smaller = max(number1, number2), min(number1, number2)
     mod = bigger % smaller
     while mod > 1:

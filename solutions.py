@@ -14,10 +14,9 @@ from euler.longest_collatz_sequence import collatz_length
 from euler.maximum_path_sum import Tree
 from euler.power_digit_sum import power_digit_sum
 from euler.reciprocal_cycles import string_division
-from euler.smallest_multiple import smallest_multiple_up_to
 from euler.util import maths, prime
 from euler.util.fibonacci import FibonacciIterator
-from euler.util.multiplications import find_gcd
+from euler.util.multiplications import greatest_common_denominator, lowest_common_multiple
 from euler.util.prime import generate_to_sie, is_prime
 from euler.util.strings import is_palindrome
 
@@ -67,8 +66,14 @@ def q4(digit=3):
     return max(map(int, filter(is_palindrome, all_range(digit))))
 
 
-def q5():
-    return smallest_multiple_up_to(20)
+def q5(up_to=20):
+    if up_to <= 1: return up_to
+
+    cumulative = 2
+    for number in range(3, up_to + 1):
+        cumulative = lowest_common_multiple(cumulative, number)
+
+    return int(cumulative)
 
 
 def q6(n=100):
@@ -311,7 +316,7 @@ def q33():
         top *= min(a, b)
         bottom *= max(a, b)
 
-    return int(bottom / find_gcd(top, bottom))
+    return int(bottom / greatest_common_denominator(top, bottom))
 
 
 def q34():
@@ -391,7 +396,8 @@ def q50(upper_limit=10 ** 6):
         if index > 5: break
 
         consecutive_sum = all_added
-        for sequence_length, current in reversed(list(enumerate(prime_numbers[index + 1:]))):
+        for sequence_length, current in reversed(
+                list(enumerate(prime_numbers[index + 1:]))):
             consecutive_sum -= current
 
             if consecutive_sum > upper_limit: continue
@@ -448,7 +454,7 @@ if __name__ == '__main__':
     start_time = time.time()
 
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
-    print(q3())
+    print(q5())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
