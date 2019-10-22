@@ -450,8 +450,7 @@ def q67():
 
 
 def q156():
-    investigate_1()
-    return None
+    return investigate_1()
 
 
 if __name__ == '__main__':

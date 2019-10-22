@@ -1,5 +1,4 @@
 import math
-import matplotlib.pyplot as plt
 
 
 def brute_force(up_to, digit):
@@ -33,22 +32,49 @@ def investigate_1():
     #         print(f'Correct={correct}')
     #         print(f'Attempt={attempt}')
 
-    inputs, answers = [], []
-
+    all_answers = []
     cumulative = 0
-    for n in range(1, 3000000):
-        raw_answer = count_digit_occurence_until(n, 1)
-        answer = sum(raw_answer)
-        if answer == n:
-            cumulative += answer
-            print(f'Number={n}, A={answer}, Cumulative={cumulative}')
+    n = 1
+    add_by = 1
 
-        inputs.append(n)
-        answers.append(answer)
+    last_difference = 0
+    last_number = 1
 
-    plt.plot(inputs, inputs)
-    plt.plot(inputs, answers)
-    plt.show()
+    while True:
+        result = sum(count_digit_occurence_until(n, 1))
+        this_difference = n - result
+        if abs(this_difference) > abs(last_difference):
+            print(f'Difference becoming bigger::Result={result}, n={n}, this={this_difference}, last={last_difference}')
+            cumulative = find_in_range(last_number, n, cumulative, all_answers)
+
+        if result == n:
+            cumulative += result
+            all_answers.append(result)
+            print(f'Number={n}, A={result}, Cumulative={cumulative}')
+
+            cumulative = find_in_range(last_number, n, cumulative, all_answers)
+
+        last_difference = this_difference
+
+        if n > math.pow(10, 6): break
+        last_number = n
+        n += add_by
+        add_by = max(n // 10, add_by)
+
+    print(f'All Answers={all_answers}')
+    return cumulative
+
+
+def find_in_range(lower, upper, cumulative, all_answers):
+    print(f'find_in_range({lower}, {upper})')
+    for n in range(lower, upper):
+        result = sum(count_digit_occurence_until(n, 1))
+        if result == n:
+            cumulative += result
+            all_answers.append(result)
+            print(f'Number={n}, A={result}, Cumulative={cumulative}')
+
+    return cumulative
 
 
 def count_digit_occurence_until(up_to, digit_compared):
