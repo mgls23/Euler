@@ -12,7 +12,28 @@ def brute_force(up_to, digit):
     return answer
 
 
-def investigate_1():
+def investigate():
+    cumulative = 0
+    for d in range(1, 9 + 1):
+        inputs, answers = [], []
+        for n in range(1, 5000000):
+            raw_answer = count_digit_occurence_until(n, d)
+            answer = sum(raw_answer)
+            if answer == n:
+                cumulative += answer
+                print(f'Number={n}, A={raw_answer}, Cumulative={cumulative}')
+
+            inputs.append(n)
+            answers.append(answer)
+
+        print(f'Digit {d} done')
+        plt.figure(d)
+        plt.plot(inputs, inputs)
+        plt.plot(inputs, answers)
+        plt.show()
+
+
+def investigate_1(digit_investigated=3):
     # inputs = [
     #     9
     #     , 99
@@ -21,27 +42,27 @@ def investigate_1():
     #     , 1521
     #     , 1121
     #     , 9999
-    #     , 999999999
-    #     , 99999999999
     # ]
-
+    #
     # for input_ in inputs:
-    #     correct = list(reversed(brute_force(input_, 1)))
-    #     attempt = count_digit_occurence_until(input_, 1)
+    #     correct = list(reversed(brute_force(input_, digit_investigated)))
+    #     attempt = count_digit_occurence_until(input_, digit_investigated)
     #     if correct != attempt:
     #         print(f'{input_}')
     #         print(f'Correct={correct}')
     #         print(f'Attempt={attempt}')
+    #     else:
+    #         print(f'Input={input_} generated {sum(correct)} correctly')
 
     inputs, answers = [], []
 
     cumulative = 0
-    for n in range(1, 3000000):
-        raw_answer = count_digit_occurence_until(n, 1)
+    for n in range(1, 5000000):
+        raw_answer = count_digit_occurence_until(n, digit_investigated)
         answer = sum(raw_answer)
         if answer == n:
             cumulative += answer
-            print(f'Number={n}, A={answer}, Cumulative={cumulative}')
+            print(f'Number={n}, A={raw_answer}, Cumulative={cumulative}')
 
         inputs.append(n)
         answers.append(answer)

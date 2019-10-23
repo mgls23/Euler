@@ -6,7 +6,7 @@ from numpy import product
 
 from euler.champernownes_constant import champernownes_constant
 from euler.coin_sums import coin_sums
-from euler.counting_digits import investigate_1
+from euler.counting_digits import investigate_1, investigate
 from euler.even_fibonacci import N2FibonacciIterator
 from euler.largest_product_in_a_series import adjacent_multiplicand
 from euler.largest_sum import first_n_digits_of_sum
@@ -450,7 +450,7 @@ def q67():
 
 
 def q156():
-    investigate_1()
+    investigate()
     return None
 
 
