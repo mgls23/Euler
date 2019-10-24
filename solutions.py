@@ -422,6 +422,51 @@ def q35():
     return len(circular_prime_numbers)
 
 
+def q37():
+    from collections import deque
+
+    truncatable_primes = {2, 3, 5, 7, }
+    not_truncatable_primes = {2, 3, 5, 7}
+
+    middle_digits = [1, 3, 7, 9]
+    ending_digits = [3, 7]  # on either ends
+
+    digit_length = 2
+    while len(truncatable_primes - not_truncatable_primes) < 11:
+        for start_digit in ending_digits:
+            for end_digit in ending_digits:
+                base_number = start_digit * 10 ** (digit_length - 1) + end_digit
+                numbers = deque([base_number])
+
+                for digit_index in range(1, digit_length - 1):
+                    new_numbers = deque()
+                    while numbers:
+                        number = numbers.pop()
+                        for middle_digit in middle_digits:
+                            new_numbers.append(number + middle_digit * 10 ** digit_index)
+                    numbers = new_numbers
+
+                # print(f'numbers={numbers}')
+                for number in numbers:
+                    if is_prime(number):
+                        is_number_prime = True
+                        for dividing_point in range(1, digit_length):
+                            div = number // 10 ** dividing_point
+                            mod = number % 10 ** dividing_point
+
+                            if not (is_prime(div) and is_prime(mod)):
+                                is_number_prime = False
+                                break
+
+                        if is_number_prime:
+                            truncatable_primes.add(number)
+
+        digit_length += 1
+        print(f'Truncatable Primes = {list(sorted(truncatable_primes - not_truncatable_primes))}')
+
+    return sum(truncatable_primes - not_truncatable_primes)
+
+
 def q40():
     return product([champernownes_constant(10 ** power) for power in range(7)])
 
@@ -501,7 +546,7 @@ if __name__ == '__main__':
     start_time = time.time()
 
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
-    print(q19())
+    print(q37())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
