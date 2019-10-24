@@ -2,6 +2,8 @@ import logging
 import math
 import sys
 
+from numpy import product
+
 from euler.champernownes_constant import champernownes_constant
 from euler.coin_sums import coin_sums
 from euler.even_fibonacci import N2FibonacciIterator
@@ -14,6 +16,7 @@ from euler.maximum_path_sum import Tree
 from euler.power_digit_sum import power_digit_sum
 from euler.reciprocal_cycles import string_division
 from euler.util import maths, prime
+from euler.util.dates import calculate_number_of_days_in_month
 from euler.util.fibonacci import FibonacciIterator
 from euler.util.multiplications import greatest_common_denominator, lowest_common_multiple
 from euler.util.prime import generate_to_sie, is_prime
@@ -219,6 +222,19 @@ def q18():
     tree = Tree('data/p018_tree.txt')
     maximum_path_sum = tree.find_maximum_path_sum()
     return maximum_path_sum
+
+
+def q19():
+    number_of_sundays_on_first = 0
+    day_on_sunday = 6
+
+    for year in range(1901, 2001):
+        for month in range(1, 13):
+            number_of_days_in_month = calculate_number_of_days_in_month(year, month)
+            day_on_sunday = ((day_on_sunday - (number_of_days_in_month % 7)) % 7) or 7
+            if day_on_sunday == 1: number_of_sundays_on_first += 1
+
+    return number_of_sundays_on_first
 
 
 def q20():
@@ -485,7 +501,7 @@ if __name__ == '__main__':
     start_time = time.time()
 
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
-    print(q11())
+    print(q19())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
