@@ -7,7 +7,8 @@ from numpy import product
 from euler.champernownes_constant import champernownes_constant
 from euler.coin_sums import coin_sums
 from euler.even_fibonacci import N2FibonacciIterator
-from euler.largest_product_in_a_series import adjacent_multiplicand_string, adjacent_multiplicand, horizontal, left_diagonal, \
+from euler.largest_product_in_a_series import adjacent_multiplicand_string, adjacent_multiplicand, horizontal, \
+    left_diagonal, \
     right_diagonal
 from euler.largest_sum import first_n_digits_of_sum
 from euler.lexographical_permutations import lexilogical_ordering
@@ -19,7 +20,7 @@ from euler.util import maths, prime
 from euler.util.dates import calculate_number_of_days_in_month
 from euler.util.fibonacci import FibonacciIterator
 from euler.util.multiplications import greatest_common_denominator, lowest_common_multiple
-from euler.util.prime import generate_to_sie, is_prime
+from euler.util.prime import generate_to_sie, is_prime, is_truncable_prime
 from euler.util.strings import is_palindrome
 
 
@@ -423,48 +424,30 @@ def q35():
 
 
 def q37():
-    from collections import deque
-
-    truncatable_primes = {2, 3, 5, 7, }
-    not_truncatable_primes = {2, 3, 5, 7}
+    truncatable_primes = list(filter(lambda prime_number: is_truncable_prime(prime_number), generate_to_sie(100)))
 
     middle_digits = [1, 3, 7, 9]
     ending_digits = [3, 7]  # on either ends
 
-    digit_length = 2
-    while len(truncatable_primes - not_truncatable_primes) < 11:
+    digit_length = 3
+    while len(truncatable_primes) < 15:  # we are given there are 11 truncatable primes other than 4 primes < 10
         for start_digit in ending_digits:
             for end_digit in ending_digits:
-                base_number = start_digit * 10 ** (digit_length - 1) + end_digit
-                numbers = deque([base_number])
+                numbers = [start_digit * 10 ** (digit_length - 1) + end_digit]
 
                 for digit_index in range(1, digit_length - 1):
-                    new_numbers = deque()
-                    while numbers:
-                        number = numbers.pop()
-                        for middle_digit in middle_digits:
-                            new_numbers.append(number + middle_digit * 10 ** digit_index)
-                    numbers = new_numbers
+                    numbers = [
+                        number + middle_digit * 10 ** digit_index
+                        for number in numbers
+                        for middle_digit in middle_digits
+                    ]
 
-                # print(f'numbers={numbers}')
-                for number in numbers:
-                    if is_prime(number):
-                        is_number_prime = True
-                        for dividing_point in range(1, digit_length):
-                            div = number // 10 ** dividing_point
-                            mod = number % 10 ** dividing_point
-
-                            if not (is_prime(div) and is_prime(mod)):
-                                is_number_prime = False
-                                break
-
-                        if is_number_prime:
-                            truncatable_primes.add(number)
+                truncatable_primes += filter(lambda n: is_truncable_prime(n, digit_length), numbers)
 
         digit_length += 1
-        print(f'Truncatable Primes = {list(sorted(truncatable_primes - not_truncatable_primes))}')
 
-    return sum(truncatable_primes - not_truncatable_primes)
+    not_truncatable_primes = {2, 3, 5, 7}  # discounted only for this question
+    return sum(set(truncatable_primes) - not_truncatable_primes)
 
 
 def q40():

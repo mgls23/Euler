@@ -72,3 +72,28 @@ def is_prime(number):
             return False
 
     return True
+
+
+COMPUTED = {}
+
+
+def is_prime_memoised(number):
+    if number in COMPUTED: return COMPUTED[number]
+
+    primality = is_prime(number)
+    COMPUTED[number] = primality
+    return primality
+
+
+def is_truncable_prime(number, digit_length=-1):
+    if not is_prime_memoised(number): return False
+    if digit_length == -1: digit_length = int(math.floor(math.log10(number)) + 1)
+
+    for dividing_point in range(1, digit_length):
+        div = number // 10 ** dividing_point
+        mod = number % 10 ** dividing_point
+
+        if not (is_prime_memoised(div) and is_prime_memoised(mod)):
+            return False
+
+    return True
