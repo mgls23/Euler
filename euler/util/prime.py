@@ -1,5 +1,7 @@
 import math
 
+from euler.util.decorators import memoised
+
 PRIME_ENTRIES = [2, 3, 5, 7]
 
 
@@ -64,6 +66,7 @@ def nth_prime_number(n):
     return PRIME_ENTRIES[n - 1]
 
 
+@memoised
 def is_prime(number):
     if number <= 1: return False
     if number <= 3: return True
@@ -76,26 +79,15 @@ def is_prime(number):
     return True
 
 
-COMPUTED = {}
-
-
-def is_prime_memoised(number):
-    if number in COMPUTED: return COMPUTED[number]
-
-    primality = is_prime(number)
-    COMPUTED[number] = primality
-    return primality
-
-
 def is_truncable_prime(number, digit_length=-1):
-    if not is_prime_memoised(number): return False
+    if not is_prime(number): return False
     if digit_length == -1: digit_length = int(math.floor(math.log10(number)) + 1)
 
     for dividing_point in range(1, digit_length):
         div = number // 10 ** dividing_point
         mod = number % 10 ** dividing_point
 
-        if not (is_prime_memoised(div) and is_prime_memoised(mod)):
+        if not (is_prime(div) and is_prime(mod)):
             return False
 
     return True
