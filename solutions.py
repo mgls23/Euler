@@ -7,11 +7,7 @@ from numpy import product
 from euler.champernownes_constant import champernownes_constant
 from euler.coin_sums import coin_sums
 from euler.even_fibonacci import N2FibonacciIterator
-from euler.largest_product_in_a_series import adjacent_multiplicand_string, adjacent_multiplicand, horizontal, \
-    left_diagonal, \
-    right_diagonal
 from euler.largest_sum import first_n_digits_of_sum
-from euler.lexographical_permutations import lexilogical_ordering
 from euler.longest_collatz_sequence import collatz_length
 from euler.maximum_path_sum import Tree
 from euler.power_digit_sum import power_digit_sum
@@ -19,9 +15,16 @@ from euler.reciprocal_cycles import string_division
 from euler.util import maths, prime
 from euler.util.dates import calculate_number_of_days_in_month
 from euler.util.fibonacci import FibonacciIterator
+from euler.util.matrix import (
+    adjacent_multiplicand_string,
+    adjacent_multiplicand,
+    horizontal,
+    left_diagonal,
+    right_diagonal
+)
 from euler.util.multiplications import greatest_common_denominator, lowest_common_multiple
 from euler.util.palindromes import is_palindrome_string, is_palindrome_simple_string, generate_palindromes
-from euler.util.prime import generate_to_sie, is_prime, is_truncable_prime
+from euler.util.prime import generate_to_sie, is_prime, is_truncable_prime, is_prime_memoised
 
 
 def q1():
@@ -60,13 +63,13 @@ def q3(number=600851475143):
             prime._generate_next_prime()
 
 
-def q4(digit=3):
+def q4(digit_given=3):
     def all_range(digit):
         for x in range(10 ** digit, 10 ** (digit - 1), -1):
             for y in range(10 ** digit - 1, 10 ** (digit - 1), -1):
                 yield str(x * y)
 
-    return max(map(int, filter(is_palindrome_string, all_range(digit))))
+    return max(map(int, filter(is_palindrome_string, all_range(digit_given))))
 
 
 def q5(up_to=20):
@@ -297,7 +300,17 @@ def q24():
     nth = 1000000
     zero_to = 9
 
-    return int(lexilogical_ordering(nth, zero_to))
+    nth -= 1
+    digit_offsets = []
+    digits = list(range(zero_to + 1))
+
+    for digit in reversed(digits):
+        factorial = math.factorial(digit)
+        digit_offsets.append(int(math.floor(nth / factorial)))
+        nth %= factorial
+
+    answer_digits = [digits.pop(nth_digit) for nth_digit in digit_offsets]
+    return int(''.join(map(str, answer_digits)))
 
 
 def q25():

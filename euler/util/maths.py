@@ -10,12 +10,11 @@ def fizz_buzz(x, lower_bound=2, fizz=3, buzz=5):
     :param buzz :int
     """
     return [number
-        for number in range(lower_bound, x + 1)
-        if (number % fizz) == 0 or (number % buzz) == 0
-    ]
+            for number in range(lower_bound, x + 1)
+            if (number % fizz) == 0 or (number % buzz) == 0]
 
 
-def guassian_sum(upper_bound, multiplicand):
+def guassian_sum(upper_bound, multiplier):
     """ Finds multiplicative sum [pi] of multiplicand no bigger than the upper bound.
     The multiplication with multiplicand x 1, therefore it does not include 0
 
@@ -32,12 +31,10 @@ def guassian_sum(upper_bound, multiplicand):
         :: n = math.floor(upper_bound / multiplicand
 
     :param upper_bound :int
-    :param multiplicand :int
+    :param multiplier :int
     """
     # Catch negative n cases as well as 0 case here
-    if upper_bound < multiplicand:
-        return 0
+    if upper_bound < multiplier: return 0
 
-    #
-    n = math.floor(upper_bound / multiplicand)
-    return multiplicand * (n + 1) * n / 2
+    n = math.floor(upper_bound / multiplier)
+    return multiplier * (n + 1) * n / 2
