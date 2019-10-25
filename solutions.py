@@ -285,24 +285,10 @@ def q20():
 
 
 def q22():
-    max_length = 12
-
-    base_score = ord('A') - 1
-    base_scores = list(map(lambda x: x * base_score, range(max_length)))
-
-    def calculate_score(string):
-        """Calculates the numerical score of a given string
-        The score of each character the string is its ordinal value
-
-        a=1, b=2, z=26
-        """
-        score = sum(map(ord, string))
-        return score - base_scores[len(string)]
-
     with open('data/p022_names.txt', 'r') as file:
         names_text = file.readlines()[0]
         names = sorted(names_text.replace('"', '').split(','))
-        name_scores = map(calculate_score, names)
+        name_scores = map(numerical_score, names)
         score_sum = sum(map(lambda score: score[0] * score[1], enumerate(name_scores, 1)))
 
     return score_sum
@@ -598,7 +584,7 @@ if __name__ == '__main__':
 
     start_time = time.time()
 
-    print(q42())
+    print(q22())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
