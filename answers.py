@@ -67,7 +67,7 @@ ANSWERS = {
 logging.basicConfig(format="[%(asctime)s] %(levelname)6s   %(message)s",
                     stream=sys.stderr, level=logging.DEBUG)
 
-FLAGGED = set()
+FLAGGED = list()
 IGNORE_FLAG = set(q.__name__.capitalize() for q in (q14, q26,))
 
 for question, answer in ANSWERS.items():
@@ -81,7 +81,7 @@ for question, answer in ANSWERS.items():
     logging.debug('Solved {} in {:4.2f}ms'.format(question_name, time_taken))
 
     if time_taken > 500:
-        FLAGGED.add((question_name, time_taken))
+        FLAGGED.append((question_name, time_taken))
 
 logging.info('{} Problems solved'.format(len(ANSWERS)))
 

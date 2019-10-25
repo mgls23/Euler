@@ -9,7 +9,9 @@ def iterator():
 
 
 def _check_prime_entries(number):
+    square_root = math.sqrt(number)
     for prime_number in PRIME_ENTRIES:
+        if prime_number > square_root: break
         if number % prime_number == 0:
             return False
 
