@@ -1,7 +1,7 @@
 import logging
+import math
 import sys
 
-import math
 from numpy import product
 
 from euler.champernownes_constant import champernownes_constant
@@ -10,6 +10,7 @@ from euler.even_fibonacci import N2FibonacciIterator
 from euler.largest_sum import first_n_digits_of_sum
 from euler.longest_collatz_sequence import collatz_length
 from euler.maximum_path_sum import Tree
+from euler.names_scores import translate
 from euler.power_digit_sum import power_digit_sum
 from euler.reciprocal_cycles import string_division
 from euler.util import maths, prime
@@ -24,7 +25,7 @@ from euler.util.matrix import (
 )
 from euler.util.multiplications import greatest_common_denominator, lowest_common_multiple
 from euler.util.palindromes import is_palindrome_string, is_palindrome_simple_string, generate_palindromes
-from euler.util.prime import generate_to_sie, is_prime, is_truncable_prime, is_prime_memoised
+from euler.util.prime import generate_to_sie, is_prime, is_truncable_prime
 
 
 def q1():
@@ -240,6 +241,15 @@ def q15(n=20):
 def q16():
     """ Q16 :: Digit of 2^1000"""
     return power_digit_sum(1000)
+
+
+def q17(start=1, up_to=1000):
+    total = 0
+    for number in range(start, up_to):
+        numerical_value = translate(number)
+        total += numerical_value
+
+    return total
 
 
 def q18():
@@ -573,7 +583,7 @@ if __name__ == '__main__':
 
     start_time = time.time()
 
-    print(q36())
+    print(q17())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
