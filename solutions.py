@@ -25,7 +25,7 @@ from euler.util.matrix import (
 )
 from euler.util.multiplications import greatest_common_denominator, lowest_common_multiple
 from euler.util.number_to_string import numerical_score
-from euler.util.palindromes import is_palindrome_string, is_palindrome_simple_string, generate_palindromes
+from euler.util.palindromes import is_palindrome_simple_string, generate_palindromes
 from euler.util.prime import generate_to_sie, is_prime, is_truncable_prime
 from euler.util.triangle_numbers import is_triangle_number
 
@@ -67,12 +67,21 @@ def q3(number=600851475143):
 
 
 def q4(digit_given=3):
-    def all_range(digit):
-        for x in range(10 ** digit, 10 ** (digit - 1), -1):
-            for y in range(10 ** digit - 1, 10 ** (digit - 1), -1):
-                yield str(x * y)
+    largest_number = 0
+    x_was = 0
 
-    return max(map(int, filter(is_palindrome_string, all_range(digit_given))))
+    for x in range(10 ** digit_given, 10 ** (digit_given - 1), -1):
+        for y in range(10 ** digit_given - 1, 10 ** (digit_given - 1), -1):
+            number = x * y
+            if number > largest_number:
+                if is_palindrome_simple_string(str(x * y)):
+                    largest_number = number
+                    if x_was > y: return number
+                    x_was = x
+            else:
+                break
+
+    return largest_number
 
 
 def q5(up_to=20):
@@ -584,7 +593,7 @@ if __name__ == '__main__':
 
     start_time = time.time()
 
-    print(q22())
+    print(q4())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
