@@ -1,6 +1,7 @@
 import logging
 import math
 import sys
+from functools import reduce
 
 from numpy import product
 
@@ -505,16 +506,9 @@ def q40():
 
 
 def q42():
-    triangle_numbered_words = 0
     with open('data/p042_words.txt') as text_file:
-        raw_words = text_file.read().split(',')
-        for raw_word in raw_words:
-            word = raw_word.replace('"', '')
-
-            if is_triangle_number(numerical_score(word)):
-                triangle_numbered_words += 1
-
-    return triangle_numbered_words
+        words = map(lambda raw_word: raw_word.replace('"', ''), text_file.read().split(','))
+        return reduce(lambda count, word: is_triangle_number(numerical_score(word)) and count + 1 or count, words, 0)
 
 
 def q48():
@@ -593,7 +587,7 @@ if __name__ == '__main__':
 
     start_time = time.time()
 
-    print(q4())
+    print(q42())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
