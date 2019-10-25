@@ -24,8 +24,10 @@ from euler.util.matrix import (
     right_diagonal
 )
 from euler.util.multiplications import greatest_common_denominator, lowest_common_multiple
+from euler.util.number_to_string import numerical_score
 from euler.util.palindromes import is_palindrome_string, is_palindrome_simple_string, generate_palindromes
 from euler.util.prime import generate_to_sie, is_prime, is_truncable_prime
+from euler.util.triangle_numbers import is_triangle_number
 
 
 def q1():
@@ -507,6 +509,19 @@ def q40():
     return product([champernownes_constant(10 ** power) for power in range(7)])
 
 
+def q42():
+    triangle_numbered_words = 0
+    with open('data/p042_words.txt') as text_file:
+        raw_words = text_file.read().split(',')
+        for raw_word in raw_words:
+            word = raw_word.replace('"', '')
+
+            if is_triangle_number(numerical_score(word)):
+                triangle_numbered_words += 1
+
+    return triangle_numbered_words
+
+
 def q48():
     """ Q48 :: Self Powers [https://projecteuler.net/problem=48]
 
@@ -583,7 +598,7 @@ if __name__ == '__main__':
 
     start_time = time.time()
 
-    print(q17())
+    print(q42())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
