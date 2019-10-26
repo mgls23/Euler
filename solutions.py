@@ -11,7 +11,6 @@ from euler.largest_sum import first_n_digits_of_sum
 from euler.longest_collatz_sequence import collatz_length
 from euler.maximum_path_sum import Tree
 from euler.names_scores import translate
-from euler.power_digit_sum import power_digit_sum
 from euler.reciprocal_cycles import string_division
 from euler.util import maths, prime
 from euler.util.dates import calculate_number_of_days_in_month
@@ -251,7 +250,28 @@ def q15(n=20):
 
 def q16():
     """ Q16 :: Digit of 2^1000"""
-    return power_digit_sum(1000)
+    # Do not use this method of digit sum - it's much faster to use
+    #   power and digit_sum_of_number - it's for the sake of question
+    #   (what if I had to do this only with multiplication and arrays?)
+
+    # Faster Variant
+    #     return digit_sum_of_number(pow(2, 1000))
+    number, power = 2, 1000
+
+    digits = [1]
+    for _ in range(power):
+        digits = [digit * number for digit in digits]
+        for digit_index in range(len(digits)):
+            # We can achieve the same with div operation but it's faster this way
+            while digits[digit_index] >= 10:
+                digits[digit_index] -= 10
+                try:
+                    digits[digit_index + 1] += 1
+
+                except IndexError:
+                    digits.append(1)
+
+    return sum(digits)
 
 
 def q17(start=1, up_to=1000):
@@ -601,7 +621,7 @@ if __name__ == '__main__':
 
     start_time = time.time()
 
-    print(q56())
+    print(q16())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
