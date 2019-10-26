@@ -275,12 +275,7 @@ def q16():
 
 
 def q17(start=1, up_to=1000):
-    total = 0
-    for number in range(start, up_to):
-        numerical_value = translate(number)
-        total += numerical_value
-
-    return total
+    return sum(translate(number) for number in range(start, up_to))
 
 
 def q18():
