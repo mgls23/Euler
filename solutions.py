@@ -24,7 +24,7 @@ from euler.util.matrix import (
     right_diagonal
 )
 from euler.util.multiplications import greatest_common_denominator, lowest_common_multiple
-from euler.util.number_to_string import numerical_score
+from euler.util.number_to_string import numerical_score, digit_sum_of_number
 from euler.util.palindromes import is_palindrome_simple_string, generate_palindromes
 from euler.util.prime import generate_to_sie, is_prime, is_truncable_prime
 from euler.util.triangle_numbers import is_triangle_number
@@ -560,6 +560,14 @@ def q57(number=1000):
     return count
 
 
+def q56(up_to_number=100):
+    return max(map(digit_sum_of_number, [
+        pow(a, b)  # Use pow instead of math.pow to produce correct results
+        for a in range(up_to_number - 1, 90, -1)
+        for b in range(up_to_number - 1, 90, -1)
+    ]))
+
+
 def q58():
     primes_encountered, none_primes = 0, 0
     number, one_side = 1, 1
@@ -593,7 +601,7 @@ if __name__ == '__main__':
 
     start_time = time.time()
 
-    print(q4())
+    print(q56())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))

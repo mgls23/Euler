@@ -10,3 +10,7 @@ def numerical_score(string):
     A=1, B=2, Z=26
     """
     return sum(ord(char) for char in string) - BASE_STARTS_WITH_1 * len(string)
+
+
+def digit_sum_of_number(number):
+    return sum(map(int, str(number)))
