@@ -1,6 +1,7 @@
 import logging
 import math
 import sys
+from collections import defaultdict
 
 from numpy import product
 
@@ -14,6 +15,7 @@ from euler.names_scores import translate
 from euler.reciprocal_cycles import string_division
 from euler.util import maths, prime
 from euler.util.dates import calculate_number_of_days_in_month
+from euler.util.digits import all_digits
 from euler.util.fibonacci import FibonacciIterator
 from euler.util.matrix import (
     adjacent_multiplicand_string,
@@ -540,6 +542,28 @@ def q48():
     return int(str(sum(map(lambda x: x ** x, range(1, 1000))))[-10:])
 
 
+def q49(given_digit=4):
+    primes = generate_to_sie(10 ** given_digit)
+    primes_in_digit_range = filter(lambda number: number >= 10 ** (given_digit - 1), primes)
+    primes_by_digits = [(number, ''.join(all_digits(number))) for number in primes_in_digit_range]
+
+    groupby_dict = defaultdict(list)
+    for prime_number, digits in primes_by_digits: groupby_dict[digits].append(prime_number)
+
+    permuting_primes = []
+    for digits, primes in groupby_dict.items():
+        if len(primes) >= 3:
+            sorted_primes = sorted(primes)
+            for i in range(len(sorted_primes) - 1, 1, -1):
+                for j in range(i - 1, 0, -1):
+                    for k in range(j, -1, -1):
+                        if sorted_primes[i] - sorted_primes[j] == sorted_primes[j] - sorted_primes[k]:
+                            permuting_primes.append([sorted_primes[k], sorted_primes[j], sorted_primes[i]])
+
+    assert len(permuting_primes) == 2, "There are only 2 permuting primes"
+    return ''.join(map(str, list(filter(lambda list_: 1487 not in list_, permuting_primes))[0]))
+
+
 def q50(upper_limit=10 ** 6):
     prime_numbers = generate_to_sie(upper_limit)
     all_added = sum(prime_numbers)
@@ -616,7 +640,7 @@ if __name__ == '__main__':
 
     start_time = time.time()
 
-    print(q16())
+    print(q49())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
