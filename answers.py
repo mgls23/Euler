@@ -12,7 +12,7 @@ from solutions import (
     q7,
     q8,
     q9,
-)
+    q42)
 
 ANSWERS = {
     q1: 233168,
@@ -54,6 +54,8 @@ ANSWERS = {
     q37: 748317,
 
     q40: 210,
+
+    q42: 142,
 
     q48: 9110846700,
 
