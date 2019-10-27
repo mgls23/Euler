@@ -1,7 +1,5 @@
 import unittest
 
-from euler.largest_palindrome_product import is_palindrome
-
 
 class TestFibonacciIterator(unittest.TestCase):
     def test_is_palindrome(self):
@@ -13,5 +11,6 @@ class TestFibonacciIterator(unittest.TestCase):
             1231: False,
         }
 
+        from euler.maths.palindromes import is_palindrome
         for number, is_palindrome_ in is_palindrome_check.items():
             self.assertEqual(is_palindrome_, is_palindrome(number))

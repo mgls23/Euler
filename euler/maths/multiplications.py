@@ -1,6 +1,6 @@
 import functools
 
-from euler.util.prime import prime_numbers_smaller_than
+from euler.maths.prime import prime_numbers_smaller_than
 
 
 def lowest_common_multiple(number1, number2):

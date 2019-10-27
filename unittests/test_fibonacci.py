@@ -3,6 +3,7 @@ import unittest
 from euler.util.fibonacci import FibonacciIterator
 from euler.even_fibonacci import NFibonacciIterator
 
+
 class TestFibonacciIterator(unittest.TestCase):
     pass
 

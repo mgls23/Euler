@@ -14,31 +14,75 @@ from euler.longest_collatz_sequence import collatz_length
 from euler.maximum_path_sum import Tree
 from euler.names_scores import translate
 from euler.reciprocal_cycles import string_division
-from euler.util import maths, prime
-from euler.util.dates import calculate_number_of_days_in_month
-from euler.util.digits import all_digits
-from euler.util.fibonacci import FibonacciIterator
-from euler.util.matrix import (
+
+from euler.maths import prime
+from euler.maths.sigma import (sigma_n, sigma_n2, )
+from euler.maths.matrix import (
     adjacent_multiplicand_string,
     adjacent_multiplicand,
     horizontal,
     left_diagonal,
     right_diagonal
 )
-from euler.util.multiplications import greatest_common_denominator, lowest_common_multiple
-from euler.util.number_to_string import numerical_score, digit_sum_of_number
-from euler.util.palindromes import is_palindrome_simple_string, generate_palindromes
-from euler.util.prime import generate_to_sie, is_prime, is_truncable_prime
-from euler.util.triangle_numbers import is_triangle_number, check_is_integer_and_odd, pentagonal, hexagonal, \
-    is_pentagonal_number
+from euler.maths.multiplications import greatest_common_denominator, lowest_common_multiple
+from euler.maths.palindromes import is_palindrome_simple_string, generate_palindromes
+from euler.maths.prime import generate_to_sie, is_prime, is_truncable_prime
+from euler.maths.triangle_numbers import (
+    is_triangle_number,
+    pentagonal,
+    hexagonal,
+    is_pentagonal_number,
+)
+
+from euler.strings.digits import all_digits
+from euler.strings.number_to_string import numerical_score, digit_sum_of_number
+
+from euler.util.dates import calculate_number_of_days_in_month
+from euler.util.fibonacci import FibonacciIterator
 
 
 def q1():
+    def fizz_buzz(x, lower_bound=2, fizz=3, buzz=5):
+        """ Finds all multiples of 3s and 5s until the given number
+
+        :param x :int (The upper bound to perform fizz buzz on)
+        :param lower_bound :int
+        :param fizz :int
+        :param buzz :int
+        """
+        return [number for number in range(lower_bound, x + 1)
+                if (number % fizz) == 0 or (number % buzz) == 0]
+
+    def sigma_n_with_multiplier(upper_bound, multiplier):
+        """ Finds multiplicative sum [pi] of multiplicand no bigger than the upper bound.
+        The multiplication with multiplicand x 1, therefore it does not include 0
+
+        This uses a simple property that 1 + 2 + 3 + 4 + 5 ... + (n-1) + n = (n + 1) x n/2
+        Taking the example of multiplicand of 3,
+        3 + 6 + 9 + 12 + 15 + ... 3n
+            = 3 x 1 + 3 x 2 + 3 x 3 + ... 3 x n
+            = 3 x (1 + 2 + 3 + ... n)
+            = 3 x (n + 1) x n/2
+            = m * (n + 1) x n/2
+             [m being the multiplicand]
+
+        Do note that n will be the highest multiple of multiplicand smaller than upper bound
+            :: n = math.floor(upper_bound / multiplicand
+
+        :param upper_bound :int
+        :param multiplier :int
+        """
+        # Catch negative n cases as well as 0 case here
+        if upper_bound < multiplier: return 0
+
+        n = math.floor(upper_bound / multiplier)
+        return multiplier * sigma_n(n)
+
     upper_bound = 999
 
-    sum3 = maths.guassian_sum(upper_bound, 3)
-    sum5 = maths.guassian_sum(upper_bound, 5)
-    sum15 = maths.guassian_sum(upper_bound, 15)
+    sum3 = sigma_n_with_multiplier(upper_bound, 3)
+    sum5 = sigma_n_with_multiplier(upper_bound, 5)
+    sum15 = sigma_n_with_multiplier(upper_bound, 15)
 
     return sum3 + sum5 - sum15
 
@@ -99,8 +143,8 @@ def q5(up_to=20):
 
 def q6(n=100):
     # Q6 :: Sum Square Difference
-    square_of_sum = int((n + 1) * n / 2) ** 2
-    sum_of_square = sum([i ** 2 for i in range(n + 1)])
+    square_of_sum = sigma_n(n) ** 2
+    sum_of_square = sigma_n2(n)
     return square_of_sum - sum_of_square
 
 
@@ -145,8 +189,7 @@ def q9():
 
 
 def q10():
-    primes = prime.generate_to_sie(2000000)
-    return sum(primes)
+    return sum(prime.generate_to_sie(2000000))
 
 
 def q11():
@@ -603,6 +646,14 @@ def q50(upper_limit=10 ** 6):
     return longest_prime_sum
 
 
+def q56(up_to_number=100):
+    return max(map(digit_sum_of_number, [
+        pow(a, b)  # Use pow instead of math.pow to produce correct results
+        for a in range(up_to_number - 1, 90, -1)
+        for b in range(up_to_number - 1, 90, -1)
+    ]))
+
+
 def q57(number=1000):
     count = 0
     small, big = 0, 1
@@ -612,14 +663,6 @@ def q57(number=1000):
             count += 1
 
     return count
-
-
-def q56(up_to_number=100):
-    return max(map(digit_sum_of_number, [
-        pow(a, b)  # Use pow instead of math.pow to produce correct results
-        for a in range(up_to_number - 1, 90, -1)
-        for b in range(up_to_number - 1, 90, -1)
-    ]))
 
 
 def q58():
@@ -655,7 +698,7 @@ if __name__ == '__main__':
 
     start_time = time.time()
 
-    print(q45())
+    print(q58())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
