@@ -685,7 +685,7 @@ if __name__ == '__main__':
 
     start_time = time.time()
 
-    print(q34())
+    print(q58())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
