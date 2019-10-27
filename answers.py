@@ -70,11 +70,10 @@ ANSWERS = {
     q67: 7273,
 }
 
-logging.basicConfig(format="[%(asctime)s] %(levelname)6s   %(message)s",
-                    stream=sys.stderr, level=logging.DEBUG)
+logging.basicConfig(format="[%(asctime)s] %(levelname)6s   %(message)s", stream=sys.stderr, level=logging.INFO)
 
 FLAGGED = list()
-IGNORE_FLAG = set(q.__name__.capitalize() for q in (q2, q14, q17, q58))
+IGNORE_FLAG = [q.__name__.capitalize() for q in (q2, q14, q17, q58)]
 
 for question, answer in ANSWERS.items():
     question_name = question.__name__.capitalize()
@@ -90,7 +89,7 @@ for question, answer in ANSWERS.items():
     if time_taken > 1000:
         FLAGGED.append((question_name, time_taken))
 
-logging.info('{} Problems so far'.format(len(ANSWERS)))
+logging.info(f'{len(ANSWERS)} Problems solved :: IGNORED={IGNORE_FLAG}')
 
 if FLAGGED:
     logging.warning('FLAGGED')
