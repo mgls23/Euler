@@ -34,7 +34,7 @@ from euler.maths.triangle_numbers import (
     is_pentagonal_number,
 )
 
-from euler.strings.digits import all_digits
+from euler.strings.digits import all_digits_sorted, all_digits
 from euler.strings.number_to_string import numerical_score, digit_sum_of_number
 
 from euler.util.dates import calculate_number_of_days_in_month
@@ -416,21 +416,19 @@ def q29():
 
 
 def q30(power=5):
-    memoised = {}
-    answers = []
-    upper_limit = 354294
+    # This function ran quite slow so it needed to be optimised - hence less readability
+    digit_powered = [0] + [pow(number, power) for number in range(1, 10)]
 
-    for number in range(2, upper_limit):
-        powers = []
-        for digit in [int(digit) for digit in str(number)]:
-            if digit not in memoised:
-                memoised[digit] = math.pow(digit, power)
+    upper_limit_digits = 1
+    while upper_limit_digits < math.log10(9 ** power * upper_limit_digits): upper_limit_digits += 1
+    upper_limit = 9 ** power * upper_limit_digits
 
-            powers.append(memoised[digit])
-
-        sum_ = sum(powers)
-        if sum_ == number:
-            answers.append(number)
+    # For iteration, generators are faster, For sum, lists are faster
+    # Favour sum(element for <iterable>) over sum(map(lambda, <iterable>))
+    answers = [
+        number for number in range(2, upper_limit)
+        if sum([digit_powered[digit] for digit in all_digits(number)]) == number
+    ]
 
     return sum(answers)
 
@@ -609,7 +607,7 @@ def q49(given_digit=4, repeating_count=3):
 
     grouped_by_digits = {}
     for number in primes_in_range:
-        digits = ''.join(all_digits(number))
+        digits = ''.join(all_digits_sorted(number))
         grouped_by_digits[digits] = grouped_by_digits.get(digits, []) + [number]
 
     permuting_primes = []
@@ -699,7 +697,7 @@ if __name__ == '__main__':
 
     start_time = time.time()
 
-    print(q58())
+    print(q30())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
