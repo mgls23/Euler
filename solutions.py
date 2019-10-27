@@ -1,9 +1,7 @@
-import collections
+import itertools
 import logging
 import math
 import sys
-import itertools
-
 from functools import reduce
 
 from numpy import product
@@ -31,7 +29,8 @@ from euler.util.multiplications import greatest_common_denominator, lowest_commo
 from euler.util.number_to_string import numerical_score, digit_sum_of_number
 from euler.util.palindromes import is_palindrome_simple_string, generate_palindromes
 from euler.util.prime import generate_to_sie, is_prime, is_truncable_prime
-from euler.util.triangle_numbers import is_triangle_number
+from euler.util.triangle_numbers import is_triangle_number, check_is_integer_and_odd, pentagonal, hexagonal, \
+    is_pentagonal_number
 
 
 def q1():
@@ -530,6 +529,26 @@ def q42():
         return reduce(lambda count, word: is_triangle_number(numerical_score(word)) and count + 1 or count, words, 0)
 
 
+def q45():
+    last_hexagonal = 1
+    pn = 2
+    while True:
+        # find the next valid triangle-pentagonal (better because pentagonal > hexagonal)
+        while not is_pentagonal_number(pn): pn += 1
+        pentagonal_ = pentagonal(pn)
+
+        # only need to check for last_hexagonal to current pentagonal
+        for hn in range(last_hexagonal, pn):
+            if pentagonal_ == hexagonal(hn):
+                if pentagonal_ > 571:  # given in answer
+                    # Reconstruct triangle number
+                    return hn * (2 * hn - 1)
+
+        # noinspection PyUnboundLocalVariable
+        last_hexagonal = hn
+        pn += 1
+
+
 def q48():
     """ Q48 :: Self Powers [https://projecteuler.net/problem=48]
 
@@ -636,7 +655,7 @@ if __name__ == '__main__':
 
     start_time = time.time()
 
-    print(q49())
+    print(q45())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
