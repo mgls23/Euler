@@ -4,7 +4,7 @@ import math
 import sys
 from functools import reduce
 
-from numpy import product
+import numpy
 
 from euler.champernownes_constant import champernownes_constant
 from euler.coin_sums import coin_sums
@@ -440,25 +440,21 @@ def q31():
 
 def q33():
     answers = set()
-    for a in range(1, 10):
-        for b in range(1, 10):
-            original = a * 10 + b
-            for d in range(1, 10):
-                e = a
-                denominator = d * 10 + e
+    for a, b in itertools.product(set(range(1, 10)), repeat=2):
+        original = a * 10 + b
+        for d in range(1, 10):
+            e = a
+            denominator = d * 10 + e
 
-                for c in range(1, 10):
-                    for f in range(1, 10):
-                        if c == f: continue
+            for c, f in itertools.permutations(range(1, 10), 2):
+                bc = b * c
+                df = d * f
+                ef = e * f
 
-                        bc = b * c
-                        df = d * f
-                        ef = e * f
-
-                        if ((a * c) + (bc // 10)) == (df + (ef // 10)):
-                            if (bc % 10) == (ef % 10):
-                                if bc == df:
-                                    answers.add((original, denominator))
+                if ((a * c) + (bc // 10)) == (df + (ef // 10)):
+                    if (bc % 10) == (ef % 10):
+                        if bc == df:
+                            answers.add((original, denominator))
 
     top, bottom = 1, 1
     for a, b in answers:
@@ -562,7 +558,7 @@ def q37():
 
 
 def q40():
-    return product([champernownes_constant(10 ** power) for power in range(7)])
+    return numpy.product([champernownes_constant(10 ** power) for power in range(7)])
 
 
 def q42():
@@ -697,7 +693,7 @@ if __name__ == '__main__':
 
     start_time = time.time()
 
-    print(q30())
+    print(q33())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
