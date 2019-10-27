@@ -264,6 +264,7 @@ def q14():
 
     Which starting number, under one million, produces the longest chain?
     """
+    # This cannot be speed-up further without using Cython
     max_sequence_length = max_collatz_number = 0
 
     for number in range(1, 1000000):
