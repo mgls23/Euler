@@ -1,7 +1,9 @@
 import logging
 import math
 import sys
+
 from functools import reduce
+from collections import defaultdict
 
 from numpy import product
 
@@ -12,10 +14,10 @@ from euler.largest_sum import first_n_digits_of_sum
 from euler.longest_collatz_sequence import collatz_length
 from euler.maximum_path_sum import Tree
 from euler.names_scores import translate
-from euler.power_digit_sum import power_digit_sum
 from euler.reciprocal_cycles import string_division
 from euler.util import maths, prime
 from euler.util.dates import calculate_number_of_days_in_month
+from euler.util.digits import all_digits
 from euler.util.fibonacci import FibonacciIterator
 from euler.util.matrix import (
     adjacent_multiplicand_string,
@@ -25,7 +27,7 @@ from euler.util.matrix import (
     right_diagonal
 )
 from euler.util.multiplications import greatest_common_denominator, lowest_common_multiple
-from euler.util.number_to_string import numerical_score
+from euler.util.number_to_string import numerical_score, digit_sum_of_number
 from euler.util.palindromes import is_palindrome_simple_string, generate_palindromes
 from euler.util.prime import generate_to_sie, is_prime, is_truncable_prime
 from euler.util.triangle_numbers import is_triangle_number
@@ -252,16 +254,32 @@ def q15(n=20):
 
 def q16():
     """ Q16 :: Digit of 2^1000"""
-    return power_digit_sum(1000)
+    # Do not use this method of digit sum - it's much faster to use
+    #   power and digit_sum_of_number - it's for the sake of question
+    #   (what if I had to do this only with multiplication and arrays?)
+
+    # Faster Variant
+    #     return digit_sum_of_number(pow(2, 1000))
+    number, power = 2, 1000
+
+    digits = [1]
+    for _ in range(power):
+        digits = [digit * number for digit in digits]
+        for digit_index in range(len(digits)):
+            # We can achieve the same with div operation but it's faster this way
+            while digits[digit_index] >= 10:
+                digits[digit_index] -= 10
+                try:
+                    digits[digit_index + 1] += 1
+
+                except IndexError:
+                    digits.append(1)
+
+    return sum(digits)
 
 
 def q17(start=1, up_to=1000):
-    total = 0
-    for number in range(start, up_to):
-        numerical_value = translate(number)
-        total += numerical_value
-
-    return total
+    return sum(translate(number) for number in range(start, up_to))
 
 
 def q18():
@@ -519,6 +537,28 @@ def q48():
     return int(str(sum(map(lambda x: x ** x, range(1, 1000))))[-10:])
 
 
+def q49(given_digit=4):
+    primes = generate_to_sie(10 ** given_digit)
+    primes_in_digit_range = filter(lambda number: number >= 10 ** (given_digit - 1), primes)
+    primes_by_digits = [(number, ''.join(all_digits(number))) for number in primes_in_digit_range]
+
+    groupby_dict = defaultdict(list)
+    for prime_number, digits in primes_by_digits: groupby_dict[digits].append(prime_number)
+
+    permuting_primes = []
+    for digits, primes in groupby_dict.items():
+        if len(primes) >= 3:
+            sorted_primes = sorted(primes)
+            for i in range(len(sorted_primes) - 1, 1, -1):
+                for j in range(i - 1, 0, -1):
+                    for k in range(j, -1, -1):
+                        if sorted_primes[i] - sorted_primes[j] == sorted_primes[j] - sorted_primes[k]:
+                            permuting_primes.append([sorted_primes[k], sorted_primes[j], sorted_primes[i]])
+
+    assert len(permuting_primes) == 2, "There are only 2 permuting primes"
+    return ''.join(map(str, list(filter(lambda list_: 1487 not in list_, permuting_primes))[0]))
+
+
 def q50(upper_limit=10 ** 6):
     prime_numbers = generate_to_sie(upper_limit)
     all_added = sum(prime_numbers)
@@ -554,6 +594,14 @@ def q57(number=1000):
     return count
 
 
+def q56(up_to_number=100):
+    return max(map(digit_sum_of_number, [
+        pow(a, b)  # Use pow instead of math.pow to produce correct results
+        for a in range(up_to_number - 1, 90, -1)
+        for b in range(up_to_number - 1, 90, -1)
+    ]))
+
+
 def q58():
     primes_encountered, none_primes = 0, 0
     number, one_side = 1, 1
@@ -587,7 +635,7 @@ if __name__ == '__main__':
 
     start_time = time.time()
 
-    print(q42())
+    print(q49())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
