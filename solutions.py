@@ -1,3 +1,4 @@
+import collections
 import itertools
 import logging
 import math
@@ -21,7 +22,13 @@ from euler.maths.matrix import (
 )
 from euler.maths.multiplications import greatest_common_denominator, lowest_common_multiple
 from euler.maths.palindromes import is_palindrome_simple_string, generate_palindromes
-from euler.maths.prime import generate_to_sie, is_prime, is_truncable_prime, generate_primes_in_digit_range
+from euler.maths.prime import (
+    generate_to_sie,
+    is_prime,
+    is_truncable_prime,
+    generate_primes_in_digit_range,
+    is_prime_robin_miller,
+)
 from euler.maths.sigma import (sigma_n, sigma_n2, )
 from euler.maths.triangle_numbers import (
     is_triangle_number,
@@ -667,6 +674,33 @@ def q58():
     return ((one_side - 1) * 2) - 1
 
 
+def q60():
+    def concatenate_numbers(n1, n2):
+        return pow(10, int(math.log10(n2)) + 1) * n1 + n2
+
+    # 10 ** 4 - there's no reason I just tried incrementally from 10**3
+    primes = generate_to_sie(int(10 ** 4))
+    graph = collections.defaultdict(set)
+    for x, y in itertools.combinations(primes, 2):
+        if is_prime_robin_miller(concatenate_numbers(x, y)) \
+                and is_prime_robin_miller(concatenate_numbers(y, x)):
+            graph[x].add(y)
+            graph[y].add(x)
+
+    to_visit = collections.deque()
+    for key in graph: to_visit.append([key])
+
+    while to_visit:
+        path_so_far = to_visit.popleft()
+        for connected_to_last in graph[path_so_far[-1]]:
+            if connected_to_last not in path_so_far:
+                if all(connected_to_last in graph[node] for node in path_so_far):
+                    to_visit.appendleft(path_so_far + [connected_to_last])
+                else:
+                    if len(path_so_far) > 4:
+                        return list(sorted(path_so_far))
+
+
 def q67():
     tree = Tree('data/p067_triangle.txt')
     maximum_path_sum = tree.find_maximum_path_sum()
@@ -680,7 +714,7 @@ if __name__ == '__main__':
 
     start_time = time.time()
 
-    print(q58())
+    print(q60())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
