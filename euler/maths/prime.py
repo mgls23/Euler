@@ -1,6 +1,7 @@
 import math
+import random
 
-from euler.util.decorators import memoised
+from euler.util.decorators import memoised, timed_function
 
 PRIME_ENTRIES = [2, 3, 5, 7]
 
@@ -32,6 +33,14 @@ def _generate_next_prime():
         _check_prime_entries(k + 1)
 
     return PRIME_ENTRIES[-1]
+
+
+def generate_primes_in_range(lower_limit, upper_limit):
+    return filter(lambda n: n >= lower_limit, generate_to_sie(upper_limit))
+
+
+def generate_primes_in_digit_range(lower_limit_digit, upper_limit_digit):
+    return generate_primes_in_range(10 ** lower_limit_digit, 10 ** upper_limit_digit)
 
 
 def generate_to_sie(upper_bound):
@@ -66,6 +75,33 @@ def nth_prime_number(n):
     return PRIME_ENTRIES[n - 1]
 
 
+def is_prime_robin_miller(n, k=2):
+    if n <= 1: return False
+    if n <= 3: return True
+    if (n % 2 == 0) or (n % 3 == 0): return False
+
+    # n-1 = 2^r * d
+    r, d = 0, n - 1
+    while d % 2 == 0:
+        r += 1
+        d //= 2
+
+    for _ in range(k):
+        a = random.randint(2, n - 2)
+        x = pow(a, d, n)
+
+        if x == 1 or x == n - 1: continue  # Probably prime
+
+        for _ in range(r - 1):
+            x = pow(x, 2, n)
+            if x == (n - 1): break  # Probably prime
+
+        else:
+            return False
+
+    return True
+
+
 @memoised
 def is_prime(number):
     if number <= 1: return False
@@ -91,3 +127,22 @@ def is_truncable_prime(number, digit_length=-1):
             return False
 
     return True
+
+
+@timed_function
+def _benchmark_for_generate_sie(lower_range_digit=6, upper_range_digit=7):
+    return generate_primes_in_digit_range(lower_range_digit, upper_range_digit)
+
+
+@timed_function
+def _benchmark_generate_by_robin_miller(lower_range_digit=5, upper_range_digit=6):
+    return [number for number in range(10 ** lower_range_digit, 10 ** upper_range_digit) if
+            is_prime_robin_miller(number)]
+
+
+if __name__ == '__main__':
+    import logging, sys
+
+    logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+    _benchmark_for_generate_sie(lower_range_digit=6, upper_range_digit=7)
+    _benchmark_generate_by_robin_miller(lower_range_digit=5, upper_range_digit=6)

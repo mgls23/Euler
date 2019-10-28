@@ -11,12 +11,7 @@ from euler.coin_sums import coin_sums
 from euler.even_fibonacci import N2FibonacciIterator
 from euler.largest_sum import first_n_digits_of_sum
 from euler.longest_collatz_sequence import collatz_length
-from euler.maximum_path_sum import Tree
-from euler.names_scores import translate
-from euler.reciprocal_cycles import string_division
-
 from euler.maths import prime
-from euler.maths.sigma import (sigma_n, sigma_n2, )
 from euler.maths.matrix import (
     adjacent_multiplicand_string,
     adjacent_multiplicand,
@@ -26,17 +21,19 @@ from euler.maths.matrix import (
 )
 from euler.maths.multiplications import greatest_common_denominator, lowest_common_multiple
 from euler.maths.palindromes import is_palindrome_simple_string, generate_palindromes
-from euler.maths.prime import generate_to_sie, is_prime, is_truncable_prime
+from euler.maths.prime import generate_to_sie, is_prime, is_truncable_prime, generate_primes_in_digit_range
+from euler.maths.sigma import (sigma_n, sigma_n2, )
 from euler.maths.triangle_numbers import (
     is_triangle_number,
     pentagonal,
     hexagonal,
     is_pentagonal_number,
 )
-
+from euler.maximum_path_sum import Tree
+from euler.names_scores import translate
+from euler.reciprocal_cycles import string_division
 from euler.strings.digits import all_digits_sorted, all_digits
 from euler.strings.number_to_string import numerical_score, digit_sum_of_number
-
 from euler.util.dates import calculate_number_of_days_in_month
 from euler.util.fibonacci import FibonacciIterator
 
@@ -591,10 +588,8 @@ def q49(given_digit=4, repeating_count=3):
     from euler.util.array import is_all_same
     import operator
 
-    primes_in_range = filter(lambda n: n >= 10 ** (given_digit - 1), generate_to_sie(10 ** given_digit))
-
     grouped_by_digits = {}
-    for number in primes_in_range:
+    for number in generate_primes_in_digit_range(given_digit - 1, given_digit):
         digits = ''.join(all_digits_sorted(number))
         grouped_by_digits[digits] = grouped_by_digits.get(digits, []) + [number]
 
