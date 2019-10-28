@@ -675,6 +675,10 @@ def q58():
 
 
 def q60():
+    # This runs under 9 seconds
+    # robin_miller primality check takes up 60% of runtime
+    # concatenate_numbers another 12.6%
+    # I'm not sure how much faster this can go
     def concatenate_numbers(n1, n2):
         return pow(10, int(math.log10(n2)) + 1) * n1 + n2
 
@@ -698,7 +702,8 @@ def q60():
                     to_visit.appendleft(path_so_far + [connected_to_last])
                 else:
                     if len(path_so_far) > 4:
-                        return list(sorted(path_so_far))
+                        # print(list(sorted(path_so_far)))
+                        return sum(path_so_far)
 
 
 def q67():
