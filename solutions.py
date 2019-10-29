@@ -713,12 +713,12 @@ def q67():
     return maximum_path_sum
 
 
-def calculate_number_of_divisors(n, prime_numbers):
+def calculate_number_of_divisors(n, prime_numbers, n_multiplier=1):
     number_of_divisors = 1
     for prime_number in prime_numbers:
         current = 1
         while not n % prime_number:
-            current += 1
+            current += n_multiplier
             n //= prime_number
 
             if n == 1:
@@ -753,13 +753,25 @@ def q108(given_number=1000):
     return minimum_number
 
 
+def q110(given_number=4 * (10 ** 6)):
+    primes = generate_to_sie(10 ** 6)
+
+    nice_multiple = reduce(operator.mul, primes[:11])
+    i = nice_multiple
+    while True:
+        i += nice_multiple
+        divisors = calculate_number_of_divisors(i, primes, n_multiplier=2)
+        if (divisors + 1) // 2 > given_number:
+            return i
+
+
 if __name__ == '__main__':
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
     import time
 
     start_time = time.time()
 
-    print(q108())
+    print(q110())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
