@@ -21,7 +21,7 @@ from euler.maths.matrix import (
     left_diagonal,
     right_diagonal
 )
-from euler.maths.multiplications import greatest_common_denominator, lowest_common_multiple, decompose_to_prime_powers
+from euler.maths.multiplications import greatest_common_denominator, lowest_common_multiple
 from euler.maths.palindromes import is_palindrome_simple_string, generate_palindromes
 from euler.maths.prime import (
     generate_to_sie,
@@ -731,24 +731,26 @@ def calculate_number_of_divisors(n, prime_numbers):
     raise Exception()
 
 
-def q108(number=1000):
-    minimum_multiplied = None
+def q108(given_number=1000):
+    minimum_number = None
     primes = generate_to_sie(1000)
 
-    powers_precomputed = {
+    precomputed = {
         prime_number: {i: pow(prime_number, i) for i in range(200)}
         for prime_number in [2] + primes
     }
 
-    for group_size in range(2, 50):
-        for groups in itertools.product(set(range(1, 7)), repeat=group_size):
-            if reduce(operator.mul, groups) > 1000:
-                multiplied = reduce(operator.mul, [powers_precomputed[primes[i]][power - 1] for i, power in enumerate(groups)])
-                if minimum_multiplied is None or multiplied < minimum_multiplied:
-                    minimum_multiplied = multiplied
-                    print(int(math.log10(minimum_multiplied)), minimum_multiplied, groups)
+    for group_size in range(2, 10):
+        for groups in itertools.product(set(range(1, 1 + 2 * 4, 2)), repeat=group_size):
+            divisors = reduce(operator.mul, groups)
+            if (divisors + 1) // 2 > given_number:
+                number = reduce(operator.mul,
+                                [precomputed[primes[i]][(power - 1) // 2] for i, power in enumerate(groups)])
+                if minimum_number is None or number < minimum_number:
+                    minimum_number = number
+                    # print(int(math.log10(minimum_number)), minimum_number, groups)
 
-    return minimum_multiplied
+    return minimum_number
 
 
 if __name__ == '__main__':
