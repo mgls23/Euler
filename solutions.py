@@ -35,8 +35,7 @@ from euler.maths.triangle_numbers import (
     is_triangle_number,
     pentagonal,
     hexagonal,
-    is_pentagonal_number,
-    triangle_numbers_generator)
+    is_pentagonal_number)
 from euler.maximum_path_sum import Tree
 from euler.names_scores import translate
 from euler.reciprocal_cycles import string_division
@@ -252,9 +251,18 @@ def q11():
 def q12():
     primes = generate_to_sie(10 ** 5)
 
-    for triangle_number in triangle_numbers_generator(100000):
-        if calculate_number_of_divisors(triangle_number, primes) > 500:
-            return triangle_number
+    n = 2
+    divisor1, divisor2 = 2, 2
+
+    while divisor1 * divisor2 < 500:
+        if n % 2 == 0:
+            divisor1 = calculate_number_of_divisors(n + 1, primes)
+        else:
+            divisor2 = calculate_number_of_divisors((n + 1) // 2, primes)
+
+        n += 1
+
+    return ((n + 1) * n) // 2
 
 
 def q13():
