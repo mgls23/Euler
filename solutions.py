@@ -2,6 +2,7 @@ import collections
 import itertools
 import logging
 import math
+import operator
 import sys
 from functools import reduce
 
@@ -20,7 +21,7 @@ from euler.maths.matrix import (
     left_diagonal,
     right_diagonal
 )
-from euler.maths.multiplications import greatest_common_denominator, lowest_common_multiple
+from euler.maths.multiplications import greatest_common_denominator, lowest_common_multiple, decompose_to_prime_powers
 from euler.maths.palindromes import is_palindrome_simple_string, generate_palindromes
 from euler.maths.prime import (
     generate_to_sie,
@@ -455,10 +456,10 @@ def q33():
                 df = d * f
                 ef = e * f
 
-                if ((a * c) + (bc // 10)) == (df + (ef // 10)):
-                    if (bc % 10) == (ef % 10):
-                        if bc == df:
-                            answers.add((original, denominator))
+        if ((a * c) + (bc // 10)) == (df + (ef // 10)):
+            if (bc % 10) == (ef % 10):
+                if bc == df:
+                    answers.add((original, denominator))
 
     top, bottom = 1, 1
     for a, b in answers:
@@ -712,14 +713,56 @@ def q67():
     return maximum_path_sum
 
 
+def calculate_number_of_divisors(n, prime_numbers):
+    number_of_divisors = 1
+    for prime_number in prime_numbers:
+        current = 1
+        while not n % prime_number:
+            current += 1
+            n //= prime_number
+
+            if n == 1:
+                number_of_divisors *= current
+                # print(original_number, number_of_divisors)
+                return number_of_divisors
+
+        number_of_divisors *= current
+
+    raise Exception()
+
+
+def q108(number=1000):
+    upper_range_group_size = 50
+    multiplier = 5
+
+    minimum_multiplied = None
+    primes = generate_to_sie(100)
+
+    for group_size in range(2, upper_range_group_size):
+        for groups in itertools.product(set(range(1, int(number ** (1 / float(group_size)) * multiplier))), repeat=group_size):
+            if reduce(operator.mul, groups) > 1000:
+                multiplied = reduce(operator.mul, [pow(primes[i], power - 1) for i, power in enumerate(groups)])
+                if minimum_multiplied is None or multiplied < minimum_multiplied:
+                    print(minimum_multiplied, groups)
+                    minimum_multiplied = multiplied
+
+    # for a, b, c in itertools.product(set(range(1, 20)), repeat=4):
+    #     if a * b * c > 1000:
+    #         multiplied = pow(2, a - 1) * pow(3, b - 1) * pow(5, c - 1)
+    #         if minimum_multiplied is None or multiplied < minimum_multiplied:
+    #             print(a, b, c)
+    #             minimum_multiplied = multiplied
+
+    return minimum_multiplied
+
+
 if __name__ == '__main__':
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
-
     import time
 
     start_time = time.time()
 
-    print(q60())
+    print(q108())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))

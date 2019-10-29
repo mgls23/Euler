@@ -1,3 +1,4 @@
+import collections
 import functools
 
 from euler.maths.prime import prime_numbers_smaller_than
@@ -18,10 +19,10 @@ def greatest_common_denominator(number1, number2):
 
 
 def multiply(*prime_powers):
-    multiplied = {}
+    multiplied = collections.defaultdict(int)
     for prime_power in prime_powers:
         for prime, power in prime_power.items():
-            multiplied[prime] = multiplied.get(prime, 0) + power
+            multiplied[prime] += power
 
     return multiplied
 
@@ -50,10 +51,10 @@ def decompose_to_prime_powers(number, primes=None):
     """
     if primes is None: primes = prime_numbers_smaller_than(number)
 
-    prime_composition = {}
+    prime_composition = collections.defaultdict(int)
     for prime_number in primes:
         while not number % prime_number:
-            prime_composition[prime_number] = prime_composition.get(prime_number, 0) + 1
+            prime_composition[prime_number] += 1
             number /= prime_number
             if number == 1:
                 return prime_composition
