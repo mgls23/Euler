@@ -36,7 +36,7 @@ from euler.maths.triangle_numbers import (
     pentagonal,
     hexagonal,
     is_pentagonal_number,
-)
+    triangle_numbers_generator)
 from euler.maximum_path_sum import Tree
 from euler.names_scores import translate
 from euler.reciprocal_cycles import string_division
@@ -247,6 +247,14 @@ def q11():
         largest = max(adjacent_multiplicand(line, 4), largest)
 
     return largest
+
+
+def q12():
+    primes = generate_to_sie(10 ** 5)
+
+    for triangle_number in triangle_numbers_generator(100000):
+        if calculate_number_of_divisors(triangle_number, primes) > 500:
+            return triangle_number
 
 
 def q13():
@@ -714,6 +722,8 @@ def q67():
 
 
 def calculate_number_of_divisors(n, prime_numbers, n_multiplier=1):
+    if n == 1: return 1
+
     number_of_divisors = 1
     for prime_number in prime_numbers:
         current = 1
@@ -728,7 +738,7 @@ def calculate_number_of_divisors(n, prime_numbers, n_multiplier=1):
 
         number_of_divisors *= current
 
-    raise Exception()
+    raise Exception(n)
 
 
 def q108(given_number=1000):
@@ -773,7 +783,7 @@ if __name__ == '__main__':
 
     start_time = time.time()
 
-    print(q110())
+    print(q12())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
