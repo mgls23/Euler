@@ -732,6 +732,7 @@ def calculate_number_of_divisors(n, prime_numbers, n_multiplier=1):
 
 
 def q108(given_number=1000):
+    # 180180
     minimum_number = None
     primes = generate_to_sie(1000)
 
@@ -754,6 +755,7 @@ def q108(given_number=1000):
 
 
 def q110(given_number=4 * (10 ** 6)):
+    # 9350130049860600
     primes = generate_to_sie(10 ** 6)
 
     nice_multiple = reduce(operator.mul, primes[:11])
