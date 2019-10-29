@@ -732,26 +732,21 @@ def calculate_number_of_divisors(n, prime_numbers):
 
 
 def q108(number=1000):
-    upper_range_group_size = 50
-    multiplier = 5
-
     minimum_multiplied = None
-    primes = generate_to_sie(100)
+    primes = generate_to_sie(1000)
 
-    for group_size in range(2, upper_range_group_size):
-        for groups in itertools.product(set(range(1, int(number ** (1 / float(group_size)) * multiplier))), repeat=group_size):
+    powers_precomputed = {
+        prime_number: {i: pow(prime_number, i) for i in range(200)}
+        for prime_number in [2] + primes
+    }
+
+    for group_size in range(2, 50):
+        for groups in itertools.product(set(range(1, 7)), repeat=group_size):
             if reduce(operator.mul, groups) > 1000:
-                multiplied = reduce(operator.mul, [pow(primes[i], power - 1) for i, power in enumerate(groups)])
+                multiplied = reduce(operator.mul, [powers_precomputed[primes[i]][power - 1] for i, power in enumerate(groups)])
                 if minimum_multiplied is None or multiplied < minimum_multiplied:
-                    print(minimum_multiplied, groups)
                     minimum_multiplied = multiplied
-
-    # for a, b, c in itertools.product(set(range(1, 20)), repeat=4):
-    #     if a * b * c > 1000:
-    #         multiplied = pow(2, a - 1) * pow(3, b - 1) * pow(5, c - 1)
-    #         if minimum_multiplied is None or multiplied < minimum_multiplied:
-    #             print(a, b, c)
-    #             minimum_multiplied = multiplied
+                    print(int(math.log10(minimum_multiplied)), minimum_multiplied, groups)
 
     return minimum_multiplied
 
