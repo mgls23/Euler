@@ -49,13 +49,14 @@ def decompose_to_prime_powers(number, primes=None):
                 Nm, Pm,
             } ... (N1 ^ P1) * (N2 ^ P2) * ... = number
     """
+    assert number > 0
     if primes is None: primes = prime_numbers_smaller_than(number)
 
     prime_composition = collections.defaultdict(int)
     for prime_number in primes:
-        while not number % prime_number:
+        while number % prime_number == 0:
             prime_composition[prime_number] += 1
-            number /= prime_number
+            number //= prime_number
             if number == 1:
                 return prime_composition
 

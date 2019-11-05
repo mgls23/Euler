@@ -21,7 +21,11 @@ from euler.maths.matrix import (
     left_diagonal,
     right_diagonal
 )
-from euler.maths.multiplications import greatest_common_denominator, lowest_common_multiple
+from euler.maths.multiplications import (
+    greatest_common_denominator,
+    lowest_common_multiple,
+    decompose_to_prime_powers,
+)
 from euler.maths.palindromes import is_palindrome_simple_string, generate_palindromes
 from euler.maths.prime import (
     generate_to_sie,
@@ -386,6 +390,39 @@ def q22():
         score_sum = sum(map(lambda score: score[0] * score[1], enumerate(name_scores, 1)))
 
     return score_sum
+
+
+def q23(upper_bound=10000):
+    # 31626
+    from euler.util.decorators import memoised
+
+    primes = generate_to_sie(upper_bound)
+
+    def sum_of_divisors(n):
+        return reduce(operator.mul,
+                      [_sum_of_divisors(prime_number, power)
+                       for prime_number, power in decompose_to_prime_powers(n, primes).items()])
+
+    def _sum_of_divisors(prime_number, power):
+        return (prime_number ** (power + 1) - 1) // (prime_number - 1)
+
+    @memoised
+    def sum_of_proper_divisors(n):
+        return sum_of_divisors(n) - n
+
+    def is_amicable_number(n1, n2):
+        return sum_of_proper_divisors(n1) == n2 and sum_of_proper_divisors(n2) == n1
+
+    # amicable_numbers = list(filter(is_amicable_number, range(6, upper_bound)))  # We know that 6 is the first amicable number
+
+    amicable_numbers = []
+    for a, b in itertools.combinations(range(4, upper_bound), 2):
+        if is_amicable_number(a, b):
+            amicable_numbers.append(a)
+            amicable_numbers.append(b)
+
+    logging.debug(f'Amicable numbers under {upper_bound} are {amicable_numbers}')
+    return sum(amicable_numbers)
 
 
 def q24():
@@ -806,7 +843,7 @@ if __name__ == '__main__':
 
     start_time = time.time()
 
-    print(q76())
+    print(q23())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))

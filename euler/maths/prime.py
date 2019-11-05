@@ -12,6 +12,8 @@ def iterator():
 
 
 def _check_prime_entries(number):
+    global PRIME_ENTRIES
+
     square_root = math.sqrt(number)
     for prime_number in PRIME_ENTRIES:
         if prime_number > square_root: break
@@ -23,6 +25,8 @@ def _check_prime_entries(number):
 
 
 def _generate_next_prime():
+    global PRIME_ENTRIES
+
     starting_length = len(PRIME_ENTRIES)
     i = math.ceil((PRIME_ENTRIES[-1] - 1) / 6)
 
