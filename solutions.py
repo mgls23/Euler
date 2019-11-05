@@ -40,6 +40,7 @@ from euler.maths.triangle_numbers import (
 from euler.maximum_path_sum import Tree
 from euler.names_scores import translate
 from euler.reciprocal_cycles import string_division
+from euler.something import f, _f
 from euler.strings.digits import all_digits_sorted, all_digits
 from euler.strings.number_to_string import numerical_score, digit_sum_of_number
 from euler.util.dates import calculate_number_of_days_in_month
@@ -723,6 +724,10 @@ def q71():
     return expanded_fraction_numerator - 1  # Because n-1 and n are co-primes
 
 
+def q76():
+    return f(100) - 1
+
+
 def calculate_number_of_divisors(n, prime_numbers):
     number_of_divisors = 1
     for prime_number in prime_numbers:
@@ -767,7 +772,7 @@ if __name__ == '__main__':
 
     start_time = time.time()
 
-    print(q108())
+    print(q76())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
