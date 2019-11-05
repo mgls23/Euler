@@ -1,18 +1,4 @@
-import logging
-import sys
-import time
-
-from solutions import (
-    q1, q10, q11, q13, q14, q15, q16, q17, q18, q19,
-    q2, q20, q21, q22, q24, q25, q26, q28, q29,
-    q3, q30, q31, q33, q34, q35, q36, q37,
-    q4, q40, q42, q45, q48, q49,
-    q5, q50, q56, q57, q58,
-    q6, q67,
-    q7,
-    q8,
-    q9,
-)
+from solutions import *
 
 ANSWERS = {
     q1: 233168,
@@ -26,7 +12,7 @@ ANSWERS = {
     q9: 31875000,
     q10: 142913828922,
     q11: 70600674,
-
+    q12: 76576500,
     q13: 5537376230,
     q14: 837799,
     q15: 137846528820,
@@ -68,12 +54,16 @@ ANSWERS = {
     q58: 26241,
 
     q67: 7273,
+
+    q108: 180180,
+
+    q110: 9350130049860600,
 }
 
 logging.basicConfig(format="[%(asctime)s] %(levelname)6s   %(message)s", stream=sys.stderr, level=logging.INFO)
 
 FLAGGED = list()
-IGNORE_FLAG = [q.__name__.capitalize() for q in (q2, q14, q17, q58)]
+IGNORE_FLAG = [q.__name__.capitalize() for q in (q2, q14, q17, q58, q108, q110)]
 
 for question, answer in ANSWERS.items():
     question_name = question.__name__.capitalize()
