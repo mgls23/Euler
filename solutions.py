@@ -713,6 +713,16 @@ def q67():
     return maximum_path_sum
 
 
+def q71():
+    number = 1000000
+    numerator, denominator = 3, 7
+
+    expanded_fraction_denominator = (number // denominator) * denominator
+    expanded_fraction_numerator = (expanded_fraction_denominator * numerator) // denominator
+
+    return expanded_fraction_numerator - 1  # Because n-1 and n are co-primes
+
+
 def calculate_number_of_divisors(n, prime_numbers):
     number_of_divisors = 1
     for prime_number in prime_numbers:
