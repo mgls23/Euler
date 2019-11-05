@@ -3,6 +3,11 @@ import math
 from euler.util.decorators import memoised
 
 
+def triangle_numbers_generator(number):
+    for n in range(1, number):
+        yield ((n + 1) * n) // 2
+
+
 @memoised
 def is_triangle_number(number):
     if number <= 0: return False
