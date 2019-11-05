@@ -1,3 +1,5 @@
+import time
+
 from solutions import *
 
 ANSWERS = {
@@ -63,7 +65,8 @@ ANSWERS = {
 logging.basicConfig(format="[%(asctime)s] %(levelname)6s   %(message)s", stream=sys.stderr, level=logging.INFO)
 
 FLAGGED = list()
-IGNORE_FLAG = [q.__name__.capitalize() for q in (q2, q14, q17, q58, q108, q110)]
+IGNORE_FLAG = [q.__name__.capitalize() for q in (q2, q12, q17)]
+# FLAGGED = [q14, q58, q108, q110]
 
 for question, answer in ANSWERS.items():
     question_name = question.__name__.capitalize()

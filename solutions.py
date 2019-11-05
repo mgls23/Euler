@@ -506,10 +506,10 @@ def q33():
                 df = d * f
                 ef = e * f
 
-        if ((a * c) + (bc // 10)) == (df + (ef // 10)):
-            if (bc % 10) == (ef % 10):
-                if bc == df:
-                    answers.add((original, denominator))
+                if ((a * c) + (bc // 10)) == (df + (ef // 10)):
+                    if (bc % 10) == (ef % 10):
+                        if bc == df:
+                            answers.add((original, denominator))
 
     top, bottom = 1, 1
     for a, b in answers:
