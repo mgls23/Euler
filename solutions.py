@@ -21,7 +21,7 @@ from euler.maths.matrix import (
     left_diagonal,
     right_diagonal
 )
-from euler.maths.multiplications import greatest_common_denominator, lowest_common_multiple, decompose_to_prime_powers
+from euler.maths.multiplications import greatest_common_denominator, lowest_common_multiple
 from euler.maths.palindromes import is_palindrome_simple_string, generate_palindromes
 from euler.maths.prime import (
     generate_to_sie,
@@ -35,8 +35,7 @@ from euler.maths.triangle_numbers import (
     is_triangle_number,
     pentagonal,
     hexagonal,
-    is_pentagonal_number,
-)
+    is_pentagonal_number)
 from euler.maximum_path_sum import Tree
 from euler.names_scores import translate
 from euler.reciprocal_cycles import string_division
@@ -248,6 +247,23 @@ def q11():
         largest = max(adjacent_multiplicand(line, 4), largest)
 
     return largest
+
+
+def q12():
+    primes = generate_to_sie(10 ** 5)
+
+    n = 2
+    divisor1, divisor2 = 2, 2
+
+    while divisor1 * divisor2 < 500:
+        if n % 2 == 0:
+            divisor1 = calculate_number_of_divisors(n + 1, primes)
+        else:
+            divisor2 = calculate_number_of_divisors((n + 1) // 2, primes)
+
+        n += 1
+
+    return ((n + 1) * n) // 2
 
 
 def q13():
@@ -728,12 +744,14 @@ def q76():
     return f(100) - 1
 
 
-def calculate_number_of_divisors(n, prime_numbers):
+def calculate_number_of_divisors(n, prime_numbers, n_multiplier=1):
+    if n == 1: return 1
+
     number_of_divisors = 1
     for prime_number in prime_numbers:
         current = 1
         while not n % prime_number:
-            current += 1
+            current += n_multiplier
             n //= prime_number
 
             if n == 1:
@@ -743,27 +761,43 @@ def calculate_number_of_divisors(n, prime_numbers):
 
         number_of_divisors *= current
 
-    raise Exception()
+    raise Exception(n)
 
 
-def q108(number=1000):
-    minimum_multiplied = None
+def q108(given_number=1000):
+    # 180180
+    minimum_number = None
     primes = generate_to_sie(1000)
 
-    powers_precomputed = {
+    precomputed = {
         prime_number: {i: pow(prime_number, i) for i in range(200)}
         for prime_number in [2] + primes
     }
 
-    for group_size in range(2, 50):
-        for groups in itertools.product(set(range(1, 9)), repeat=group_size):
-            if reduce(operator.mul, groups) > 1000:
-                multiplied = reduce(operator.mul, [powers_precomputed[primes[i]][power - 1] for i, power in enumerate(groups)])
-                if minimum_multiplied is None or multiplied < minimum_multiplied:
-                    minimum_multiplied = multiplied
-                    print(int(math.log10(minimum_multiplied)), minimum_multiplied, groups)
+    for group_size in range(2, 10):
+        for groups in itertools.product(set(range(1, 1 + 2 * 4, 2)), repeat=group_size):
+            divisors = reduce(operator.mul, groups)
+            if (divisors + 1) // 2 > given_number:
+                number = reduce(operator.mul,
+                                [precomputed[primes[i]][(power - 1) // 2] for i, power in enumerate(groups)])
+                if minimum_number is None or number < minimum_number:
+                    minimum_number = number
+                    # print(int(math.log10(minimum_number)), minimum_number, groups)
 
-    return minimum_multiplied
+    return minimum_number
+
+
+def q110(given_number=4 * (10 ** 6)):
+    # 9350130049860600
+    primes = generate_to_sie(10 ** 6)
+
+    nice_multiple = reduce(operator.mul, primes[:11])
+    i = nice_multiple
+    while True:
+        i += nice_multiple
+        divisors = calculate_number_of_divisors(i, primes, n_multiplier=2)
+        if (divisors + 1) // 2 > given_number:
+            return i
 
 
 if __name__ == '__main__':
