@@ -382,21 +382,10 @@ def q20():
     return sum(map(int, str(math.factorial(100))))
 
 
-def q22():
-    with open('data/p022_names.txt', 'r') as file:
-        names_text = file.readlines()[0]
-        names = sorted(names_text.replace('"', '').split(','))
-        name_scores = map(numerical_score, names)
-        score_sum = sum(map(lambda score: score[0] * score[1], enumerate(name_scores, 1)))
-
-    return score_sum
-
-
-def q23(upper_bound=10000):
-    # 31626
+def q21(upper_bound=10000):
     from euler.util.decorators import memoised
 
-    primes = generate_to_sie(upper_bound)
+    primes = generate_to_sie(upper_bound * 2)
 
     def sum_of_divisors(n):
         return reduce(operator.mul,
@@ -410,19 +399,26 @@ def q23(upper_bound=10000):
     def sum_of_proper_divisors(n):
         return sum_of_divisors(n) - n
 
-    def is_amicable_number(n1, n2):
-        return sum_of_proper_divisors(n1) == n2 and sum_of_proper_divisors(n2) == n1
+    def is_amicable_number_group(tuple_):
+        n1, n2 = tuple_
+        return (n2 > n1) and sum_of_proper_divisors(n1) == n2 and sum_of_proper_divisors(n2) == n1
 
-    # amicable_numbers = list(filter(is_amicable_number, range(6, upper_bound)))  # We know that 6 is the first amicable number
+    pairs_of_numbers = [(i, sum_of_proper_divisors(i)) for i in range(4, upper_bound)]
+    amicable_groups = list(filter(is_amicable_number_group, pairs_of_numbers))
 
-    amicable_numbers = []
-    for a, b in itertools.combinations(range(4, upper_bound), 2):
-        if is_amicable_number(a, b):
-            amicable_numbers.append(a)
-            amicable_numbers.append(b)
-
-    logging.debug(f'Amicable numbers under {upper_bound} are {amicable_numbers}')
+    logging.debug(f'Amicable numbers under {upper_bound} are {amicable_groups}')
+    amicable_numbers = list(sum(amicable_groups, ()))
     return sum(amicable_numbers)
+
+
+def q22():
+    with open('data/p022_names.txt', 'r') as file:
+        names_text = file.readlines()[0]
+        names = sorted(names_text.replace('"', '').split(','))
+        name_scores = map(numerical_score, names)
+        score_sum = sum(map(lambda score: score[0] * score[1], enumerate(name_scores, 1)))
+
+    return score_sum
 
 
 def q24():

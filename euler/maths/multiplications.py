@@ -50,6 +50,7 @@ def decompose_to_prime_powers(number, primes=None):
             } ... (N1 ^ P1) * (N2 ^ P2) * ... = number
     """
     assert number > 0
+    if number == 1: return {}
     if primes is None: primes = prime_numbers_smaller_than(number)
 
     prime_composition = collections.defaultdict(int)
@@ -60,7 +61,7 @@ def decompose_to_prime_powers(number, primes=None):
             if number == 1:
                 return prime_composition
 
-    assert False, "Bad Programmer Error"
+    assert False, f"Number={number}, primes={primes} failed to factorise"
 
 
 def multiply_out_numbers_in_powers(number_in_powers):
