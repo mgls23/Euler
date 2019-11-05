@@ -741,7 +741,7 @@ def q108(number=1000):
     }
 
     for group_size in range(2, 50):
-        for groups in itertools.product(set(range(1, 7)), repeat=group_size):
+        for groups in itertools.product(set(range(1, 9)), repeat=group_size):
             if reduce(operator.mul, groups) > 1000:
                 multiplied = reduce(operator.mul, [powers_precomputed[primes[i]][power - 1] for i, power in enumerate(groups)])
                 if minimum_multiplied is None or multiplied < minimum_multiplied:
