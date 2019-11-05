@@ -1,5 +1,6 @@
 import collections
 import functools
+import math
 
 from euler.maths.prime import prime_numbers_smaller_than
 
@@ -51,17 +52,16 @@ def decompose_to_prime_powers(number, primes=None):
     """
     assert number > 0
     if number == 1: return {}
-    if primes is None: primes = prime_numbers_smaller_than(number)
+    if primes is None: primes = prime_numbers_smaller_than(int(math.ceil(math.sqrt(number))))
 
     prime_composition = collections.defaultdict(int)
     for prime_number in primes:
         while number % prime_number == 0:
             prime_composition[prime_number] += 1
             number //= prime_number
-            if number == 1:
-                return prime_composition
+            if number == 1: return prime_composition
 
-    assert False, f"Number={number}, primes={primes} failed to factorise"
+    assert False, f"Not Enough Primes provided - number={number}, primes={primes}"
 
 
 def multiply_out_numbers_in_powers(number_in_powers):

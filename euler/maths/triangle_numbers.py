@@ -5,7 +5,11 @@ from euler.util.decorators import memoised
 
 def triangle_numbers_generator(number):
     for n in range(1, number):
-        yield ((n + 1) * n) // 2
+        yield nth_triangle_number(n)
+
+
+def nth_triangle_number(n):
+    return ((n + 1) * n) // 2
 
 
 @memoised

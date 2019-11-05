@@ -13,6 +13,11 @@ from euler.coin_sums import coin_sums
 from euler.even_fibonacci import N2FibonacciIterator
 from euler.largest_sum import first_n_digits_of_sum
 from euler.longest_collatz_sequence import collatz_length
+from euler.maximum_path_sum import Tree
+from euler.names_scores import translate
+from euler.reciprocal_cycles import string_division
+from euler.something import f
+
 from euler.maths import prime
 from euler.maths.matrix import (
     adjacent_multiplicand_string,
@@ -39,28 +44,20 @@ from euler.maths.triangle_numbers import (
     is_triangle_number,
     pentagonal,
     hexagonal,
-    is_pentagonal_number)
-from euler.maximum_path_sum import Tree
-from euler.names_scores import translate
-from euler.reciprocal_cycles import string_division
-from euler.something import f, _f
+    is_pentagonal_number,
+    nth_triangle_number,
+)
+
 from euler.strings.digits import all_digits_sorted, all_digits
 from euler.strings.number_to_string import numerical_score, digit_sum_of_number
+
 from euler.util.dates import calculate_number_of_days_in_month
 from euler.util.fibonacci import FibonacciIterator
 
 
 def q1():
     def fizz_buzz(x, lower_bound=2, fizz=3, buzz=5):
-        """ Finds all multiples of 3s and 5s until the given number
-
-        :param x :int (The upper bound to perform fizz buzz on)
-        :param lower_bound :int
-        :param fizz :int
-        :param buzz :int
-        """
-        return [number for number in range(lower_bound, x + 1)
-                if (number % fizz) == 0 or (number % buzz) == 0]
+        return [number for number in range(lower_bound, x + 1) if (number % fizz) == 0 or (number % buzz) == 0]
 
     def sigma_n_with_multiplier(upper_bound, multiplier):
         """ Finds multiplicative sum [pi] of multiplicand no bigger than the upper bound.
@@ -75,9 +72,6 @@ def q1():
             = m * (n + 1) x n/2
              [m being the multiplicand]
 
-        Do note that n will be the highest multiple of multiplicand smaller than upper bound
-            :: n = math.floor(upper_bound / multiplicand
-
         :param upper_bound :int
         :param multiplier :int
         """
@@ -87,13 +81,13 @@ def q1():
         n = math.floor(upper_bound / multiplier)
         return multiplier * sigma_n(n)
 
-    upper_bound = 999
+    number_up_to = 999
 
-    sum3 = sigma_n_with_multiplier(upper_bound, 3)
-    sum5 = sigma_n_with_multiplier(upper_bound, 5)
-    sum15 = sigma_n_with_multiplier(upper_bound, 15)
+    multiples_of_3 = sigma_n_with_multiplier(number_up_to, 3)
+    multiples_of_5 = sigma_n_with_multiplier(number_up_to, 5)
+    multiples_of_15 = sigma_n_with_multiplier(number_up_to, 15)
 
-    return sum3 + sum5 - sum15
+    return (multiples_of_3 + multiples_of_5) - multiples_of_15
 
 
 def q2():
@@ -111,15 +105,7 @@ def q2():
 
 def q3(number=600851475143):
     # Q3 :: Largest Prime Factor of 600851475143
-    for index, prime_number in enumerate(prime.iterator(), 1):
-        while number % prime_number == 0:
-            number /= prime_number
-
-        if number <= 1:
-            return prime_number
-
-        if index >= len(prime.PRIME_ENTRIES):
-            prime._generate_next_prime()
+    return max(decompose_to_prime_powers(number).values())
 
 
 def q4(digit_given=3):
@@ -303,23 +289,7 @@ def q14():
 
 
 def q15(n=20):
-    """ Triangle number with 'various degrees'
-
-    Memory :: n
-    Complexity :: n^2
-
-    TODO :: extend for max(n, m) where it supports a rectangle rather than
-    a square
-
-    :param n: int
-    :return:
-    """
-    paths = [1] * (n + 1)
-    for _ in range(n):
-        for index in range(1, n + 1):
-            paths[index] += paths[index - 1]
-
-    return paths[-1]
+    return nth_triangle_number(n)
 
 
 def q16():
@@ -328,8 +298,7 @@ def q16():
     #   power and digit_sum_of_number - it's for the sake of question
     #   (what if I had to do this only with multiplication and arrays?)
 
-    # Faster Variant
-    #     return digit_sum_of_number(pow(2, 1000))
+    #     return digit_sum_of_number(pow(2, 1000)) # Much faster, concise - just better in every way variant
     number, power = 2, 1000
 
     digits = [1]
@@ -360,13 +329,13 @@ def q18():
 
 def q19():
     number_of_sundays_on_first = 0
-    day_on_sunday = 6
+    sunday_is_on = 6  # 1901.01.06 = Sunday
 
     for year in range(1901, 2001):
         for month in range(1, 13):
             number_of_days_in_month = calculate_number_of_days_in_month(year, month)
-            day_on_sunday = ((day_on_sunday - (number_of_days_in_month % 7)) % 7) or 7
-            if day_on_sunday == 1: number_of_sundays_on_first += 1
+            sunday_is_on = ((sunday_is_on - (number_of_days_in_month % 7)) % 7) or 7
+            if sunday_is_on == 1: number_of_sundays_on_first += 1
 
     return number_of_sundays_on_first
 
@@ -378,7 +347,6 @@ def q20():
         For example, 10! = 10 × 9 × ... × 3 × 2 × 1 = 3628800,
         The sum of the digits for 10! = 3 + 6 + 2 + 8 + 8 + 0 + 0 = 27.
     """
-    import math
     return sum(map(int, str(math.factorial(100))))
 
 
@@ -488,7 +456,6 @@ def q30(power=5):
     return sum(answers)
 
 
-# noinspection PyDefaultArgument
 def q31():
     return coin_sums(coin_total=200, coins_available=[1, 2, 5, 10, 20, 50, 100, 200])
 
@@ -528,7 +495,7 @@ def q34():
     # factorial(9) * 6 + 2 = 2177282
     # Therefore upper range is 2177282 - we could go further
     # upper_limit = 2177282
-    upper_limit = 40586  # but since i've ran this once and it runs slowly - i'll just use 40586 here
+    upper_limit = 40586  # This can't be sped up - i'll just use 40586 here
 
     answer = []
     for number in range(upper_limit):
@@ -560,8 +527,7 @@ def q35():
         if lowest_circular_primes not in lowests:
             lowests.add(lowest_circular_primes)
 
-            if all(circular_prime in prime_number_set for circular_prime in
-                   circular_primes):
+            if all(circular_prime in prime_number_set for circular_prime in circular_primes):
                 circular_prime_numbers += circular_primes
 
     return len(circular_prime_numbers)
