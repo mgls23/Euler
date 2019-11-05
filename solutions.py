@@ -14,6 +14,7 @@ from euler.even_fibonacci import N2FibonacciIterator
 from euler.largest_sum import first_n_digits_of_sum
 from euler.longest_collatz_sequence import collatz_length
 from euler.maths import prime
+from euler.maths.divisors import sum_of_proper_divisors
 from euler.maths.matrix import (
     adjacent_multiplicand_string,
     adjacent_multiplicand,
@@ -24,7 +25,6 @@ from euler.maths.matrix import (
 from euler.maths.multiplications import (
     greatest_common_denominator,
     lowest_common_multiple,
-    decompose_to_prime_powers,
 )
 from euler.maths.palindromes import is_palindrome_simple_string, generate_palindromes
 from euler.maths.prime import (
@@ -43,7 +43,7 @@ from euler.maths.triangle_numbers import (
 from euler.maximum_path_sum import Tree
 from euler.names_scores import translate
 from euler.reciprocal_cycles import string_division
-from euler.something import f, _f
+from euler.something import f
 from euler.strings.digits import all_digits_sorted, all_digits
 from euler.strings.number_to_string import numerical_score, digit_sum_of_number
 from euler.util.dates import calculate_number_of_days_in_month
@@ -383,27 +383,13 @@ def q20():
 
 
 def q21(upper_bound=10000):
-    from euler.util.decorators import memoised
-
     primes = generate_to_sie(upper_bound * 2)
-
-    def sum_of_divisors(n):
-        return reduce(operator.mul,
-                      [_sum_of_divisors(prime_number, power)
-                       for prime_number, power in decompose_to_prime_powers(n, primes).items()])
-
-    def _sum_of_divisors(prime_number, power):
-        return (prime_number ** (power + 1) - 1) // (prime_number - 1)
-
-    @memoised
-    def sum_of_proper_divisors(n):
-        return sum_of_divisors(n) - n
 
     def is_amicable_number_group(tuple_):
         n1, n2 = tuple_
-        return (n2 > n1) and sum_of_proper_divisors(n1) == n2 and sum_of_proper_divisors(n2) == n1
+        return (n2 > n1) and sum_of_proper_divisors(n2, primes) == n1
 
-    pairs_of_numbers = [(i, sum_of_proper_divisors(i)) for i in range(4, upper_bound)]
+    pairs_of_numbers = [(i, sum_of_proper_divisors(i, primes)) for i in range(4, upper_bound)]
     amicable_groups = list(filter(is_amicable_number_group, pairs_of_numbers))
 
     logging.debug(f'Amicable numbers under {upper_bound} are {amicable_groups}')
@@ -419,6 +405,22 @@ def q22():
         score_sum = sum(map(lambda score: score[0] * score[1], enumerate(name_scores, 1)))
 
     return score_sum
+
+
+def q23():
+    upper_bound = 28123
+    primes = generate_to_sie(upper_bound)
+
+    def is_perfect_number(number):
+        return sum_of_proper_divisors(number, primes) == number
+
+    def is_abundant_number(number):
+        return sum_of_proper_divisors(number, primes) > number
+
+    abundant_numbers = set(filter(is_abundant_number, range(12, upper_bound)))
+    logging.debug(f'Abundant Numbers are {abundant_numbers}')
+    # amicable_numbers = list(sum(amicable_groups, ()))
+    # return sum(amicable_numbers)
 
 
 def q24():
@@ -837,7 +839,7 @@ if __name__ == '__main__':
 
     start_time = time.time()
 
-    print(q12())
+    print(q23())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
