@@ -411,6 +411,8 @@ def is_perfect_number(number):
     # Perfect number has 2 interesting properties:
     # 1. perfect_number => 2^n * y   # where y is a prime
     # 2. 2^(n+1) = y+1
+    # Apparently - this is Euclid-Euler theorem
+    #   [https://en.wikipedia.org/wiki/Euclid%E2%80%93Euler_theorem]
     y, n = factorise_by(number, 2)
     return pow(2, n + 1) == (y + 1) and is_prime(y)
 
