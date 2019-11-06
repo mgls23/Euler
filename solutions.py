@@ -19,6 +19,7 @@ from euler.reciprocal_cycles import string_division
 from euler.something import f
 
 from euler.maths import prime
+from euler.maths.divisors import sum_of_proper_divisors, factorise_by
 from euler.maths.matrix import (
     adjacent_multiplicand_string,
     adjacent_multiplicand,
@@ -29,7 +30,6 @@ from euler.maths.matrix import (
 from euler.maths.multiplications import (
     greatest_common_denominator,
     lowest_common_multiple,
-    decompose_to_prime_powers,
 )
 from euler.maths.palindromes import is_palindrome_simple_string, generate_palindromes
 from euler.maths.prime import (
@@ -351,27 +351,13 @@ def q20():
 
 
 def q21(upper_bound=10000):
-    from euler.util.decorators import memoised
-
     primes = generate_to_sie(upper_bound * 2)
-
-    def sum_of_divisors(n):
-        return reduce(operator.mul,
-                      [_sum_of_divisors(prime_number, power)
-                       for prime_number, power in decompose_to_prime_powers(n, primes).items()])
-
-    def _sum_of_divisors(prime_number, power):
-        return (prime_number ** (power + 1) - 1) // (prime_number - 1)
-
-    @memoised
-    def sum_of_proper_divisors(n):
-        return sum_of_divisors(n) - n
 
     def is_amicable_number_group(tuple_):
         n1, n2 = tuple_
-        return (n2 > n1) and sum_of_proper_divisors(n1) == n2 and sum_of_proper_divisors(n2) == n1
+        return (n2 > n1) and sum_of_proper_divisors(n2, primes) == n1
 
-    pairs_of_numbers = [(i, sum_of_proper_divisors(i)) for i in range(4, upper_bound)]
+    pairs_of_numbers = [(i, sum_of_proper_divisors(i, primes)) for i in range(4, upper_bound)]
     amicable_groups = list(filter(is_amicable_number_group, pairs_of_numbers))
 
     logging.debug(f'Amicable numbers under {upper_bound} are {amicable_groups}')
@@ -387,6 +373,94 @@ def q22():
         score_sum = sum(map(lambda score: score[0] * score[1], enumerate(name_scores, 1)))
 
     return score_sum
+
+
+def is_perfect_number(number):
+    # Perfect number has 2 interesting properties:
+    # 1. perfect_number => 2^n * y   # where y is a prime
+    # 2. 2^(n+1) = y+1
+    # Apparently - this is Euclid-Euler theorem
+    #   [https://en.wikipedia.org/wiki/Euclid%E2%80%93Euler_theorem]
+    y, n = factorise_by(number, 2)
+    return pow(2, n + 1) == (y + 1) and is_prime(y)
+
+
+def generate_perfect_numbers(upper_limit=None):
+    def power_to_perfect_number(power):
+        return pow(2, 2 * power + 1) - pow(2, power)
+
+    i = 0
+    while upper_limit is None or power_to_perfect_number(i) < upper_limit:
+        i += 1
+        if is_prime(pow(2, i + 1) - 1):
+            yield power_to_perfect_number(i)
+
+
+def is_abundant_number(number, primes):
+    return sum_of_proper_divisors(number, primes) > number
+
+
+def q23():
+    upper_bound = 28123
+    primes = generate_to_sie(upper_bound)
+
+    abundant_numbers = list(filter(lambda number: is_abundant_number(number, primes), range(2, upper_bound)))
+    logging.debug(f'Abundant Numbers are {abundant_numbers}')
+
+    all_possible_combinations = set()
+    for xi, x in enumerate(abundant_numbers):
+        for yi in range(xi, len(abundant_numbers)):
+            y = abundant_numbers[yi]
+
+            z = x + y
+            if z > upper_bound: break
+            all_possible_combinations.add(z)
+
+    cannot_be_written = set(range(1, upper_bound + 1)) - all_possible_combinations
+
+    logging.debug(f'Possible combinations are {all_possible_combinations}')
+    logging.debug(f'Cannot be written are {list(sorted(cannot_be_written))}')
+    return sum(cannot_be_written)
+
+
+def multiply_out(prime_number, power):
+    numerator = pow(prime_number, power + 1) - 1
+    denominator = pow(prime_number, power) - 1
+
+    logging.debug(f'{prime_number, power, numerator, denominator}')
+
+    return numerator, denominator
+
+
+def generate_abundant_number(n, prime_powers):
+    lhs = pow(2, n + 1)
+    rhs = 1
+    for p, m in prime_powers.items():
+        numerator, denominator = multiply_out(p, m)
+
+        rhs *= numerator
+        lhs *= denominator
+
+    logging.debug(f'{lhs, rhs}')
+
+    if lhs > rhs:
+        abundant_number = pow(2, n)
+        for p, m in prime_powers.items():
+            abundant_number *= pow(p, m)
+        return abundant_number
+
+    return -1
+
+
+import sympy
+
+
+def break_down(number):
+    factorised = sympy.factorint(number)
+    n = factorised.get(2, 0)
+    del factorised[2]
+
+    return n, factorised
 
 
 def q24():
@@ -803,7 +877,7 @@ if __name__ == '__main__':
 
     start_time = time.time()
 
-    print(q12())
+    print(q23())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
