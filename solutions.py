@@ -14,7 +14,7 @@ from euler.even_fibonacci import N2FibonacciIterator
 from euler.largest_sum import first_n_digits_of_sum
 from euler.longest_collatz_sequence import collatz_length
 from euler.maths import prime
-from euler.maths.divisors import sum_of_proper_divisors
+from euler.maths.divisors import sum_of_proper_divisors, factorise_by
 from euler.maths.matrix import (
     adjacent_multiplicand_string,
     adjacent_multiplicand,
@@ -407,20 +407,38 @@ def q22():
     return score_sum
 
 
+def is_perfect_number(number):
+    # Perfect number has 2 interesting properties:
+    # 1. perfect_number => 2^n * y   # where y is a prime
+    # 2. 2^(n+1) = y+1
+    y, n = factorise_by(number, 2)
+    return pow(2, n + 1) == (y + 1) and is_prime(y)
+
+
+def generate_perfect_numbers(upper_limit=None):
+    def power_to_perfect_number(power):
+        return pow(2, 2 * power + 1) - pow(2, power)
+
+    i = 0
+    while upper_limit is None or power_to_perfect_number(i) < upper_limit:
+        i += 1
+        if is_prime(pow(2, i + 1) - 1):
+            yield power_to_perfect_number(i)
+
+
+def is_abundant_number(number, primes):
+    return sum_of_proper_divisors(number, primes) > number
+
+
 def q23():
-    upper_bound = 28123
+    upper_bound = 28123 // 2
     primes = generate_to_sie(upper_bound)
 
-    def is_perfect_number(number):
-        return sum_of_proper_divisors(number, primes) == number
-
-    def is_abundant_number(number):
-        return sum_of_proper_divisors(number, primes) > number
-
-    abundant_numbers = set(filter(is_abundant_number, range(12, upper_bound)))
+    abundant_numbers = list(filter(lambda number: is_abundant_number(number, primes), range(12, upper_bound)))
     logging.debug(f'Abundant Numbers are {abundant_numbers}')
-    # amicable_numbers = list(sum(amicable_groups, ()))
-    # return sum(amicable_numbers)
+
+    perfect_numbers = list(generate_perfect_numbers(upper_bound))
+    logging.debug(f'Perfect Numbers are {perfect_numbers}')
 
 
 def q24():
