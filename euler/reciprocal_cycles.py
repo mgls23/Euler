@@ -19,9 +19,3 @@ def string_division(divisor, dividend=1):
         dividend *= 10
 
     return 0
-
-
-if __name__ == '__main__':
-    from solutions import q26
-
-    print(q26())

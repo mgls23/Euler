@@ -492,9 +492,8 @@ def q26():
     Find value of d for which 1/d contains the longest recurring cycle
         in its decimal fraction part
     """
-    calculated = map(string_division, range(2, 1000 + 1))
-    n, _ = max(enumerate(calculated, 2), key=lambda x: x[1])
-    return n
+    # Use Prime numbers to speed it up!
+    return max(generate_to_sie(1000), key=lambda number: string_division(number))
 
 
 def q27():
