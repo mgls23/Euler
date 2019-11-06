@@ -30,6 +30,7 @@ from euler.maths.matrix import (
 from euler.maths.multiplications import (
     greatest_common_denominator,
     lowest_common_multiple,
+    decompose_to_prime_powers,
 )
 from euler.maths.palindromes import is_palindrome_simple_string, generate_palindromes
 from euler.maths.prime import (
@@ -496,6 +497,32 @@ def q26():
     return n
 
 
+def q27():
+    upper_bound = 1000
+    primes = generate_to_sie(upper_bound)
+    primes_with_negatives = primes + list(map(lambda x: x * -1, primes))
+
+    longest_consecutive_primes = 0
+    longest_a, longest_b = -1, -1
+    for b in primes:
+        for a in primes_with_negatives + [1, -1]:
+            consecutive_primes = 0
+
+            for n in range(1, 80):
+                output = pow(n, 2) + a * n + b
+                if is_prime(output):
+                    consecutive_primes += 1
+                else:
+                    if longest_consecutive_primes < consecutive_primes:
+                        longest_a, longest_b = a, b
+                        longest_consecutive_primes = consecutive_primes
+                        logging.debug(f'{a, b} just overtook with sequence_length={consecutive_primes}')
+
+                    break
+
+    return longest_a * longest_b
+
+
 def q28():
     """ Q28 :: Number spiral diagonals [https://projecteuler.net/problem=28]
 
@@ -877,7 +904,7 @@ if __name__ == '__main__':
 
     start_time = time.time()
 
-    print(q23())
+    print(q27())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
