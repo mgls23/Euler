@@ -433,14 +433,66 @@ def is_abundant_number(number, primes):
 
 
 def q23():
-    upper_bound = 28123 // 2
+    upper_bound = 28123
     primes = generate_to_sie(upper_bound)
 
-    abundant_numbers = list(filter(lambda number: is_abundant_number(number, primes), range(12, upper_bound)))
+    abundant_numbers = list(filter(lambda number: is_abundant_number(number, primes), range(2, upper_bound)))
     logging.debug(f'Abundant Numbers are {abundant_numbers}')
 
-    perfect_numbers = list(generate_perfect_numbers(upper_bound))
-    logging.debug(f'Perfect Numbers are {perfect_numbers}')
+    all_possible_combinations = set()
+    for xi, x in enumerate(abundant_numbers):
+        for yi in range(xi, len(abundant_numbers)):
+            y = abundant_numbers[yi]
+
+            z = x + y
+            if z > upper_bound: break
+            all_possible_combinations.add(z)
+
+    cannot_be_written = set(range(1, upper_bound + 1)) - all_possible_combinations
+
+    logging.debug(f'Possible combinations are {all_possible_combinations}')
+    logging.debug(f'Cannot be written are {list(sorted(cannot_be_written))}')
+    return sum(cannot_be_written)
+
+
+def multiply_out(prime_number, power):
+    numerator = pow(prime_number, power + 1) - 1
+    denominator = pow(prime_number, power) - 1
+
+    logging.debug(f'{prime_number, power, numerator, denominator}')
+
+    return numerator, denominator
+
+
+def generate_abundant_number(n, prime_powers):
+    lhs = pow(2, n + 1)
+    rhs = 1
+    for p, m in prime_powers.items():
+        numerator, denominator = multiply_out(p, m)
+
+        rhs *= numerator
+        lhs *= denominator
+
+    logging.debug(f'{lhs, rhs}')
+
+    if lhs > rhs:
+        abundant_number = pow(2, n)
+        for p, m in prime_powers.items():
+            abundant_number *= pow(p, m)
+        return abundant_number
+
+    return -1
+
+
+import sympy
+
+
+def break_down(number):
+    factorised = sympy.factorint(number)
+    n = factorised.get(2, 0)
+    del factorised[2]
+
+    return n, factorised
 
 
 def q24():
