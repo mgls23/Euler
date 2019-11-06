@@ -25,11 +25,11 @@ ANSWERS = {
     q20: 648,
     q21: 31626,
     q22: 871198282,
-
+    q23: 4179871,
     q24: 2783915460,
     q25: 4782,
     q26: 983,
-
+    q27: -59231,
     q28: 669171001,
     q29: 9183,
     q30: 443839,
@@ -66,7 +66,7 @@ logging.basicConfig(format="[%(asctime)s] %(levelname)6s   %(message)s", stream=
 
 FLAGGED = list()
 IGNORE_FLAG = [q.__name__.capitalize() for q in (q2, q12, q17)]
-# FLAGGED = [q14, q58, q108, q110]
+# FLAGGED = [q14, q23, q58, q108, q110]
 
 for question, answer in ANSWERS.items():
     question_name = question.__name__.capitalize()
@@ -77,7 +77,7 @@ for question, answer in ANSWERS.items():
     assert solution == answer, "{}::{} != {}".format(question_name, solution, answer)
 
     time_taken = (time.time() - start_time) * 1000
-    logging.debug('Solved {} in {:4.2f}ms'.format(question_name, time_taken))
+    logging.info('Solved {} in {:4.2f}ms'.format(question_name, time_taken))
 
     if time_taken > 1000:
         FLAGGED.append((question_name, time_taken))
