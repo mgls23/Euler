@@ -5,6 +5,7 @@ import math
 import operator
 import sys
 from functools import reduce
+from string import ascii_lowercase
 
 import numpy
 
@@ -717,6 +718,37 @@ def q58():
     return ((one_side - 1) * 2) - 1
 
 
+def q59():
+    key_length = 3  # this is given in the question
+
+    def seems_valid_line(line):
+        common_words = ['in ', 'the ']
+        return all(word in line.lower() for word in common_words)
+
+    valid_characters = set(list(range(ord(' '), ord('~') + 1)))
+
+    with open('data/p059_cipher.txt') as numbers_file:
+        numbers = list(map(int, numbers_file.readlines()[0].split(',')))
+
+        valid_answer = []
+        for decrypt_key_numbers in itertools.product(map(ord, ascii_lowercase), repeat=key_length):
+            decrypted_text = ''
+            for index, number in enumerate(numbers):
+                decrypt_key_number = decrypt_key_numbers[index % key_length]
+                decrypted_character = number ^ decrypt_key_number  # ^ is python's way of XOR
+                if decrypted_character not in valid_characters: break
+                decrypted_text += chr(decrypted_character)
+
+            else:
+                if seems_valid_line(decrypted_text):
+                    key = ''.join(map(chr, decrypt_key_numbers))
+                    logging.debug(f'Q59::Key={key}, Plain Text={decrypted_text}')
+                    valid_answer.append(decrypted_text)
+
+        assert len(valid_answer) == 1, "Multiple answers found::" + str(valid_answer)
+        return sum(ord(character) for character in valid_answer[0])
+
+
 def q60():
     # This runs under 9 seconds
     # robin_miller primality check takes up 60% of runtime
@@ -829,7 +861,7 @@ if __name__ == '__main__':
 
     start_time = time.time()
 
-    print(q27())
+    print(q59())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
