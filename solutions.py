@@ -14,13 +14,16 @@ import math
 import sys
 from string import ascii_lowercase
 
+import numpy
+
+from euler.largest_sum import first_n_digits_of_sum
 from euler.maths.divisors import sum_of_proper_divisors, is_abundant_number
+from euler.maths.fibonacci import NFibonacciIterator
 from euler.maths.matrix import (
     adjacent_multiplicand_string
 )
 from euler.maths.multiplications import (
-    greatest_common_denominator,
-    multiply_out_numbers_in_powers
+    greatest_common_denominator, multiply_out_numbers_in_powers
 )
 from euler.maths.palindromes import is_palindrome_simple_string
 from euler.maths.prime import (
@@ -71,8 +74,6 @@ def q1():
 
 
 def q2():
-    from euler.maths.fibonacci import NFibonacciIterator
-
     iterator = NFibonacciIterator.n3()
     iterator.set_upper_bound(4 * MILLION)
 
@@ -127,8 +128,6 @@ def q13():
     Work out the first ten digits of the sum of the following
         one-hundred 50-digit numbers.
     """
-    from euler.largest_sum import first_n_digits_of_sum
-
     with open(datafiles('p013_numbers.txt')) as numbers_file:
         numbers = [number.replace('\n', '') for number in numbers_file.readlines()]
         return first_n_digits_of_sum(10, numbers)
@@ -624,15 +623,13 @@ def q60():
 
 
 def q66(max_value_d=1000):
-    from math import sqrt
-
     prime_numbers = generate_to_sie(10 ** 6)
     x_to_minimal_ds = {}
     x = 1
 
     while len(x_to_minimal_ds) < 10:
         x += 1
-        if sqrt(x) % 1 == 0:
+        if math.sqrt(x) % 1 == 0:
             continue
 
         d_y_squared = x ** 2 - 1
