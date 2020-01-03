@@ -37,6 +37,7 @@ def factorise_by(number, prime_number):
 
     return number, power
 
+
 # functions introduced by 21, 23
 def is_perfect_number(number):
     # Perfect number has 2 interesting properties:
