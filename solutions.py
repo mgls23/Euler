@@ -5,14 +5,10 @@ import math
 import operator
 import sys
 from functools import reduce
+from string import ascii_lowercase
 
 import numpy
 
-from euler.champernownes_constant import champernownes_constant
-from euler.coin_sums import coin_sums
-from euler.even_fibonacci import N2FibonacciIterator
-from euler.largest_sum import first_n_digits_of_sum
-from euler.longest_collatz_sequence import collatz_length
 from euler.maths import prime
 from euler.maths.divisors import sum_of_proper_divisors, is_abundant_number
 from euler.maths.matrix import (
@@ -26,7 +22,7 @@ from euler.maths.multiplications import (
     greatest_common_denominator,
     lowest_common_multiple,
     decompose_to_prime_powers,
-)
+    multiply_out_numbers_in_powers)
 from euler.maths.palindromes import is_palindrome_simple_string, generate_palindromes
 from euler.maths.prime import (
     generate_to_sie,
@@ -42,10 +38,6 @@ from euler.maths.triangle_numbers import (
     hexagonal,
     is_pentagonal_number,
 )
-from euler.maximum_path_sum import Tree
-from euler.names_scores import translate
-from euler.reciprocal_cycles import string_division
-from euler.something import f
 from euler.strings.digits import all_digits_sorted, all_digits
 from euler.strings.number_to_string import numerical_score, digit_sum_of_number
 from euler.util.dates import calculate_number_of_days_in_month
@@ -88,6 +80,8 @@ def q1():
 
 
 def q2():
+    from euler.even_fibonacci import N2FibonacciIterator
+
     upper_bound = 4000000
 
     #
@@ -235,6 +229,8 @@ def q13():
     Work out the first ten digits of the sum of the following
         one-hundred 50-digit numbers.
     """
+    from euler.largest_sum import first_n_digits_of_sum
+
     with open('data/p013_numbers.txt') as numbers_file:
         numbers = [
             number.replace('\n', '')
@@ -249,6 +245,8 @@ def q14():
 
     Which starting number, under one million, produces the longest chain?
     """
+    from euler.longest_collatz_sequence import collatz_length
+
     # This cannot be speed-up further without using Cython
     max_sequence_length = max_collatz_number = 0
 
@@ -307,10 +305,12 @@ def q16():
 
 
 def q17(start=1, up_to=1000):
+    from euler.names_scores import translate
     return sum(translate(number) for number in range(start, up_to))
 
 
 def q18():
+    from euler.maximum_path_sum import Tree
     tree = Tree('data/p018_tree.txt')
     maximum_path_sum = tree.find_maximum_path_sum()
     return maximum_path_sum
@@ -415,7 +415,29 @@ def q26():
     Find value of d for which 1/d contains the longest recurring cycle
         in its decimal fraction part
     """
-    # Use Prime numbers to speed it up!
+
+    def string_division(divisor, dividend=1):
+        dividends = []
+        quotients = []
+
+        while dividend > 0:
+            if dividend >= divisor:
+                for start, number in enumerate(dividends):
+                    if number == dividend:
+                        return len(quotients) - start
+
+                quotients.append(int(dividend / divisor))
+                dividends.append(dividend)
+                dividend %= divisor
+
+            else:
+                quotients.append(0)
+                dividends.append(dividend)
+
+            dividend *= 10
+
+        return 0
+
     return max(generate_to_sie(1000), key=lambda number: string_division(number))
 
 
@@ -480,6 +502,7 @@ def q30(power=5):
 
 
 def q31():
+    from euler.coin_sums import coin_sums
     return coin_sums(coin_total=200, coins_available=[1, 2, 5, 10, 20, 50, 100, 200])
 
 
@@ -594,6 +617,7 @@ def q37():
 
 
 def q40():
+    from euler.champernownes_constant import champernownes_constant
     return numpy.product([champernownes_constant(10 ** power) for power in range(7)])
 
 
@@ -714,6 +738,37 @@ def q58():
     return ((one_side - 1) * 2) - 1
 
 
+def q59():
+    key_length = 3  # this is given in the question
+
+    def seems_valid_line(line):
+        common_words = ['in ', 'the ']
+        return all(word in line.lower() for word in common_words)
+
+    valid_characters = set(list(range(ord(' '), ord('~') + 1)))
+
+    with open('data/p059_cipher.txt') as numbers_file:
+        numbers = list(map(int, numbers_file.readlines()[0].split(',')))
+
+        valid_answer = []
+        for decrypt_key_numbers in itertools.product(map(ord, ascii_lowercase), repeat=key_length):
+            decrypted_text = ''
+            for index, number in enumerate(numbers):
+                decrypt_key_number = decrypt_key_numbers[index % key_length]
+                decrypted_character = number ^ decrypt_key_number  # ^ is python's way of XOR
+                if decrypted_character not in valid_characters: break
+                decrypted_text += chr(decrypted_character)
+
+            else:
+                if seems_valid_line(decrypted_text):
+                    key = ''.join(map(chr, decrypt_key_numbers))
+                    logging.debug(f'Q59::Key={key}, Plain Text={decrypted_text}')
+                    valid_answer.append(decrypted_text)
+
+        assert len(valid_answer) == 1, "Multiple answers found::" + str(valid_answer)
+        return sum(ord(character) for character in valid_answer[0])
+
+
 def q60():
     # This runs under 9 seconds
     # robin_miller primality check takes up 60% of runtime
@@ -746,7 +801,44 @@ def q60():
                         return sum(path_so_far)
 
 
+def q66(max_value_d=1000):
+    from math import sqrt, floor
+
+    prime_numbers = generate_to_sie(10 ** 6)
+    x_to_minimal_ds = {}
+    max_len = max_value_d - floor(sqrt(max_value_d))
+    x = 1
+
+    while len(x_to_minimal_ds) < 10:
+        x += 1
+        if sqrt(x) % 1 == 0:
+            continue
+
+        d_y_squared = x ** 2 - 1
+
+        prime_powers = decompose_to_prime_powers(d_y_squared, prime_numbers)
+        eligible_powers = [prime_number for prime_number, power in prime_powers.items() if power >= 2]
+
+        if eligible_powers:
+            d_decomposed = prime_powers
+            d_decomposed[min(eligible_powers)] -= 2
+            if d_decomposed[min(eligible_powers)] == 0:
+                del d_decomposed[min(eligible_powers)]
+
+            minimal_d = multiply_out_numbers_in_powers(d_decomposed)
+        else:
+            minimal_d = d_y_squared
+
+        if minimal_d < max_value_d:
+            x_to_minimal_ds[x] = minimal_d
+
+    print(x_to_minimal_ds)
+
+    return max(x_to_minimal_ds)
+
+
 def q67():
+    from euler.maximum_path_sum import Tree
     tree = Tree('data/p067_triangle.txt')
     maximum_path_sum = tree.find_maximum_path_sum()
     return maximum_path_sum
@@ -781,6 +873,7 @@ def q71():
 
 
 def q76():
+    from euler.something import f
     return f(100) - 1
 
 
@@ -844,7 +937,7 @@ if __name__ == '__main__':
 
     start_time = time.time()
 
-    print(q69())
+    print(q66())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
