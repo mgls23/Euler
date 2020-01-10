@@ -13,11 +13,6 @@ from euler.coin_sums import coin_sums
 from euler.even_fibonacci import N2FibonacciIterator
 from euler.largest_sum import first_n_digits_of_sum
 from euler.longest_collatz_sequence import collatz_length
-from euler.maximum_path_sum import Tree
-from euler.names_scores import translate
-from euler.reciprocal_cycles import string_division
-from euler.something import f
-
 from euler.maths import prime
 from euler.maths.divisors import sum_of_proper_divisors, is_abundant_number
 from euler.maths.matrix import (
@@ -47,10 +42,12 @@ from euler.maths.triangle_numbers import (
     hexagonal,
     is_pentagonal_number,
 )
-
+from euler.maximum_path_sum import Tree
+from euler.names_scores import translate
+from euler.reciprocal_cycles import string_division
+from euler.something import f
 from euler.strings.digits import all_digits_sorted, all_digits
 from euler.strings.number_to_string import numerical_score, digit_sum_of_number
-
 from euler.util.dates import calculate_number_of_days_in_month
 from euler.util.fibonacci import FibonacciIterator
 
@@ -755,6 +752,24 @@ def q67():
     return maximum_path_sum
 
 
+def q69(upper_limit=10 ** 6):
+    from euler.maths.ungrouped import phi
+
+    prime_numbers = generate_to_sie(17 + 1)
+    prime_number = reduce(operator.mul, prime_numbers)
+
+    maximum_value = 1
+    maximum_n = 1
+
+    for n in range(prime_number, upper_limit, prime_number):
+        value = n / phi(n)
+        if maximum_value < value:
+            maximum_value = value
+            maximum_n = n
+
+    return maximum_n
+
+
 def q71():
     number = 1000000
     numerator, denominator = 3, 7
@@ -829,7 +844,7 @@ if __name__ == '__main__':
 
     start_time = time.time()
 
-    print(q27())
+    print(q69())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))

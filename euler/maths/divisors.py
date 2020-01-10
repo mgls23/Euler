@@ -3,6 +3,7 @@ import operator
 from functools import reduce
 
 import sympy
+import sympy as sympy
 
 from euler.maths.multiplications import decompose_to_prime_powers
 from euler.maths.prime import is_prime
@@ -36,6 +37,7 @@ def factorise_by(number, prime_number):
         power += 1
 
     return number, power
+
 
 # functions introduced by 21, 23
 def is_perfect_number(number):
