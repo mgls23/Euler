@@ -1,6 +1,6 @@
 import unittest
 
-from euler.something import f, _f, _f_
+from euler.something import ways_to_express_number, ways_to_express, _f_
 
 
 class TestSomething(unittest.TestCase):
@@ -14,7 +14,7 @@ class TestSomething(unittest.TestCase):
         }
 
         for args, answer in answers.items():
-            self.assertEqual(f(args), answer)
+            self.assertEqual(ways_to_express_number(args), answer)
 
     def test_fn_(self):
         answers = {
@@ -26,7 +26,7 @@ class TestSomething(unittest.TestCase):
         }
 
         for args, answer in answers.items():
-            self.assertEqual(_f(*args), answer)
+            self.assertEqual(ways_to_express(*args), answer)
 
     def test_fn__(self):
         answers = {
@@ -39,4 +39,4 @@ class TestSomething(unittest.TestCase):
 
     def test_something(self):
         for i in [20, 50, 100]:
-            self.assertEqual(f(i), _f(i, i - 1) + 1, i)
+            self.assertEqual(ways_to_express_number(i), ways_to_express(i, i - 1) + 1, i)

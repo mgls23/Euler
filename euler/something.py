@@ -2,34 +2,34 @@ from euler.util.decorators import memoised
 
 
 @memoised
-def f(n):
-    if n <= 1: return n
+def ways_to_express_number(number):
+    if number <= 1: return number
 
-    sum_ = 1
-    for i in range(n, 0, -1):
-        reverse = n - i
-        if 1 <= reverse <= (n // 2):
-            sum_ += f(reverse)
+    ways = 1
+    for i in range(number, 0, -1):
+        reverse = number - i
+        if 1 <= reverse <= (number // 2):
+            ways += ways_to_express_number(reverse)
         else:
-            sum_ += _f(reverse, i)
+            ways += ways_to_express(reverse, i)
 
-    return sum_
+    return ways
 
 
 @memoised
-def _f(n, m):
+def ways_to_express(n, smaller_than):
     if n <= 1: return n
-    if m >= n: return f(n)
+    if smaller_than >= n: return ways_to_express_number(n)
 
-    sum_ = 1
-    for i in range(m, 1, -1):
+    ways = 1
+    for i in range(smaller_than, 1, -1):
         reverse = n - i
         if 1 <= reverse <= (n // 2):
-            sum_ += f(reverse)
+            ways += ways_to_express_number(reverse)
         else:
-            sum_ += _f_(reverse, i)
+            ways += _f_(reverse, i)
 
-    return sum_
+    return ways
 
 
 @memoised
@@ -40,7 +40,7 @@ def _f_(n, m):
     sum_ = 1  # i = 1
     for i in range(2, m + 1):
         for j in range(i, (n // i) * i + 1, i):
-            sum_ += _f(n - j, i - 1)
+            sum_ += ways_to_express(n - j, i - 1)
         sum_ += (n % i) == 0 and 1 or 0
 
     return sum_

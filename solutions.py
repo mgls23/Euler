@@ -22,8 +22,12 @@ from euler.maths.multiplications import (
     greatest_common_denominator,
     lowest_common_multiple,
     decompose_to_prime_powers,
-    multiply, multiply_out_numbers_in_powers)
-from euler.maths.palindromes import is_palindrome_simple_string, generate_palindromes
+    multiply_out_numbers_in_powers
+)
+from euler.maths.palindromes import (
+    is_palindrome_simple_string,
+    generate_palindromes,
+)
 from euler.maths.prime import (
     generate_to_sie,
     is_prime,
@@ -38,10 +42,8 @@ from euler.maths.triangle_numbers import (
     hexagonal,
     is_pentagonal_number,
 )
-
 from euler.strings.digits import all_digits_sorted, all_digits
 from euler.strings.number_to_string import numerical_score, digit_sum_of_number
-
 from euler.util.dates import calculate_number_of_days_in_month
 from euler.util.fibonacci import FibonacciIterator
 
@@ -846,8 +848,11 @@ def q67():
     return maximum_path_sum
 
 
-def q71():
-    number = 1000000
+def q70():
+    pass
+
+
+def q71(number=1000000):
     numerator, denominator = 3, 7
 
     expanded_fraction_denominator = (number // denominator) * denominator
@@ -856,9 +861,32 @@ def q71():
     return expanded_fraction_numerator - 1  # Because n-1 and n are co-primes
 
 
+def q72(number=1000000):
+    def pi(numbers):
+        # Mathematical notation for multiplying out numbers "sigma of multiplication"
+        return reduce(operator.mul, numbers)
+
+    prime_numbers = generate_to_sie(number)
+    max_group_size = next(group_size for group_size in range(1, len(prime_numbers))
+                          if pi(prime_numbers[:group_size]) > number) - 1
+    logging.debug(f'Max group size={max_group_size}, pi={pi(prime_numbers[:max_group_size])}')
+
+    def calculation(factor):
+        up_to = (number - 1) // factor
+        return sigma_n(up_to)
+
+    calculated = {prime_number: calculation(prime_number) for prime_number in prime_numbers}
+
+    for group_size in range(2, max_group_size + 1):
+        logging.debug(f'Group Size={group_size}')
+        for group in itertools.combinations(prime_numbers, group_size):
+            pass
+            # logging.debug(f'Examining::{multiplied}, count={count}')
+
+
 def q76():
-    from euler.something import f
-    return f(100) - 1
+    from euler.something import ways_to_express_number
+    return ways_to_express_number(100) - 1
 
 
 def calculate_number_of_divisors(n, prime_numbers, n_multiplier=1):
@@ -879,6 +907,20 @@ def calculate_number_of_divisors(n, prime_numbers, n_multiplier=1):
         number_of_divisors *= current
 
     raise Exception(n)
+
+
+def q78():
+    def break_down(number):
+
+        return 1 + sum(map(lambda other: break_down_with_limit(number, other), range(1, number)))
+
+    def break_down_with_limit(number, no_bigger_than):
+        if no_bigger_than == 1: return 1
+        return sum(map(lambda other: break_down_with_limit(number - other, other),
+                       range(1, no_bigger_than)))
+
+    for i in range(2, 100):
+        print(f'{i}={break_down(i)}')
 
 
 def q108(given_number=1000):
@@ -921,7 +963,7 @@ if __name__ == '__main__':
 
     start_time = time.time()
 
-    print(q66())
+    print(q78())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
