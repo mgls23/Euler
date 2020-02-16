@@ -24,10 +24,7 @@ from euler.maths.multiplications import (
     decompose_to_prime_powers,
     multiply_out_numbers_in_powers
 )
-from euler.maths.palindromes import (
-    is_palindrome_simple_string,
-    generate_palindromes,
-)
+from euler.maths.palindromes import is_palindrome_simple_string, generate_palindromes
 from euler.maths.prime import (
     generate_to_sie,
     is_prime,
@@ -846,6 +843,24 @@ def q67():
     tree = Tree('data/p067_triangle.txt')
     maximum_path_sum = tree.find_maximum_path_sum()
     return maximum_path_sum
+
+
+def q69(upper_limit=10 ** 6):
+    from euler.maths.ungrouped import phi
+
+    prime_numbers = generate_to_sie(17 + 1)
+    prime_number = reduce(operator.mul, prime_numbers)
+
+    maximum_value = 1
+    maximum_n = 1
+
+    for n in range(prime_number, upper_limit, prime_number):
+        value = n / phi(n)
+        if maximum_value < value:
+            maximum_value = value
+            maximum_n = n
+
+    return maximum_n
 
 
 def q70():
