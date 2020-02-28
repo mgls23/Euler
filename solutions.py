@@ -642,6 +642,24 @@ def q45():
         pn += 1
 
 
+def q46():
+    upper_bound = 10000  # Random - I would have increased it as I went
+    prime_numbers = generate_to_sie(upper_bound)
+
+    def fits_goldbach_conjecture(candidate):
+        return any(math.sqrt((candidate - prime_number) / 2).is_integer()
+                       for prime_number in filter(candidate.__ge__, prime_numbers))
+
+    previous_primality = True  # prime + 2*1**2 always fits goldbach_conjecture.
+    for number in range(9, upper_bound, 2):
+        primality = is_prime_robin_miller(number)
+        composite = not primality
+        if composite and not previous_primality and not fits_goldbach_conjecture(number):
+            return number
+
+        previous_primality = primality
+
+
 def q48():
     """ Q48 :: Self Powers [https://projecteuler.net/problem=48]
 
@@ -845,7 +863,7 @@ if __name__ == '__main__':
 
     start_time = time.time()
 
-    print(q44())
+    print(q46())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
