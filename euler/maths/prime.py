@@ -3,6 +3,7 @@ import random
 
 from euler.util.decorators import memoised, timed_function
 
+# To be retired - this was fun when learning Python, but just is not necessary
 PRIME_ENTRIES = [2, 3, 5, 7]
 
 
@@ -58,9 +59,7 @@ def generate_to_sie(upper_bound):
     for number in range(2, upper_bound):
         if considered[number]:
             PRIME_ENTRIES.append(number)
-
-            considered[number * 2::number] = \
-                [False] * (((upper_bound - 1) // number) - 1)
+            considered[number * 2::number] = [False] * (((upper_bound - 1) // number) - 1)
 
     return PRIME_ENTRIES
 

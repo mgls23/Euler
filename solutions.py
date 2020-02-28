@@ -1,3 +1,12 @@
+"""
+While efforts were made to refactor the code in here, the structure of the file is not scalable and
+    the legacy code is still here. Later neat_solutions have better coding standards and smarter solutions
+
+    See neat_solutions for completed questions
+
+    TODO :: consider Jupyter as a blog-like way of explaining my answers
+        -> importing common functions wasn't easy from my brief look
+"""
 import collections
 import itertools
 import logging
@@ -7,24 +16,16 @@ import sys
 from functools import reduce
 from string import ascii_lowercase
 
-import numpy
-
-from euler.maths import prime
 from euler.maths.divisors import sum_of_proper_divisors, is_abundant_number
 from euler.maths.matrix import (
-    adjacent_multiplicand_string,
-    adjacent_multiplicand,
-    horizontal,
-    left_diagonal,
-    right_diagonal
+    adjacent_multiplicand_string
 )
 from euler.maths.multiplications import (
     greatest_common_denominator,
-    lowest_common_multiple,
     decompose_to_prime_powers,
     multiply_out_numbers_in_powers
 )
-from euler.maths.palindromes import is_palindrome_simple_string, generate_palindromes
+from euler.maths.palindromes import is_palindrome_simple_string
 from euler.maths.prime import (
     generate_to_sie,
     is_prime,
@@ -32,15 +33,13 @@ from euler.maths.prime import (
     generate_primes_in_digit_range,
     is_prime_robin_miller,
 )
-from euler.maths.sigma import (sigma_n, sigma_n2, )
+from euler.maths.sigma import (sigma_n, )
 from euler.maths.triangle_numbers import (
-    is_triangle_number,
     pentagonal,
     hexagonal,
     is_pentagonal_number,
 )
 from euler.strings.digits import all_digits_sorted, all_digits
-from euler.strings.number_to_string import numerical_score, digit_sum_of_number
 from euler.util.dates import calculate_number_of_days_in_month
 from euler.util.fibonacci import FibonacciIterator
 
@@ -81,6 +80,7 @@ def q1():
 
 
 def q2():
+    # Needs Refactoring (tried something really fancy but was a train-wreck
     from euler.even_fibonacci import N2FibonacciIterator
 
     upper_bound = 4000000
@@ -93,11 +93,6 @@ def q2():
     fib_generator = N2FibonacciIterator()
     fib_generator.set_upper_bound(upper_bound)
     return sum(fib_generator.sequence)
-
-
-def q3(number=600851475143):
-    # Q3 :: Largest Prime Factor of 600851475143
-    return max(decompose_to_prime_powers(number, generate_to_sie(10000)).keys())
 
 
 def q4(digit_given=3):
@@ -116,27 +111,6 @@ def q4(digit_given=3):
                 break
 
     return largest_number
-
-
-def q5(up_to=20):
-    if up_to <= 1: return up_to
-
-    cumulative = 2
-    for number in range(3, up_to + 1):
-        cumulative = lowest_common_multiple(cumulative, number)
-
-    return int(cumulative)
-
-
-def q6(n=100):
-    # Q6 :: Sum Square Difference
-    square_of_sum = sigma_n(n) ** 2
-    sum_of_square = sigma_n2(n)
-    return square_of_sum - sum_of_square
-
-
-def q7():
-    return prime.nth_prime_number(10001)
 
 
 def q8():
@@ -173,38 +147,6 @@ def q9():
                 return a * b * c
 
     raise Exception('NOTHING_FOUND')
-
-
-def q10():
-    return sum(prime.generate_to_sie(2000000))
-
-
-def q11():
-    grid = [
-        [8, 2, 22, 97, 38, 15, 0, 40, 0, 75, 4, 5, 7, 78, 52, 12, 50, 77, 91, 8],
-        [49, 49, 99, 40, 17, 81, 18, 57, 60, 87, 17, 40, 98, 43, 69, 48, 4, 56, 62, 0],
-        [81, 49, 31, 73, 55, 79, 14, 29, 93, 71, 40, 67, 53, 88, 30, 3, 49, 13, 36, 65],
-        [52, 70, 95, 23, 4, 60, 11, 42, 69, 24, 68, 56, 1, 32, 56, 71, 37, 2, 36, 91],
-        [22, 31, 16, 71, 51, 67, 63, 89, 41, 92, 36, 54, 22, 40, 40, 28, 66, 33, 13, 80],
-        [24, 47, 32, 60, 99, 3, 45, 2, 44, 75, 33, 53, 78, 36, 84, 20, 35, 17, 12, 50],
-        [32, 98, 81, 28, 64, 23, 67, 10, 26, 38, 40, 67, 59, 54, 70, 66, 18, 38, 64, 70],
-        [67, 26, 20, 68, 2, 62, 12, 20, 95, 63, 94, 39, 63, 8, 40, 91, 66, 49, 94, 21],
-        [24, 55, 58, 5, 66, 73, 99, 26, 97, 17, 78, 78, 96, 83, 14, 88, 34, 89, 63, 72],
-        [21, 36, 23, 9, 75, 0, 76, 44, 20, 45, 35, 14, 0, 61, 33, 97, 34, 31, 33, 95],
-        [78, 17, 53, 28, 22, 75, 31, 67, 15, 94, 3, 80, 4, 62, 16, 14, 9, 53, 56, 92],
-        [16, 39, 5, 42, 96, 35, 31, 47, 55, 58, 88, 24, 0, 17, 54, 24, 36, 29, 85, 57],
-        [86, 56, 0, 48, 35, 71, 89, 7, 5, 44, 44, 37, 44, 60, 21, 58, 51, 54, 17, 58],
-        [19, 80, 81, 68, 5, 94, 47, 69, 28, 73, 92, 13, 86, 52, 17, 77, 4, 89, 55, 40],
-        [4, 52, 8, 83, 97, 35, 99, 16, 7, 97, 57, 32, 16, 26, 26, 79, 33, 27, 98, 66],
-        [88, 36, 68, 87, 57, 62, 20, 72, 3, 46, 33, 67, 46, 55, 12, 32, 63, 93, 53, 69],
-        [4, 42, 16, 73, 38, 25, 39, 11, 24, 94, 72, 18, 8, 46, 29, 32, 40, 62, 76, 36],
-        [20, 69, 36, 41, 72, 30, 23, 88, 34, 62, 99, 69, 82, 67, 59, 85, 74, 4, 36, 16],
-        [20, 73, 35, 29, 78, 31, 90, 1, 74, 31, 49, 71, 48, 86, 81, 16, 23, 57, 5, 54],
-        [1, 70, 54, 71, 83, 51, 54, 69, 16, 92, 33, 48, 61, 43, 52, 1, 89, 19, 67, 48],
-    ]
-
-    return max(map(lambda line: adjacent_multiplicand(line, 4),
-                   grid + horizontal(grid) + left_diagonal(grid) + right_diagonal(grid)))
 
 
 def q12():
@@ -305,11 +247,6 @@ def q16():
     return sum(digits)
 
 
-def q17(start=1, up_to=1000):
-    from euler.names_scores import translate
-    return sum(translate(number) for number in range(start, up_to))
-
-
 def q18():
     from euler.maximum_path_sum import Tree
     tree = Tree('data/p018_tree.txt')
@@ -330,16 +267,6 @@ def q19():
     return number_of_sundays_on_first
 
 
-def q20():
-    """ Q20 :: Factorial digit sum [https://projecteuler.net/problem=20]
-
-    Find the sum of the digits in the number 100!
-        For example, 10! = 10 × 9 × ... × 3 × 2 × 1 = 3628800,
-        The sum of the digits for 10! = 3 + 6 + 2 + 8 + 8 + 0 + 0 = 27.
-    """
-    return sum(map(int, str(math.factorial(100))))
-
-
 def q21(upper_bound=10000):
     primes = generate_to_sie(upper_bound * 2)
 
@@ -353,16 +280,6 @@ def q21(upper_bound=10000):
     logging.debug(f'Amicable numbers under {upper_bound} are {amicable_groups}')
     amicable_numbers = list(sum(amicable_groups, ()))
     return sum(amicable_numbers)
-
-
-def q22():
-    with open('data/p022_names.txt', 'r') as file:
-        names_text = file.readlines()[0]
-        names = sorted(names_text.replace('"', '').split(','))
-        name_scores = map(numerical_score, names)
-        score_sum = sum(map(lambda score: score[0] * score[1], enumerate(name_scores, 1)))
-
-    return score_sum
 
 
 def q23():
@@ -468,17 +385,6 @@ def q27():
     return longest_a * longest_b
 
 
-def q28():
-    """ Q28 :: Number spiral diagonals [https://projecteuler.net/problem=28]
-
-    What is the sum of the numbers on the diagonals in a 1001 by 1001 spiral?
-    """
-    side_length = 1001
-    one_side = (side_length - 1) // 2
-
-    return int(((16 * (one_side ** 3) + 30 * (one_side ** 2) + 26 * one_side) / 3) + 1)
-
-
 def q29():
     # TODO :: implement this one-liner
     return 9183
@@ -580,16 +486,6 @@ def q35():
     return len(circular_prime_numbers)
 
 
-def q36():
-    up_to_digit = 6
-    double_base_palindromes = [
-        palindrome for palindrome in generate_palindromes(up_to_digit)
-        if palindrome % 2 == 1 and is_palindrome_simple_string(bin(palindrome)[2:])
-    ]
-
-    return sum(double_base_palindromes)
-
-
 def q37():
     truncatable_primes = list(filter(lambda prime_number: is_truncable_prime(prime_number), generate_to_sie(100)))
 
@@ -636,23 +532,6 @@ def q38():
     return next(filter(is_concatenated_product_pandigital, range(upper_range, lower_range - 1, -1)))
 
 
-def q40():
-    from euler.champernownes_constant import champernownes_constant
-    return numpy.product([champernownes_constant(10 ** power) for power in range(7)])
-
-
-def q41():
-    # We know that sum(1..9) = 45. sum(1..8) = 45 - 9. Therefore sum(7) is the possible first pandigital prime
-    pandigital_numbers = map(lambda group: int(''.join(map(str, group))), itertools.permutations(range(7, 0, -1)))
-    return next(filter(is_prime_robin_miller, pandigital_numbers))
-
-
-def q42():
-    with open('data/p042_words.txt') as text_file:
-        words = map(lambda raw_word: raw_word.replace('"', ''), text_file.read().split(','))
-        return reduce(lambda count, word: is_triangle_number(numerical_score(word)) and count + 1 or count, words, 0)
-
-
 def q44():
     def pentagonal_number(input_number):
         return input_number * (3 * input_number - 1) // 2
@@ -695,7 +574,7 @@ def q46():
 
     def fits_goldbach_conjecture(candidate):
         return any(math.sqrt((candidate - prime_number) / 2).is_integer()
-                       for prime_number in filter(candidate.__ge__, prime_numbers))
+                   for prime_number in filter(candidate.__ge__, prime_numbers))
 
     previous_primality = True  # prime + 2*1**2 always fits goldbach_conjecture.
     for number in range(9, upper_bound, 2):
@@ -705,14 +584,6 @@ def q46():
             return number
 
         previous_primality = primality
-
-
-def q48():
-    """ Q48 :: Self Powers [https://projecteuler.net/problem=48]
-
-    Find the last ten digits of the series, 1^1 + 2^2 + 3^3 + ... + 1000^1000
-    """
-    return int(str(sum(map(lambda x: x ** x, range(1, 1000))))[-10:])
 
 
 def q49(given_digit=4, repeating_count=3):
@@ -757,14 +628,6 @@ def q50(upper_limit=10 ** 6):
         all_added -= prime_number
 
     return longest_prime_sum
-
-
-def q56(up_to_number=100):
-    return max(map(digit_sum_of_number, [
-        pow(a, b)  # Use pow instead of math.pow to produce correct results
-        for a in range(up_to_number - 1, 90, -1)
-        for b in range(up_to_number - 1, 90, -1)
-    ]))
 
 
 def q57(number=1000):
@@ -926,15 +789,6 @@ def q70():
     pass
 
 
-def q71(number=1000000):
-    numerator, denominator = 3, 7
-
-    expanded_fraction_denominator = (number // denominator) * denominator
-    expanded_fraction_numerator = (expanded_fraction_denominator * numerator) // denominator
-
-    return expanded_fraction_numerator - 1  # Because n-1 and n are co-primes
-
-
 def q72(number=1000000):
     def pi(numbers):
         # Mathematical notation for multiplying out numbers "sigma of multiplication"
@@ -985,13 +839,11 @@ def calculate_number_of_divisors(n, prime_numbers, n_multiplier=1):
 
 def q78():
     def break_down(number):
-
         return 1 + sum(map(lambda other: break_down_with_limit(number, other), range(1, number)))
 
     def break_down_with_limit(number, no_bigger_than):
         if no_bigger_than == 1: return 1
-        return sum(map(lambda other: break_down_with_limit(number - other, other),
-                       range(1, no_bigger_than)))
+        return sum(map(lambda other: break_down_with_limit(number - other, other), range(1, no_bigger_than)))
 
     for i in range(2, 100):
         print(f'{i}={break_down(i)}')

@@ -1,5 +1,5 @@
-import time
-
+from neat_solutions.elegant import q3, q10, q11, q40, q42, q56, q17, q20, q22, q36, q48
+from neat_solutions.simplified import q5, q6, q7, q28
 from solutions import *
 
 ANSWERS = {
