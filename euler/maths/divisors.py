@@ -3,7 +3,6 @@ import operator
 from functools import reduce
 
 import sympy
-import sympy as sympy
 
 from euler.maths.multiplications import decompose_to_prime_powers
 from euler.maths.prime import is_prime
