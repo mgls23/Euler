@@ -606,6 +606,22 @@ def q42():
         return reduce(lambda count, word: is_triangle_number(numerical_score(word)) and count + 1 or count, words, 0)
 
 
+def q44():
+    def pentagonal_number(input_number):
+        return input_number * (3 * input_number - 1) // 2
+
+    def is_pentagonal(input_number):
+        return ((math.sqrt((24 * input_number) + 1) + 1) / 6).is_integer()
+
+    pentagonal_numbers = [0, 1]
+    for bigger in range(2, 2500):  # arbitrary upper_limit
+        pentagonal_numbers.append(pentagonal_number(bigger))
+        for smaller in range(1, bigger):
+            if is_pentagonal(pentagonal_numbers[bigger] + pentagonal_numbers[smaller]) and \
+                    is_pentagonal(pentagonal_numbers[bigger] - pentagonal_numbers[smaller]):
+                return pentagonal_numbers[bigger] - pentagonal_numbers[smaller]
+
+
 def q45():
     last_hexagonal = 1
     pn = 2
@@ -829,7 +845,7 @@ if __name__ == '__main__':
 
     start_time = time.time()
 
-    print(q27())
+    print(q44())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
