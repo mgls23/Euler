@@ -32,16 +32,14 @@ def timed_function(function_):
             arguments = arguments and arguments + ', ' or arguments
             arguments += f'{key}={value}'
 
-        print(f'Executing {function_.__name__}({arguments})')
-
         import time
         start_time = time.time()
 
         results = function_(*args, **kwargs)
 
         time_taken = (time.time() - start_time) * 1000
-        print(f'Took {time_taken}ms. Results={results}')
-        print()
+        print(f'{function_.__name__}({arguments})={results}')
+        print(f'Took {time_taken}ms')
 
         return results
 
