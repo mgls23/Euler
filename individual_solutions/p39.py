@@ -13,7 +13,8 @@ def q39(upper_bound_perimeter=1000):
     assert (len(possibilities) == len(valid_perimeters))
 
     max_solution, max_perimeter = 0, -1
-    for perimeter in range(4, upper_bound_perimeter + 1):
+    # https://projecteuler.net/thread=39 @rayfil::P will always be even
+    for perimeter in range(4, upper_bound_perimeter + 1, 2):
         solution = len([1 for valid_perimeter in valid_perimeters if perimeter % valid_perimeter == 0])
         if solution > max_solution:
             max_solution, max_perimeter = solution, perimeter
@@ -22,19 +23,20 @@ def q39(upper_bound_perimeter=1000):
 
 
 def fits_fibonacci(max_perimeter=1000):
-    possible = set()
+    possible = []
 
     # b is the bigger side (than a), and c is hypotenuse
     for bigger_leg in range(1, max_perimeter // 2):
         for smaller_leg in range(1, bigger_leg + 1):
             hypotenuse = sqrt(smaller_leg ** 2 + bigger_leg ** 2)
-            if hypotenuse.is_integer():
-                triangle_gcd = reduce(gcd, [smaller_leg, bigger_leg, int(hypotenuse)])
-                possible.add((smaller_leg // triangle_gcd, bigger_leg // triangle_gcd, int(hypotenuse) // triangle_gcd))
+            if hypotenuse.is_integer() and reduce(gcd, [smaller_leg, bigger_leg, int(hypotenuse)]) == 1:
+                possible.append((smaller_leg, bigger_leg, int(hypotenuse)))
 
     return possible
 
 
 if __name__ == '__main__':
-    assert (timed_function(q39)(120) == 120)
-    assert (timed_function(q39)() == 840)
+    timed_function(fits_fibonacci)()
+
+    # assert (timed_function(q39)(120) == 120)
+    # assert (timed_function(q39)() == 840)
