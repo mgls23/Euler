@@ -4,6 +4,8 @@ from math import gcd, sqrt
 from euler.util.decorators import timed_function
 
 
+# TODO :: after q9 is re-implemented after learning Euclidean formula - revisit this also
+#  This somewhat touches co-prime a,b - but the 'correct' answer seems much neater
 def q39(upper_bound_perimeter=1000):
     # Exploits that k* a**2 + k* b ** 2 = k* c ** 2
     # Also relies on having 1 unique pair of a, b that satisfies
