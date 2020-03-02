@@ -1,7 +1,7 @@
 import unittest
 
 
-class TestFibonacciIterator(unittest.TestCase):
+class TestPalindrome(unittest.TestCase):
     def test_is_palindrome(self):
         is_palindrome_check = {
             1: True,
