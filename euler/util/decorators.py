@@ -39,7 +39,7 @@ def timed_function(function_):
 
         time_taken = (time.time() - start_time) * 1000
         print(f'{function_.__name__}({arguments})={results}')
-        print(f'Took {time_taken}ms')
+        print(f'Took {time_taken} ms')
 
         return results
 
