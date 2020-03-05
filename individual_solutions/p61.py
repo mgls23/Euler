@@ -140,7 +140,7 @@ def connect_nodes_in_graph(graph):
 
 
 def find_cyclical_figurate_number(graph):
-    paths = deque([([node], node) for node in graph[0]])
+    paths = deque([([node], node) for node in graph[-1]])
     while paths:
         path, last_node_in_path = paths.pop()
         for connected_node in last_node_in_path.connected:
