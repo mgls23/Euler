@@ -63,7 +63,7 @@ def find_cyclical_figurate_number(graph: [[PolygonalNode]]):
 
 
 def q61(digits=4):
-    polygonal_sequence_types = [Triangle, Square, Pentagonal, Hexagonal, Heptagonal, Octagonal]
+    polygonal_sequence_types = [Triangle(), Square(), Pentagonal(), Hexagonal(), Heptagonal(), Octagonal()]
     all_polynomial_numbers_in_range = [generate_polygonal_nodes(polygonal_sequence_type, digits)
                                        for polygonal_sequence_type in polygonal_sequence_types]
 
@@ -76,6 +76,6 @@ if __name__ == '__main__':
     import sys
 
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
-    assert (timed_function(Triangle.to_index)(10 ** 3) == 44.224154547626725)
+    assert (timed_function(Triangle.to_index)(Triangle(), 10 ** 3) == 44.224154547626725)
 
     assert (timed_function(q61)() == 28684)
