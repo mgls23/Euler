@@ -12,10 +12,10 @@ class SequenceGenerator(ABC):
         pass
 
     def generate_numbers_with(self, digit):
-        lower_bound = 10 ** (digit - 1)
-        upper_bound = 10 ** digit
+        return self.generate_numbers_in_range(10 ** (digit - 1), 10 ** digit)
 
-        lower_index = ceil(self.to_index(lower_bound))
-        upper_index = int(self.to_index(upper_bound))
+    def generate_numbers_in_range(self, number_start, number_end):
+        lower_index = ceil(self.to_index(number_start))
+        upper_index = int(self.to_index(number_end))
 
         return [self.to_number(index) for index in range(lower_index, upper_index)]

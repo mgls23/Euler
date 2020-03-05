@@ -1,7 +1,7 @@
 from euler.sequence.sequence import SequenceGenerator
 
 
-class PolynomialSequenceGenerator(SequenceGenerator):
+class Polynomial(SequenceGenerator):
     def __init__(self, polynomial_degree):
         self.polynomial_degree = polynomial_degree
 

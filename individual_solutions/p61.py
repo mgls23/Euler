@@ -32,7 +32,7 @@ class PolygonalNode:
         return all(self.polygonal_degree != node.polygonal_degree for node in path)
 
 
-def generate_polygonal_nodes(polygon_type, digits: int):
+def generate_polygonal_nodes(polygon_type: Polygonal, digits: int):
     return [
         PolygonalNode(polygon_type.polygonal_degree, number)
         for number in polygon_type.generate_numbers_with(digits)
