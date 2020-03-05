@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from collections import deque
-from itertools import combinations, permutations
+from itertools import permutations
 from math import ceil
 
 from euler.util.decorators import timed_function
