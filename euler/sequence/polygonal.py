@@ -36,6 +36,9 @@ class Pentagonal(Polygonal):
     def to_index(self, number):
         return ((24 * number + 1) ** 0.5 + 1) / 6
 
+    def is_pentagonal(self, number):
+        return self.to_index(number).is_integer()
+
 
 class Hexagonal(Polygonal):
     polygonal_degree = 6

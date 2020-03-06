@@ -2,6 +2,8 @@ from euler.maths import prime
 from euler.maths.multiplications import lowest_common_multiple
 from euler.maths.sigma import sigma_n, sigma_n2
 
+from individual_solutions.p62 import q62
+
 
 def q5(up_to=20):
     if up_to <= 1: return up_to
@@ -42,3 +44,6 @@ def q71(number=1000000):
     expanded_fraction_numerator = (expanded_fraction_denominator * numerator) // denominator
 
     return expanded_fraction_numerator - 1  # Because n-1 and n are co-primes
+
+
+SIMPLIFIED = [q5, q6, q7, q28, q62]
