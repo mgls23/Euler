@@ -2,11 +2,11 @@ from euler.util.decorators import timed_function
 
 
 def continued_fraction_has_odd_periods(number):
-    if not (number ** 0.5).is_integer():
-        a0, period = find_fraction_representation_of_root(number)
-        if len(period) % 2 == 1:
-            # print(f'√{number}=({a0};{period})')
-            return True
+    if (number ** 0.5).is_integer(): return False
+
+    a0, period = find_fraction_representation_of_root(number)
+    # print(f'√{number}=({a0};{period})')
+    return len(period) % 2 == 1
 
 
 def q64(up_to=10 ** 4):
