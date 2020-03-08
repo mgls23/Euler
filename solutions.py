@@ -563,17 +563,6 @@ def q50(upper_limit=10 ** 6):
     return longest_prime_sum
 
 
-def q57(number=1000):
-    count = 0
-    small, big = 0, 1
-    for i in range(number):
-        small, big = big, big * 2 + small
-        if len(str(small + big)) > len(str(big)):
-            count += 1
-
-    return count
-
-
 def q58():
     primes_encountered, none_primes = 0, 0
     number, one_side = 1, 1
