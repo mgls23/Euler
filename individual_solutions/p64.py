@@ -2,7 +2,11 @@ from euler.util.decorators import timed_function
 
 
 def continued_fraction_has_odd_periods(number):
-    if (number ** 0.5).is_integer(): return False
+    # https://projecteuler.net/thread=64 - mathgod optimisation
+    always_true_offset = [+1]
+    always_false_offset = [-1, -2, 0, +2]
+    if any(((number - offset) ** 0.5).is_integer() for offset in always_true_offset): return True
+    if any(((number - offset) ** 0.5).is_integer() for offset in always_false_offset): return False
 
     a0, period = find_fraction_representation_of_root(number)
     # print(f'√{number}=({a0};{period})')
