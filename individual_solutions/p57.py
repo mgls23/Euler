@@ -1,5 +1,3 @@
-from functools import reduce
-
 from euler.util.decorators import timed_function
 
 
@@ -17,8 +15,8 @@ def numerator_has_more_digits(numerator, denominator):
 
 
 def q57(number=1000):
-    return reduce(lambda count, fraction: numerator_has_more_digits(*fraction) and count + 1 or count,
-                  square_root_2_generator(number), 0)
+    return len([(numerator, denominator) for numerator, denominator in square_root_2_generator(number)
+                if numerator_has_more_digits(numerator, denominator)])
 
 
 if __name__ == '__main__':
