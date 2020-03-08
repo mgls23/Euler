@@ -1,26 +1,17 @@
 from euler.util.decorators import timed_function
 
 
-def q64(up_to=10 ** 4):
-    odd_numbered_period_counts = 0
-    for number in range(2, up_to):
-        if not (number ** 0.5).is_integer():
-            a0, period = find_fraction_representation_of_root(number)
+def continued_fraction_has_odd_periods(number):
+    if not (number ** 0.5).is_integer():
+        a0, period = find_fraction_representation_of_root(number)
+        if len(period) % 2 == 1:
             # print(f'√{number}=({a0};{period})')
-            if len(period) % 2 == 1:
-                odd_numbered_period_counts += 1
-
-    return odd_numbered_period_counts
+            return True
 
 
-# TODO :: Should be improved
-def is_repeating(array):
-    if array.count(array[0]) == len(array): return [array[0]]
-    for length in range(2, len(array) // 2):
-        if array[:length] == array[length:length * 2]:
-            return array[:length]
-
-    return False
+def q64(up_to=10 ** 4):
+    numbers_with_odd_periods = [number for number in range(2, up_to) if continued_fraction_has_odd_periods(number)]
+    return len(numbers_with_odd_periods)
 
 
 def find_fraction_representation_of_root(number):
@@ -29,25 +20,26 @@ def find_fraction_representation_of_root(number):
 
     periods = []
 
+    # Before indicates before expanded (because the fraction reverses)
+    # It is only necessary to keep track of the number because the root number stays constant
     before_top_number = 1
     before_bottom_number = -a0
 
-    combinations_used = {(before_top_number, before_bottom_number)}
+    expanded = {(before_top_number, before_bottom_number)}
 
     for _ in range(1000):
         after_top = root_of_number - before_bottom_number
-        after_bottom = number - (before_bottom_number ** 2)  # evaluated
-        after_cancelled_bottom = after_bottom / before_top_number
+        after_bottom = (number - (before_bottom_number ** 2)) / before_top_number
 
-        a = int(after_top // after_cancelled_bottom)
+        a = int(after_top // after_bottom)
         periods.append(a)
 
-        before_top_number = int(after_cancelled_bottom)
-        before_bottom_number = int(-before_bottom_number - (after_cancelled_bottom * a))
+        before_top_number = int(after_bottom)
+        before_bottom_number = int(-before_bottom_number - (after_bottom * a))
 
-        new_combination_used = (before_top_number, before_bottom_number)
-        if new_combination_used in combinations_used:
-            return 10, periods
+        expand_next = (before_top_number, before_bottom_number)
+        if expand_next in expanded:
+            return a0, periods
 
 
 if __name__ == '__main__':
@@ -55,7 +47,7 @@ if __name__ == '__main__':
     import sys
 
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
-    # assert (timed_function(find_fraction_representation_of_root)(23) == (4, [1, 3, 1, 8]))
+    assert (timed_function(find_fraction_representation_of_root)(23) == (4, [1, 3, 1, 8]))
     assert (timed_function(q64)(13 + 1) == 4)
 
     assert (timed_function(q64)() == 1322)
