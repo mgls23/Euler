@@ -5,10 +5,7 @@ class Tree:
         self.rows = []
         with open(file_path, 'r') as text_file:
             for line in text_file.readlines():
-                numbers_string = line.split(' ')
-                numbers = [int(element) for element in numbers_string]
-
-                self.rows.append(numbers)
+                self.rows.append(list(map(int, line.split(' '))))
 
         self.validate_tree()
 
