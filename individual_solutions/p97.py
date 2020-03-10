@@ -53,7 +53,30 @@ def multiply_out_power_of_2(huge_power, last_digits):
 
 def q97(multiplier=28433, given_huge_power=7830457, digit_number=10):
     power_of_2 = multiply_out_power_of_2(given_huge_power, digit_number)
-    return str((multiplier * power_of_2) + 1)[-10:]
+    return str((multiplier * power_of_2) + 1)[-digit_number:]
+
+
+def q97_built_in_function(multiplier=28433, given_huge_power=7830457, digit_number=10):
+    power_of_2 = pow(2, given_huge_power, 10 ** digit_number)
+    return str((multiplier * power_of_2) + 1)[-digit_number:]
+
+
+def q97_bitwise_operation(multiplier=28433, given_huge_power=7830457, digit_number=10):
+    power_of_2 = 1
+    for _ in range(given_huge_power):
+        power_of_2 <<= 1
+        power_of_2 %= 10 ** 10
+
+    return str((multiplier * power_of_2) + 1)[-digit_number:]
+
+
+def q97_multiplication(multiplier=28433, given_huge_power=7830457, digit_number=10):
+    power_of_2 = 1
+    for _ in range(given_huge_power):
+        power_of_2 *= 2
+        power_of_2 %= 10 ** 10
+
+    return str((multiplier * power_of_2) + 1)[-digit_number:]
 
 
 if __name__ == '__main__':
@@ -66,4 +89,7 @@ if __name__ == '__main__':
     # assert (timed_function(multiply_out_power_of_2)(23, 3) == 608)
     # assert (timed_function(multiply_out_power_of_2)(31, 4) == 3648)
 
-    assert (timed_function(q97)() == 8739992577)
+    assert (timed_function(q97)() == '8739992577')  # Unfortunate? Or fortunate that this can't beat pow()?
+    # assert (timed_function(q97_built_in_function)() == '8739992577')  # use pow(base, power, mod)
+    # assert (timed_function(q97_bitwise_operation)() == '8739992577') # not worth it
+    # assert (timed_function(q97_multiplication)() == '8739992577') # not worth it
