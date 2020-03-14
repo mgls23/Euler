@@ -689,24 +689,6 @@ def q67():
     return maximum_path_sum
 
 
-def q69(upper_limit=10 ** 6):
-    from euler.maths.ungrouped import phi
-
-    prime_numbers = generate_to_sie(17 + 1)
-    prime_number = reduce(operator.mul, prime_numbers)
-
-    maximum_value = 1
-    maximum_n = 1
-
-    for n in range(prime_number, upper_limit, prime_number):
-        value = n / phi(n)
-        if maximum_value < value:
-            maximum_value = value
-            maximum_n = n
-
-    return maximum_n
-
-
 def q76():
     from euler.something import ways_to_express_number
     return ways_to_express_number(100) - 1

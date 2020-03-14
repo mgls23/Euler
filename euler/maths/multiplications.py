@@ -2,7 +2,7 @@ import collections
 import functools
 import math
 
-from euler.maths.prime import prime_numbers_smaller_than
+from euler.maths.prime import prime_numbers_smaller_than, is_prime
 
 
 def lowest_common_multiple(number1, number2):
@@ -61,7 +61,9 @@ def decompose_to_prime_powers(number, primes=None):
             number //= prime_number
             if number == 1: return prime_composition
 
-    assert False, f"Not Enough Primes provided - number={number}, primes={primes}"
+    assert is_prime(number) or number == 1, f"Not Enough Primes provided - number={number}, primes={primes}"
+    prime_composition[number] = 1
+    return prime_composition
 
 
 def multiply_out_numbers_in_powers(number_in_powers):
