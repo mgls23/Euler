@@ -1,9 +1,5 @@
+from euler.maths.matrix import debug_log_2d_matrix
 from euler.util.decorators import timed_function
-
-
-def debug_log_2d_matrix(matrix):
-    for row in matrix:
-        logging.debug(f'{row}')
 
 
 def dijkstra_cost_search(matrix):

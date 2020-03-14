@@ -1,3 +1,5 @@
+import logging
+
 import numpy
 
 
@@ -27,3 +29,8 @@ def left_diagonal(matrix):
 
 def right_diagonal(matrix):
     return numpy.array([[0] * (len(matrix) - i) + row + [0] * i for i, row in enumerate(matrix)]).transpose().tolist()
+
+
+def debug_log_2d_matrix(matrix):
+    for row in matrix:
+        logging.debug(f'{row}')
