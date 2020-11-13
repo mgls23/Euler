@@ -10,12 +10,12 @@ from operator import mul
 from euler.champernownes_constant import champernownes_constant
 from euler.maths import prime
 from euler.maths.matrix import adjacent_multiplicand, horizontal, left_diagonal, right_diagonal
-from euler.maths.multiplications import decompose_to_prime_powers
 from euler.maths.palindromes import generate_palindromes, is_palindrome_simple_string
-from euler.maths.prime import generate_to_sie, is_prime_robin_miller
+from euler.maths.prime import generate_to_sie, is_prime_robin_miller, decompose_to_prime_powers
 from euler.maths.triangle_numbers import is_triangle_number
 from euler.names_scores import translate
 from euler.strings.number_to_string import numerical_score, digit_sum_of_number
+from euler.util.io import datafiles
 
 
 def q3(number=600851475143):
@@ -65,7 +65,7 @@ def q20():
 
 
 def q22():
-    with open('data/p022_names.txt', 'r') as file:
+    with open(datafiles('p022_names.txt'), 'r') as file:
         names_text = file.readlines()[0]
         names = sorted(names_text.replace('"', '').split(','))
         name_scores = map(numerical_score, names)
@@ -92,7 +92,7 @@ def q41():
 
 
 def q42():
-    with open('data/p042_words.txt') as text_file:
+    with open(datafiles('p042_words.txt')) as text_file:
         words = map(lambda raw_word: raw_word.replace('"', ''), text_file.read().split(','))
         return reduce(lambda count, word: is_triangle_number(numerical_score(word)) and count + 1 or count, words, 0)
 

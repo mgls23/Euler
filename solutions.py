@@ -22,7 +22,6 @@ from euler.maths.matrix import (
 )
 from euler.maths.multiplications import (
     greatest_common_denominator,
-    decompose_to_prime_powers,
     multiply_out_numbers_in_powers
 )
 from euler.maths.palindromes import is_palindrome_simple_string
@@ -31,7 +30,7 @@ from euler.maths.prime import (
     is_prime,
     is_truncable_prime,
     generate_primes_in_digit_range,
-    is_prime_robin_miller,
+    is_prime_robin_miller, decompose_to_prime_powers,
 )
 from euler.maths.sigma import (sigma_n, )
 from euler.maths.triangle_numbers import (
@@ -43,6 +42,7 @@ from euler.maths.ungrouped import calculate_number_of_divisors
 from euler.strings.digits import all_digits_sorted, all_digits
 from euler.util.dates import calculate_number_of_days_in_month
 from euler.util.fibonacci import FibonacciIterator
+from euler.util.io import datafiles
 
 
 def q1():
@@ -146,7 +146,7 @@ def q13():
     """
     from euler.largest_sum import first_n_digits_of_sum
 
-    with open('data/p013_numbers.txt') as numbers_file:
+    with open(datafiles('p013_numbers.txt')) as numbers_file:
         numbers = [number.replace('\n', '') for number in numbers_file.readlines()]
         return first_n_digits_of_sum(10, numbers)
 
@@ -217,7 +217,7 @@ def q16():
 
 def q18():
     from euler.maximum_path_sum import Tree
-    tree = Tree('data/p018_tree.txt')
+    tree = Tree(datafiles('p018_tree.txt'))
     maximum_path_sum = tree.find_maximum_path_sum()
     return maximum_path_sum
 
@@ -592,7 +592,7 @@ def q59():
 
     valid_characters = set(list(range(ord(' '), ord('~') + 1)))
 
-    with open('data/p059_cipher.txt') as numbers_file:
+    with open(datafiles('p059_cipher.txt')) as numbers_file:
         numbers = list(map(int, numbers_file.readlines()[0].split(',')))
 
         valid_answer = []
@@ -684,7 +684,7 @@ def q66(max_value_d=1000):
 
 def q67():
     from euler.maximum_path_sum import Tree
-    tree = Tree('data/p067_triangle.txt')
+    tree = Tree(datafiles('p067_triangle.txt'))
     maximum_path_sum = tree.find_maximum_path_sum()
     return maximum_path_sum
 
@@ -728,7 +728,7 @@ def q110(given_number=4 * (10 ** 6)):
             return i
 
 
-if __name__ == '__main__':
+def run():
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
     import time
 
@@ -738,3 +738,7 @@ if __name__ == '__main__':
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
+
+
+if __name__ == '__main__':
+    run()

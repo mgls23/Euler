@@ -1,43 +1,47 @@
+import collections
 import math
 import random
 
 from euler.util.decorators import memoised, timed_function
 
-# To be retired - this was fun when learning Python, but just is not necessary
-PRIME_ENTRIES = [2, 3, 5, 7]
 
+class PrimeGenerator:
+    def __init__(self):
+        self.prime_numbers = [2, 3, 5, 7]
 
-def iterator():
-    for prime_entry in PRIME_ENTRIES:
-        yield prime_entry
+    def _check_prime_entries(self, number):
+        square_root = math.sqrt(number)
+        for prime_number in self.prime_numbers:
+            if prime_number > square_root: break
+            if number % prime_number == 0:
+                return False
 
+        self.prime_numbers.append(number)
+        return True
 
-def _check_prime_entries(number):
-    global PRIME_ENTRIES
+    def _generate_next_prime(self):
+        starting_length = len(self.prime_numbers)
+        i = math.ceil((self.prime_numbers[-1] - 1) / 6)
 
-    square_root = math.sqrt(number)
-    for prime_number in PRIME_ENTRIES:
-        if prime_number > square_root: break
-        if number % prime_number == 0:
-            return False
+        while starting_length == len(self.prime_numbers):
+            i += 1
+            k = i * 6
+            self._check_prime_entries(k - 1)
+            self._check_prime_entries(k + 1)
 
-    PRIME_ENTRIES.append(number)
-    return True
+        return self.prime_numbers[-1]
 
+    def nth_prime_number(self, n):
+        while len(self.prime_numbers) < n:
+            self._generate_next_prime()
 
-def _generate_next_prime():
-    global PRIME_ENTRIES
+        return self.prime_numbers[n - 1]
 
-    starting_length = len(PRIME_ENTRIES)
-    i = math.ceil((PRIME_ENTRIES[-1] - 1) / 6)
+    def prime_numbers_smaller_than(self, number):
+        while self._generate_next_prime() < number:
+            pass
 
-    while starting_length == len(PRIME_ENTRIES):
-        i += 1
-        k = i * 6
-        _check_prime_entries(k - 1)
-        _check_prime_entries(k + 1)
-
-    return PRIME_ENTRIES[-1]
+        return self.prime_numbers
 
 
 def generate_primes_in_range(lower_limit, upper_limit):
@@ -49,33 +53,16 @@ def generate_primes_in_digit_range(lower_limit_digit, upper_limit_digit):
 
 
 def generate_to_sie(upper_bound):
-    """ Prime numbers generation using Sieve of Eratosthenes
-    https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes"""
-    global PRIME_ENTRIES
-    PRIME_ENTRIES = []
-
+    """ Prime numbers generation using Sieve of Eratosthenes [https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes]"""
+    prime_numbers = []
     considered = [True] * upper_bound
 
     for number in range(2, upper_bound):
         if considered[number]:
-            PRIME_ENTRIES.append(number)
+            prime_numbers.append(number)
             considered[number * 2::number] = [False] * (((upper_bound - 1) // number) - 1)
 
-    return PRIME_ENTRIES
-
-
-def prime_numbers_smaller_than(number):
-    while _generate_next_prime() < number:
-        pass
-
-    return PRIME_ENTRIES
-
-
-def nth_prime_number(n):
-    while len(PRIME_ENTRIES) < n:
-        _generate_next_prime()
-
-    return PRIME_ENTRIES[n - 1]
+    return prime_numbers
 
 
 def is_prime_robin_miller(n, k=2):
@@ -149,3 +136,41 @@ if __name__ == '__main__':
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
     _benchmark_for_generate_sie(lower_range_digit=6, upper_range_digit=7)
     _benchmark_generate_by_robin_miller(lower_range_digit=5, upper_range_digit=6)
+
+
+def decompose_to_prime_powers(number, primes=None):
+    """ Decomposes a given number into a set of prime number paired with
+    powers which multiplied out, gives the original number
+
+        Args
+        ----
+            :param number: int
+                The given number to decompose
+
+            :param primes: list
+                Prime numbers that does not exceed the number
+
+        Returns
+        -------
+            {
+                N1: P1,
+                N2: P2,
+                N3: P3,
+                ...
+                Nm, Pm,
+            } ... (N1 ^ P1) * (N2 ^ P2) * ... = number
+    """
+    assert number > 0
+    if number == 1: return {}
+    if primes is None: primes = generate_to_sie(number)
+
+    prime_composition = collections.defaultdict(int)
+    for prime_number in primes:
+        while number % prime_number == 0:
+            prime_composition[prime_number] += 1
+            number //= prime_number
+            if number == 1: return prime_composition
+
+    assert is_prime(number) or number == 1, f"Not Enough Primes provided - number={number}, primes={primes}"
+    prime_composition[number] = 1
+    return prime_composition

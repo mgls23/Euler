@@ -1,6 +1,7 @@
 from fractions import Fraction
 
-from euler.maths.multiplications import greatest_common_denominator as gcd, decompose_to_prime_powers
+from euler.maths.multiplications import greatest_common_denominator as gcd
+from euler.maths.prime import decompose_to_prime_powers
 
 
 def slow_phi(number):

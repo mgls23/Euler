@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from collections import deque
 from itertools import permutations
 
@@ -72,7 +73,6 @@ def q61(digits=4):
 
 
 if __name__ == '__main__':
-    import logging
     import sys
 
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)

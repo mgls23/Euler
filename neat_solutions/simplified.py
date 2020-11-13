@@ -23,7 +23,7 @@ def q6(n=100):
 
 
 def q7():
-    return prime.nth_prime_number(10001)
+    return prime.PrimeGenerator().nth_prime_number(10001)
 
 
 def q28():

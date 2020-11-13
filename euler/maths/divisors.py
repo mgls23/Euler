@@ -4,8 +4,7 @@ from functools import reduce
 
 import sympy
 
-from euler.maths.multiplications import decompose_to_prime_powers
-from euler.maths.prime import is_prime
+from euler.maths.prime import is_prime, decompose_to_prime_powers
 
 
 def sum_of_divisors(n, primes):
