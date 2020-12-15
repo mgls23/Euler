@@ -1,38 +1,35 @@
-import math
-
 from sympy import totient
 
-from euler.maths.prime import generate_to_sie
 from euler.util.decorators import timed_function
 
 
 def q72(number=1000000):
-    prime_numbers = generate_to_sie(number)
-    visited = [False] * number
-
-    next_prime_number = prime_numbers.pop(0)
+    visited = list(range(number + 1))
     summed = 0
-    for i in range(2, number):
-        if i == next_prime_number:
-            last_power = int(math.log(number, i))
-            progression_sum = geometric_sum(start=1, ratio=i, number=last_power)
-            for j in range(2, last_power + 1):
-                visited[i ** j] = True
 
-            summed += progression_sum
-        elif not visited[i]:
-            summed += totient(i)
+    for index in range(2, number + 1):  # don't use enumerate/iterator
+        # Prime Number
+        if index == visited[index]:
+            summed += index - 1
 
-    return summed
+            # reverse - sieve: decrease by (p-1)/p
+            for to_update in range(index * 2, number + 1, index):
+                visited[to_update] *= (index - 1) / index
+
+        # Composite / power - already decreased
+        else:
+            summed += visited[index]
+
+    return int(summed)
 
 
 def brute_force(number):
     # for i in range(2, number): logging.debug(i, totient(i))
-    return sum(map(totient, range(2, number)))
+    return sum(map(totient, range(2, number + 1)))
 
 
 def geometric_sum(start: int, ratio: int, number: int):
-    return start * (ratio ** number - 1) / (ratio - 1)
+    return start * ((ratio ** number) - 1) / (ratio - 1)
 
 
 if __name__ == '__main__':
@@ -44,5 +41,6 @@ if __name__ == '__main__':
     # assert (timed_function(geometric_sum)(3, 3, 2) == 12)
     # assert (timed_function(geometric_sum)(2, 7, 3) == 114)
 
-    assert (timed_function(q72)(1000) == brute_force(1000))
-    assert (timed_function(q72)() == -1)
+    # assert (timed_function(q72)(8) == 21)
+    # assert (timed_function(q72)(100) == brute_force(100))
+    assert (timed_function(q72)() == 303963552391)
