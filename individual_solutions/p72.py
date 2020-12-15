@@ -1,33 +1,38 @@
-import itertools
-from functools import reduce
-from operator import mul
+import math
+
+from sympy import totient
 
 from euler.maths.prime import generate_to_sie
-from euler.maths.sigma import sigma_n
 from euler.util.decorators import timed_function
 
 
 def q72(number=1000000):
-    def pi(numbers):
-        # Mathematical notation for multiplying out numbers "sigma of multiplication"
-        return reduce(mul, numbers)
-
     prime_numbers = generate_to_sie(number)
-    max_group_size = next(group_size for group_size in range(1, len(prime_numbers))
-                          if pi(prime_numbers[:group_size]) > number) - 1
-    logging.debug(f'Max group size={max_group_size}, pi={pi(prime_numbers[:max_group_size])}')
+    visited = [False] * number
 
-    def calculation(factor):
-        up_to = (number - 1) // factor
-        return sigma_n(up_to)
+    next_prime_number = prime_numbers.pop(0)
+    summed = 0
+    for i in range(2, number):
+        if i == next_prime_number:
+            last_power = int(math.log(number, i))
+            progression_sum = geometric_sum(start=1, ratio=i, number=last_power)
+            for j in range(2, last_power + 1):
+                visited[i ** j] = True
 
-    calculated = {prime_number: calculation(prime_number) for prime_number in prime_numbers}
+            summed += progression_sum
+        elif not visited[i]:
+            summed += totient(i)
 
-    for group_size in range(2, max_group_size + 1):
-        logging.debug(f'Group Size={group_size}')
-        for group in itertools.combinations(prime_numbers, group_size):
-            pass
-            # logging.debug(f'Examining::{multiplied}, count={count}')
+    return summed
+
+
+def brute_force(number):
+    # for i in range(2, number): logging.debug(i, totient(i))
+    return sum(map(totient, range(2, number)))
+
+
+def geometric_sum(start: int, ratio: int, number: int):
+    return start * (ratio ** number - 1) / (ratio - 1)
 
 
 if __name__ == '__main__':
@@ -35,4 +40,9 @@ if __name__ == '__main__':
     import sys
 
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+
+    # assert (timed_function(geometric_sum)(3, 3, 2) == 12)
+    # assert (timed_function(geometric_sum)(2, 7, 3) == 114)
+
+    assert (timed_function(q72)(1000) == brute_force(1000))
     assert (timed_function(q72)() == -1)
