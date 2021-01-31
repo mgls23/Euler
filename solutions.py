@@ -705,10 +705,9 @@ def q108(given_number=1000):
 
     for group_size in range(2, 10):
         for groups in itertools.product(set(range(1, 1 + 2 * 4, 2)), repeat=group_size):
-            divisors = reduce(operator.mul, groups)
+            divisors = math.prod(groups)
             if (divisors + 1) // 2 > given_number:
-                number = reduce(operator.mul,
-                                [precomputed[primes[i]][(power - 1) // 2] for i, power in enumerate(groups)])
+                number = math.prod([precomputed[primes[i]][(power - 1) // 2] for i, power in enumerate(groups)])
                 if minimum_number is None or number < minimum_number:
                     minimum_number = number
                     # print(int(math.log10(minimum_number)), minimum_number, groups)
@@ -719,7 +718,7 @@ def q108(given_number=1000):
 def q110(given_number=4 * (10 ** 6)):
     primes = generate_to_sie(10 ** 6)
 
-    nice_multiple = reduce(operator.mul, primes[:11])
+    nice_multiple = math.prod(primes[:11])
     i = nice_multiple
     while True:
         i += nice_multiple

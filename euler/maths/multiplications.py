@@ -1,5 +1,7 @@
 import collections
 import functools
+import math
+import operator
 
 
 def lowest_common_multiple(number1, number2):
@@ -31,5 +33,4 @@ def multiply_out_numbers_in_powers(number_in_powers):
     :param number_in_powers: dict
     :returns: (key ^ value) * (key ^ value) ...
     """
-    powers = [number ** power for number, power in number_in_powers.items()]
-    return functools.reduce(lambda x, y: x * y, powers)
+    return math.prod([number ** power for number, power in number_in_powers.items()])
