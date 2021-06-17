@@ -80,7 +80,7 @@ def is_prime_robin_miller(n, k=2):
         a = random.randint(2, n - 2)
         x = pow(a, d, n)
 
-        if x == 1 or x == n - 1: continue  # Probably prime
+        if x in [1, n - 1]: continue  # Probably prime
 
         for _ in range(r - 1):
             x = pow(x, 2, n)
@@ -98,11 +98,10 @@ def is_prime(number):
     if number <= 3: return True
     if (number % 2 == 0) or (number % 3 == 0): return False
 
-    for i in range(5, math.floor(math.sqrt(number)) + 1, 6):
-        if (number % i) == 0 or (number % (i + 2)) == 0:
-            return False
-
-    return True
+    return all(
+        (number % i) == 0 or (number % (i + 2)) == 0
+        for i in range(5, math.floor(math.sqrt(number)) + 1, 6)
+    )
 
 
 def is_truncable_prime(number, digit_length=-1):

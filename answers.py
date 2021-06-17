@@ -122,7 +122,7 @@ def warn_about_long_questions(flagged_questions):
 
 def _solve_and_check_answers(my_implementations, ignored_questions):
     tested_questions_count = 0
-    flagged_questions = list()
+    flagged_questions = []
     start_run_time = time.time()
 
     for question_number, answer in my_implementations.items():
