@@ -9,9 +9,10 @@ NOT_CALCULATED = 2 ** 32 - 1  # Something arbitrarily big
 
 def q82():
     cost_matrix = read_input_file()
-    path_matrix = []
-    for y in range(len(cost_matrix)):
-        path_matrix.append([cost_matrix[y][0]] + [NOT_CALCULATED] * (len(cost_matrix[0]) - 1))
+    path_matrix = [
+        [cost_matrix[y][0]] + [NOT_CALCULATED] * (len(cost_matrix[0]) - 1)
+        for y in range(len(cost_matrix))
+    ]
 
     debug_log_2d_matrix(path_matrix)
     for x in range(1, len(cost_matrix[0])):

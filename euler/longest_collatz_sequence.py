@@ -16,11 +16,7 @@ def collatz_length(number):
         if number == 1: break
 
         # Next Collatz Sequence
-        if number % 2 == 0:
-            number = int(number / 2)
-        else:
-            number = 3 * number + 1
-
+        number = int(number / 2) if number % 2 == 0 else 3 * number + 1
         count += 1
 
     sequence_length = collatz_sequence[number] + count

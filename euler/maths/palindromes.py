@@ -3,11 +3,7 @@ import math
 
 def is_palindrome_string(string):
     half = int(math.ceil(len(string) / 2))
-    for index in range(half):
-        if string[index] != string[-index - 1]:
-            return False
-
-    return True
+    return all(string[index] == string[-index - 1] for index in range(half))
 
 
 def is_palindrome_simple_string(string):

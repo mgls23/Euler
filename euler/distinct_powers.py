@@ -9,19 +9,18 @@ def see_pattern(lower, upper):
             powers.append(final)
 
     for x, x_power, x_product in pattern:
-        duplicating_entries = []
-        for y, ypower, final_y in pattern:
-            if x_product == final_y and x != y:
-                duplicating_entries.append((y, ypower))
+        duplicating_entries = [
+            (y, ypower)
+            for y, ypower, final_y in pattern
+            if x_product == final_y and x != y
+        ]
 
         if duplicating_entries:
-            print('{}^{}[{}] can also be expressed as {}'.format(
-                x, x_power, x_product,
-                ', '.join([
-                    '{}^{}'.format(y, power)
-                    for y, power in duplicating_entries
-                ])
-            ))
+            print('{}^{}[{}] can also be expressed as {}'
+                  .format(x, x_power, x_product,
+                          ', '.join('{}^{}'.format(y, power) for y, power in duplicating_entries),
+                          )
+                  )
 
     print(pattern)
     print(len(set(pattern)))
