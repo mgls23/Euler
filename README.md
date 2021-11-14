@@ -11,11 +11,12 @@ All of the questions are available here [https://projecteuler.net/archives]
 To run this project, you'll need the latest version of Python. Currently, this is Python 3.8
 
 ### Python 2
-Last decade was good but this is a new decade. 
+Last decade was good I agree but the decade we're in is now 2020s. 
+Some things can come back after lockdown, but not Python 2. Sorry. 
 
 ### Python 3.8
-Certain syntax (which I think greatly decreases repetition in code) are only available in 3.8
-Most examples are: math.prod, but many more
+Certain syntax (which I think greatly decreases repetition in code) are only available in 3.8.
+Great examples are: math.prod, but many more
 
 ## Technical Debt
 I used Project Euler to get better at programming, and this includes my early days of programming.
