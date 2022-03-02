@@ -1,260 +1,113 @@
+import logging
 import re
-import os
-from math import floor
+import sys
+from itertools import permutations
+from typing import List
 
-TOGGLE = True
-UPPER_LIMIT = 5 if TOGGLE else 9
+from euler.util.io import datafiles
 
-
-def string_to_2d_array(strings):
-    return [[int(character) for character in line] for line in strings]
-
-
-def get_block(integer):
-    return int(floor(integer / 3))
+NOT_SOLVED = 0
+SIZE = 9
 
 
-class SudokuBlock:
-    def __init__(self, cells, block_type, suffix):
-        for cell in cells:
-            setattr(cell, block_type, self)
-
-        self.cells = cells
-        self.block_type = block_type
-        self.suffix = suffix
-
-    def solved(self):
-        return all(cell.solved() for cell in self.cells)
-
-    def discard_possibility(self, value):
-        for cell in self.cells:
-            cell.discard_possibility(value)
-
-    def check_if_solvable(self):
-        counts = {i: (0, None) for i in range(1, 10)}
-
-        for cell in self.cells:
-            for possibility in cell.possibilities:
-                counts[possibility] = counts[possibility][0] + 1, cell
-
-        one_remaining = [(number, cell) for number, (count, cell) in counts.items() if count == 1]
-        for number, cell in one_remaining:
-            if all(getattr(cell, block_name).check_if_possible(number) for block_name in ('column', 'row', 'square')):
-                print('X={}, Y={}, number={}'.format(str(self), cell.x, cell.y, number))
-                cell.solve(number)
-
-    def check_if_possible(self, value):
-        return all(cell.value != value for cell in self.cells)
-
-    def cells(self, solved=True):
-        return [cell for cell in self.cells if cell.solved() == solved]
-
-    def integrity_check(self):
-        unique_cells = set()
-        for cell in self.cells:
-            for unique_cell in unique_cells:
-                if cell.value == unique_cell.value:
-                    raise Exception('{} and {} are the same!'.format(
-                        cell, unique_cell
-                    ))
-
-            unique_cells.add(cell)
-
-    def __str__(self):
-        return '{} {}'.format(self.block_type, self.suffix)
+class SolvedException(Exception):
+    pass
 
 
-class SudokuCell:
-    """ Individual Cell that represents either a number or a list of possibilities
-    of the given Sudoku Grid"""
-
-    def __init__(self, solver, x, y, value=0):
-        self.solver = solver
-        self.x = x
-        self.y = y
-
-        self.value = value
-
-        if self.solved():
-            self.possibilities = set()
-        else:
-            self.possibilities = set(range(1, 9 + 1))
-
-    def discard_possibility(self, possibility):
-        if possibility in self.possibilities:
-            self.possibilities.remove(possibility)
-            self.check_if_solvable()
-
-    def check_if_solvable(self):
-        if len(self.possibilities) == 1:
-            assert not self.solved(), ""
-            value = self.possibilities.pop()
-            self.solve(value)
-
-    def solve(self, value):
-        self.possibilities = []
-        self.value = value
-        self.solver.queue.append(self)
-
-    def solved(self):
-        return self.value != 0
-
-    def string(self, debug=False):
-        if debug and len(self.possibilities):
-            if len(self.possibilities) == 9 and TOGGLE:
-                return '*'
-
-            elif len(self.possibilities) > UPPER_LIMIT:
-                return '!' + str(','.join(str(i)
-                    for i in set(range(1, 9 + 1)) - self.possibilities))
-
-            return str('/'.join(str(i) for i in self.possibilities))
-
-        return str(self.value or '-')
-
-    def __str__(self):
-        return self.string()
-
-    def info(self):
-        return '{}({},{})'.format(self.value, self.x, self.y)
-
-
-class SudokuSolver:
-    def __init__(self, grid=None):
-        self.grid = [[
-            SudokuCell(self, x, y, initial_value)
-            for x, initial_value in enumerate(line)]
-            for y, line in enumerate(grid)
-        ]
-
-        self.rows = [
-            SudokuBlock(rows, 'row', str(y))
-            for y, rows in enumerate(self.grid)
-        ]
-
-        self.columns = [
-            SudokuBlock([row[y] for row in self.grid], 'column', str(y))
-            for y, row in enumerate(self.grid)
-        ]
-
-        self.squares = []
-        for y in [0, 3, 6]:
-            row = []
-            for x in [0, 3, 6]:
-                square = []
-                for i in range(3):
-                    for j in range(3):
-                        square.append(self.grid[x + i][y + j])
-
-                row.append(SudokuBlock(square, 'square', '{},{}'.format(int(x / 3), int(y / 3))))
-
-            self.squares.append(row)
-
-        self.queue = []
-        self.update()
-
-    def update(self):
-        self.queue = [
-            cell for blocks in self.grid
-            for cell in blocks if cell.solved()
-        ]
+class Solver:
+    def __init__(self, board: List[List[int]]):
+        self.board = board
 
     def solve(self):
-        if not self.queue:
-            print('\nQueue is empty')
-            print(self.string(True))
-            return
+        try:
+            self._solve()
 
-        print('Clear Queue')
-        while self.queue:
-            cell = self.queue.pop(0)
+        except SolvedException:
+            assert self.is_valid_sudoku(validate=Solver.check_is_solved_board)
 
-            print('\nGetting Rid of {}[{}, {}] Queue={}'.format(
-                cell.value, cell.x, cell.y, [cell.info() for cell in self.queue]))
-            print(self.string(True))
+    def _solve(self, fixed_row=0):
+        if fixed_row == SIZE:
+            raise SolvedException()
 
-            self.rows[cell.y].discard_possibility(cell.value)
-            self.columns[cell.x].discard_possibility(cell.value)
+        row = self.board[fixed_row]
+        already_in_row = set(row)
+        numbers_missing = set(range(1, 10)) - already_in_row
+        unsolved_indices = [index for index, number in enumerate(row) if number == 0]
 
-            # Cell iteration
-            x_bound = get_block(cell.x)
-            y_bound = get_block(cell.y)
+        for permutation in permutations(numbers_missing):
+            # Make changes
+            for index, number in enumerate(permutation):
+                row[unsolved_indices[index]] = number
 
-            self.squares[x_bound][y_bound].discard_possibility(cell.value)
+            # Recurse
+            if self.is_valid_sudoku(Solver.check_is_valid):
+                self._solve(fixed_row=fixed_row + 1)
 
-        if not self.solved():
-            self.check_if_solvable(self.rows)
-            self.check_if_solvable(self.columns)
-            self.check_if_solvable([a for square in self.squares for a in square])
-            self.solve()
+            # Revert
+            # No need as we are going to overwrite them again anyway
+
+    def top_3_digit(self):
+        return int(''.join(map(str, self.board[0][:3])))
 
     @staticmethod
-    def check_if_solvable(blocks):
-        for block in blocks:
-            block.check_if_solvable()
+    def check_is_valid(iterable):
+        """ Valid != Solved, used to check if making a change / state is okay (currently - even if this move causes
+        something down the line - it only checks it at this particular level) """
+        encountered = set()
+        for number in (element for element in iterable if element != NOT_SOLVED):
+            if number in encountered: return False
+            encountered.add(number)
 
-    def string(self, debug=False):
-        GRID = 5
-        if debug:
-            GRID = 12 if TOGGLE else 18
+        return True
 
-        strings = ['+' + '+'.join(['-' * (GRID * 3 + 2)] * 3) + '+']
-        for index, blocks in enumerate(self.grid):
-            strings += [
-                '|' + '|'.join(block.string(debug).center(GRID) for block in blocks)
-                + '|']
+    @staticmethod
+    def check_is_solved_board(iterable):
+        """ Solved != Valid. This checks if the board is actually solved """
+        unique_elements = set(iterable)
+        return len(unique_elements) == 9 and NOT_SOLVED not in unique_elements
 
-            if index % 3 == 2:
-                strings += ['+' + '+'.join(['-' * (GRID * 3 + 2)] * 3) + '+']
+    def is_valid_sudoku(self, validate):
+        rows_are_good = all(validate(row) for row in self.board)
+        cols_are_good = all(validate(row[col] for row in self.board) for col in range(9))
 
-        return '\n'.join(strings)
+        squares = [[] for _ in range(9)]
+        for row_index, row in enumerate(self.board):
+            for col_index in range(3):
+                squares[(row_index // 3) * 3 + col_index] += row[col_index * 3: (col_index + 1) * 3]
 
-    def __str__(self):
-        return self.string()
+        squares_are_good = all(validate(square) for square in squares)
+        return rows_are_good and cols_are_good and squares_are_good
 
-    def solved(self):
-        return all(cell.solved() for line in self.grid for cell in line)
-
-    def integrity_check(self):
-        for blocks in (self.columns, self.rows, [cells for square in self.squares for cells in square]):
-            for block in blocks:
-                block.integrity_check()
-
-
-
-SUFFIX = os.path.expanduser('~') + '/Projects/Euler/'
+    @staticmethod
+    def from_string(lines_read):
+        return Solver([[int(element) for element in line.rstrip()] for line in lines_read])
 
 
 def q96():
+    digit_sum = 0
+
     new_line_regex = re.compile('Grid ([0-9]*)')
-    with open(SUFFIX + 'data/p096_sudoku.txt', 'r') as file:
-        string_buffer = []
-        last_match = None
+    with open(datafiles('p096_sudoku.txt')) as file:
+        lines_read = []
+        last_new_line_match = None
 
         for line in file.readlines():
-            new_line_match = new_line_regex.match(line)
-            if new_line_match:
-                if len(string_buffer):
-                    array = string_to_2d_array(string_buffer)
-                    solver = SudokuSolver(array)
+            if new_line_match := new_line_regex.match(line):
+                if last_new_line_match:
+                    sudoku_index, = last_new_line_match.groups()
+                    logging.debug(f'Solving {sudoku_index}...')
+                    solver = Solver.from_string(lines_read)
                     solver.solve()
+                    digit_sum += solver.top_3_digit()
 
-                    index, = last_match.groups()
-                    print('\nGrid {}: {}'.format(index, solver.solved()))
-                    print(str(solver) + '\n')
-                    if not solver.solved():
-                        return -1
-
-                    if index == '00':
-                        return -1
-
-                string_buffer = []
-                last_match = new_line_match
+                last_new_line_match = new_line_match
+                lines_read.clear()
             else:
-                string_buffer.append(line.strip('\n'))
+                lines_read.append(line)
 
-    return -1
+    return digit_sum
 
 
 if __name__ == '__main__':
-    q96()
+    logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
+    print(q96())
