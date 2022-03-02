@@ -29,7 +29,7 @@ def brute_force(number):
 
 
 def geometric_sum(start: int, ratio: int, number: int):
-    return start * ((ratio ** number) - 1) / (ratio - 1)
+    return start * ((ratio ** number) - 1) // (ratio - 1)
 
 
 if __name__ == '__main__':
