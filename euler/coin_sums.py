@@ -28,7 +28,7 @@ def _permutations(number, coins_available, paths=None):
     for coin in coins_available:
         valid, path_generated = _permutations(number - coin, coins_available, paths)
         if not valid: break
-        for path in path_generated: result.append(path + [coin])
+        result.extend(path + [coin] for path in path_generated)
         if not path_generated: result.append([coin])
 
     print(f'Finished {number}')
@@ -53,9 +53,9 @@ def digit_sum(number, coins, max_coin):
         for multiplier in range(1, upper_range):
             remainder = number - coin * multiplier
             if remainder < 0: break
-            valid, possibles = better(remainder, coins, coins[coins.index(coin) - 1])
+            valid, possibles = better(remainder, coins, coins[coins.card_at(coin) - 1])
             if not valid: return result
-            for possible in possibles: result.append([coin] * multiplier + possible)
+            result.extend([coin] * multiplier + possible for possible in possibles)
             if not possibles: result.append([coin] * multiplier)
 
     return result
@@ -82,7 +82,7 @@ def better(number, coins, max_coin=None):
 def coin_sums(coin_total, coins_available):
     _, paths = better(coin_total, sorted(coins_available))
 
-    unique_combinations = set(tuple(sorted(path)) for path in paths)
+    unique_combinations = {tuple(sorted(path)) for path in paths}
 
     return len(unique_combinations)
 
@@ -90,7 +90,7 @@ def coin_sums(coin_total, coins_available):
 def combinations_debug(number, coins_available, reverse=True):
     _, paths = better(number, sorted(coins_available))
 
-    unique_combinations = set(tuple(sorted(path, reverse=reverse)) for path in paths)
+    unique_combinations = {tuple(sorted(path, reverse=reverse)) for path in paths}
     for path in sorted(unique_combinations, reverse=reverse): print(path)
 
     return len(unique_combinations), sorted(unique_combinations, reverse=reverse)
