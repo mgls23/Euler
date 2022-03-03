@@ -1,3 +1,4 @@
+import copy
 import logging
 import re
 import sys
@@ -17,36 +18,30 @@ class SolvedException(Exception):
 class Solver:
     def __init__(self, board: List[List[int]]):
         self.board = board
+        # self.taken_cols = [{row[col] for row in self.board} for col in range(9)]
 
     def solve(self):
-        try:
-            self._solve()
+        self._solve()
 
-        except SolvedException:
-            assert self.is_valid_sudoku(validate=Solver.check_is_solved_board)
+    def _solve(self):
+        if self.is_valid_sudoku(validate=Solver.check_is_solved_board):
+            return True
 
-    def _solve(self, fixed_row=0):
-        if fixed_row == SIZE:
-            raise SolvedException()
+        for row_index in range(9):
+            for col_index in range(9):
+                if self.board[row_index][col_index] == 0:
+                    for new_number in range(1, 9 + 1):
+                        self.board[row_index][col_index] = new_number
 
-        row = self.board[fixed_row]
-        already_in_row = set(row)
-        numbers_missing = set(range(1, 10)) - already_in_row
-        unsolved_indices = [index for index, number in enumerate(row) if number == 0]
+                        if self.is_valid_sudoku(validate=Solver.check_is_valid) and self._solve():
+                            return True
 
-        for permutation in permutations(numbers_missing):
-            # Make changes
-            for index, number in enumerate(permutation):
-                row[unsolved_indices[index]] = number
+                        self.board[row_index][col_index] = 0
 
-            # Recurse
-            if self.is_valid_sudoku(Solver.check_is_valid):
-                self._solve(fixed_row=fixed_row + 1)
-
-            # Revert
-            # No need as we are going to overwrite them again anyway
+                    return False
 
     def top_3_digit(self):
+        assert self.is_valid_sudoku(validate=Solver.check_is_solved_board)
         return int(''.join(map(str, self.board[0][:3])))
 
     @staticmethod
@@ -82,6 +77,18 @@ class Solver:
     def from_string(lines_read):
         return Solver([[int(element) for element in line.rstrip()] for line in lines_read])
 
+    def string(self):
+        cell_width = 7
+
+        string_output = ['+' + '+'.join(['-' * (cell_width * 3 + 2)] * 3) + '+']
+        for index, row in enumerate(self.board):
+            string_output += ['|' + '|'.join(str(block).center(cell_width) for block in row) + '|']
+
+            if index % 3 == 2:
+                string_output += ['+' + '+'.join(['-' * (cell_width * 3 + 2)] * 3) + '+']
+
+        return '\n'.join(string_output)
+
 
 def q96():
     digit_sum = 0
@@ -98,6 +105,11 @@ def q96():
                     logging.debug(f'Solving {sudoku_index}...')
                     solver = Solver.from_string(lines_read)
                     solver.solve()
+                    logging.debug('Solution\n' + solver.string())
+
+                    if sudoku_index == 1:
+                        assert solver.top_3_digit() == 483
+
                     digit_sum += solver.top_3_digit()
 
                 last_new_line_match = new_line_match
