@@ -2,7 +2,7 @@ from euler.maths.prime import generate_to_sie
 from euler.util.decorators import timed_function
 
 
-def coin_partition_leaner(number):
+def prime_summation_leaner(number):
 	prime_numbers = list(reversed(generate_to_sie(number + 1)))
 
 	count = 0
@@ -22,7 +22,7 @@ def coin_partition_leaner(number):
 	return count
 
 
-def coin_partition(number):
+def prime_summation(number):
 	prime_numbers = list(reversed(generate_to_sie(number + 1)))
 	logging.debug(f'Input = {number}, Prime Numbers = {prime_numbers}')
 
@@ -44,7 +44,7 @@ def coin_partition(number):
 
 def q77(more_than=5000):
 	for number in range(2, 10000):
-		result = coin_partition_leaner(number)
+		result = prime_summation_leaner(number)
 		if result > more_than:
 			return number
 
