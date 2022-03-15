@@ -1,29 +1,30 @@
 # Project Euler
-My own implementation of Project Euler, a set of mathematical computational
-challenges.
+My own implementation of Project Euler [https://projecteuler.net/archives], a set of mathematical computational challenges.
 
-Please solve the challenges for yourself. Don't ruin the fun by copying answers. Also, mine doesn't include explanations.
-At least try to learn it if you haven't got the time to solve it.
+I'm going to repeat the disclaimer on the website - try the challenges for yourself. I publish my solutions to give 
+a sense of what my Python coding looks like. It doesn't always include explanations.  
 
-All of the questions are available here [https://projecteuler.net/archives]
+My take is - give at least 1 week on getting stuck on a problem before looking at solutions.
 
 ## Requirements
-To run this project, you'll need the latest version of Python. Currently, this is Python 3.8
+To run this project, you'll need the latest version of Python. Currently, this is Python 3.9 or above
 
 ### Python 2
 Last decade was good I agree but the decade we're in is now 2020s. 
 Some things can come back after lockdown, but not Python 2. Sorry. 
 
-### Python 3.8
-Certain syntax (which I think greatly decreases repetition in code) are only available in 3.8.
-Great examples are: math.prod, but many more
+### Python 3
+* 3.9
+  * functools.cache
+  * functools.lru_cache
+* 3.8
+  * math.prod
 
 ## Technical Debt
 I used Project Euler to get better at programming, and this includes my early days of programming.
-There are a lot of legacy + ugly code  I haven't got around
-to fixing - especially in solutions.py and the files it imports.
+There are a lot of legacy + ugly code  I haven't got around to fixing - especially in solutions.py and the files it imports.
 
-Solutions.py has all of the solutions because it was intended to remove duplicating timeit function and 
+Solutions.py has all the solutions because it was intended to remove duplicating timeit function and 
 initialisation of the debugger. This is no longer the case - they are solved neatly by the use of decorators.
 
 These folders show roughly the new direction this project is headed to - although I might decide to reimplement them

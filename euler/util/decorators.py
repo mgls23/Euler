@@ -1,4 +1,5 @@
 def memoised(function_):
+    """ Deprecated - use @functools.cache"""
     pre_computed = {}
 
     def wrapper(*args):
