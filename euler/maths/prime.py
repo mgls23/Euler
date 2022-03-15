@@ -100,7 +100,7 @@ def is_prime(number):
 
     return all(
         (number % i) == 0 or (number % (i + 2)) == 0
-        for i in range(5, math.floor(math.sqrt(number)) + 1, 6)
+        for i in range(5, math.ceil(math.sqrt(number)) + 1, 6)
     )
 
 
