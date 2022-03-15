@@ -8,16 +8,10 @@ My take is - give at least 1 week on getting stuck on a problem before looking a
 
 ## Requirements
 To run this project, you'll need the latest version of Python. Currently, this is Python 3.9 or above
-
-### Python 2
-Last decade was good I agree but the decade we're in is now 2020s. 
-Some things can come back after lockdown, but not Python 2. Sorry. 
-
-### Python 3
-* 3.9
+### Python 3.9
   * functools.cache
   * functools.lru_cache
-* 3.8
+### Python 3.8
   * math.prod
 
 ## Technical Debt
