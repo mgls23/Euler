@@ -1,3 +1,3 @@
-These are not related to project euler but files I want to re-use from PE.
+These are not related to project euler but little fun ones here and there.
 
-Most notably, the logging system, or some of the maths modules.
+They can be completely unrelated. That's fine.
