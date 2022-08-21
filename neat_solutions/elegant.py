@@ -1,6 +1,6 @@
 """
 Written in a way I feel is 'elegant' - not necessarily most readable or maintainable.
-Only some of the questions can be solved like this (readability and/or performance usually comes first)
+Only some questions can be solved like this (readability and/or performance usually comes first)
 """
 import itertools
 import math

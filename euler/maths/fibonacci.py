@@ -2,15 +2,13 @@ from euler.util.exceptions import NotSupportedException
 
 
 class FibonacciIterator:
-    """ FibonacciIterator that calculates and stores calculated
-    fibonacci sequence values. N.B. This excludes the 1st 1
+    """ A wrapper for Fibonacci sequence in case the requirement changes """
 
-        (x) 1, 2, 3, 5, 8, 13, ...
-        ( ) 1, 1, 2, 3, 5, 8, 13, ...
-    """
+    def __init__(self, initial_list=None, start_with_two_1s=False):
+        if initial_list is None:
+            initial_list = start_with_two_1s and [1, 1, 2] or [1, 2]
 
-    def __init__(self, initial_list=None):
-        self.sequence = initial_list or [1, 2]
+        self.sequence = initial_list
 
     def _calculate_next(self):
         """Calculates and stores the next Fibonacci Sequence"""
@@ -22,25 +20,22 @@ class FibonacciIterator:
             raise NotSupportedException('')
 
         # See if that value has been calculated already
-        while len(self.sequence) < n:
+        for _ in range(n - len(self.sequence)):
             self._calculate_next()
 
-        # nth => n-1th in the list [0th of list is 1st Fibonnacci]
+        # nth => n-1th in the list [0th of list is 1st Fibonacci]
         return self.sequence[n - 1]
-
-    def peek(self):
-        return self.sequence[-1]
 
     def set_upper_bound(self, upper_bound):
         if upper_bound < 1:
             raise NotSupportedException('')
 
-        while self.peek() < upper_bound:
+        while self.sequence[-1] < upper_bound:
             self._calculate_next()
 
         # Discard any entries that are bigger than the upper bound
-        while self.peek() > upper_bound:
-            self.sequence.pop(-1)
+        while self.sequence[-1] > upper_bound:
+            self.sequence.pop()
 
         # Return the last entry
-        return self.peek()
+        return self.sequence[-1]
