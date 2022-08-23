@@ -84,22 +84,19 @@ def add_suffix(string, suffix):
     return string + suffix
 
 
-def test_individual(number_int, number_string, answer, function=translate):
-    result = function(number_int)
-    print(number_int, result, answer)
+def test_translate(number: int, string: str, score: int):
+    result = translate(number)
+    stripped_string = remove_spaces_and_hyphens(string)
 
-    stripped_string = remove_spaces_and_hyphens(number_string)
-
-    assert (result == answer), f"{result} != {answer}"
-    assert (answer == len(stripped_string)
-            ), f"{answer} != len({stripped_string})"
+    assert (result == score), f"{result} != {score}"
+    assert (score == len(stripped_string)), f"{score} != len({stripped_string})"
 
 
 def test():
     # No need to test any entries in NUMBER_TO_STRING other than 1
-    test_individual(1, "one", answer=3)
-    test_individual(12, "twelve", answer=6)
-    test_individual(14, "fourteen", answer=8)
-    test_individual(40, "forty", answer=5)
-    test_individual(100, "one-hundred", answer=10)
-    test_individual(256, "two-hundred and fifty-six", answer=21)
+    test_translate(1, "one", score=3)
+    test_translate(12, "twelve", score=6)
+    test_translate(14, "fourteen", score=8)
+    test_translate(40, "forty", score=5)
+    test_translate(100, "one-hundred", score=10)
+    test_translate(256, "two-hundred and fifty-six", score=21)
