@@ -38,8 +38,8 @@ from euler.maths.triangle_numbers import (
 )
 from euler.maths.ungrouped import calculate_number_of_divisors
 from euler.strings.digits import all_digits_sorted, all_digits
+from euler.strings.number_to_string import MILLION
 from euler.util.dates import calculate_number_of_days_in_month
-from euler.util.fibonacci import FibonacciIterator
 from euler.util.io import datafiles
 
 
@@ -71,19 +71,12 @@ def q1():
 
 
 def q2():
-    # Needs Refactoring (tried something really fancy but was a train-wreck
-    from euler.even_fibonacci import N2FibonacciIterator
+    from euler.maths.fibonacci import NFibonacciIterator
 
-    upper_bound = 4000000
+    iterator = NFibonacciIterator.n3()
+    iterator.set_upper_bound(4 * MILLION)
 
-    #
-    fib_generator = FibonacciIterator()
-    fib_generator.set_upper_bound(upper_bound)
-
-    #
-    fib_generator = N2FibonacciIterator()
-    fib_generator.set_upper_bound(upper_bound)
-    return sum(fib_generator.sequence)
+    return sum(iterator.sequence)
 
 
 def q4(digit_given=3):
@@ -383,7 +376,7 @@ def q33():
                 ef = e * f
 
                 if ((a * c) + (bc // 10)) == (df + (ef // 10)) \
-                    and (bc % 10) == (ef % 10) and bc == df:
+                        and (bc % 10) == (ef % 10) and bc == df:
                     answers.add((original, denominator))
 
     top, bottom = 1, 1

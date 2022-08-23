@@ -145,15 +145,15 @@ def _solve_and_check_answers(my_implementations, ignored_questions):
 
 
 def check_answers(light_mode):
-    logging.basicConfig(format="[%(asctime)s] %(levelname)6s   %(message)s", stream=sys.stderr, level=logging.INFO)
+    logging.basicConfig(format="[%(levelname)6s] %(message)s", stream=sys.stderr, level=logging.INFO)
 
-    not_run = (q2, q12, q17)
-    if light_mode: not_run += (q14, q23, q44, q58, q60, q108, q110)  # Correct solutions, take long time
-    ignored_questions = set(map(lambda q: q.__name__.capitalize(), not_run))
+    not_run = (q12, q17, q27, q31, q50)
+    if light_mode: not_run += (q14, q23, q37, q44, q58, q60, q108, q110)  # Correct solutions, take long time
+    ignored_questions = list(sorted(map(lambda q: q.__name__.capitalize(), not_run)))
 
     flagged_questions = _solve_and_check_answers(ANSWERS, ignored_questions=ignored_questions)
     warn_about_long_questions(flagged_questions)
 
 
 if __name__ == '__main__':
-    check_answers(light_mode=False)
+    check_answers(light_mode=True)
