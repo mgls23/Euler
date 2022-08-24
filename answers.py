@@ -1,5 +1,6 @@
 import time
 
+from individual_solutions.p17 import q17
 from individual_solutions.p32 import q32
 from individual_solutions.p38 import q38
 from individual_solutions.p43 import q43
