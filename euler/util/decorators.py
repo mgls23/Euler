@@ -26,7 +26,7 @@ def print_results(function_):
     return wrapper
 
 
-def timed_function(function_):
+def timed_function(function_, print_output=True):
     def wrapper(*args, **kwargs):
         arguments = ', '.join(map(str, args))
         for key, value in kwargs.items():
@@ -37,6 +37,8 @@ def timed_function(function_):
         start_time = time.time()
 
         results = function_(*args, **kwargs)
+
+        if not print_output: results = ''
 
         time_taken = (time.time() - start_time) * 1000
         print(f'{function_.__name__}({arguments})={results}')

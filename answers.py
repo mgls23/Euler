@@ -5,6 +5,7 @@ from individual_solutions.p38 import q38
 from individual_solutions.p43 import q43
 from individual_solutions.p44 import q44
 from individual_solutions.p47 import q47
+from individual_solutions.p51 import q51
 from individual_solutions.p52 import q52
 from individual_solutions.p53 import q53
 from individual_solutions.p55 import q55
@@ -13,10 +14,16 @@ from individual_solutions.p61 import q61
 from individual_solutions.p63 import q63
 from individual_solutions.p64 import q64
 from individual_solutions.p65 import q65
+from individual_solutions.p68 import q68
 from individual_solutions.p69 import q69
 from individual_solutions.p70 import q70
+from individual_solutions.p72 import q72
+from individual_solutions.p77 import q77
+from individual_solutions.p79 import q79
 from individual_solutions.p81 import q81
 from individual_solutions.p82 import q82
+from individual_solutions.p83 import q83
+from individual_solutions.p87 import q87
 from individual_solutions.p97 import q97
 from individual_solutions.revisit.p12 import q12
 from individual_solutions.revisit.p39 import q39
@@ -76,7 +83,7 @@ ANSWERS = {
     q48: 9110846700,
     q49: 296962999629,
     q50: 997651,
-
+    q51: 121313,
     q52: 142857,
     q53: 4075,
 
@@ -93,19 +100,25 @@ ANSWERS = {
     q65: 272,
 
     q67: 7273,
-
+    q68: 6531031914842725,
     q69: 510510,
     q70: 8319823,
     q71: 428570,
+    q72: 303963552391,
 
     # q74: 402,
 
     q76: 190569291,
+    q77: 71,
 
-    # q79: 73162890,
+    q79: 73162890,
 
     q81: 427337,
     q82: 260324,
+    q83: 425185,
+    # q84: 101524,
+
+    q87: 1097343,
 
     q97: 8739992577,
 
@@ -145,15 +158,15 @@ def _solve_and_check_answers(my_implementations, ignored_questions):
 
 
 def check_answers(light_mode):
-    logging.basicConfig(format="[%(asctime)s] %(levelname)6s   %(message)s", stream=sys.stderr, level=logging.INFO)
+    logging.basicConfig(format="[%(levelname)6s] %(message)s", stream=sys.stderr, level=logging.INFO)
 
-    not_run = (q2, q12, q17)
-    if light_mode: not_run += (q14, q23, q44, q58, q60, q108, q110)  # Correct solutions, take long time
-    ignored_questions = set(map(lambda q: q.__name__.capitalize(), not_run))
+    not_run = (q12, q17, q27, q31, q50, q68, q79, q83)
+    if light_mode: not_run += (q14, q23, q37, q44, q58, q60, q108, q110)  # Correct solutions, take long time
+    ignored_questions = list(sorted(map(lambda q: q.__name__.capitalize(), not_run)))
 
     flagged_questions = _solve_and_check_answers(ANSWERS, ignored_questions=ignored_questions)
     warn_about_long_questions(flagged_questions)
 
 
 if __name__ == '__main__':
-    check_answers(light_mode=False)
+    check_answers(light_mode=True)

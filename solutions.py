@@ -11,9 +11,7 @@ import collections
 import itertools
 import logging
 import math
-import operator
 import sys
-from functools import reduce
 from string import ascii_lowercase
 
 from euler.maths.divisors import sum_of_proper_divisors, is_abundant_number
@@ -40,8 +38,8 @@ from euler.maths.triangle_numbers import (
 )
 from euler.maths.ungrouped import calculate_number_of_divisors
 from euler.strings.digits import all_digits_sorted, all_digits
+from euler.strings.number_to_string import MILLION
 from euler.util.dates import calculate_number_of_days_in_month
-from euler.util.fibonacci import FibonacciIterator
 from euler.util.io import datafiles
 
 
@@ -49,27 +47,19 @@ def q1():
     def fizz_buzz(x, lower_bound=2, fizz=3, buzz=5):
         return [number for number in range(lower_bound, x + 1) if (number % fizz) == 0 or (number % buzz) == 0]
 
-    def sigma_n_with_multiplier(upper_bound, multiplier):
-        """ Finds multiplicative sum [pi] of multiplicand no bigger than the upper bound.
-        The multiplication with multiplicand x 1, therefore it does not include 0
+    def sigma_n_with_multiplier(upper_bound: int, multiples_of: int):
+        """ Finds sum of all `multiples_of` from 1 to upper bound
+        Taking the example of multiples_of=3,
 
-        This uses a simple property that 1 + 2 + 3 + 4 + 5 ... + (n-1) + n = (n + 1) x n/2
-        Taking the example of multiplicand of 3,
-        3 + 6 + 9 + 12 + 15 + ... 3n
-            = 3 x 1 + 3 x 2 + 3 x 3 + ... 3 x n
-            = 3 x (1 + 2 + 3 + ... n)
-            = 3 x (n + 1) x n/2
-            = m * (n + 1) x n/2
-             [m being the multiplicand]
-
-        :param upper_bound :int
-        :param multiplier :int
+            3   +   6   +   9   +   12  +   ...   3n
+        = (3x1) + (3x2) + (3x3) + (3x4) +   ... (3xn)
+        = 3 x (1+2+3+ ... n)
+        = 3 x sigma(1 -> n)
+        = `multiples_of` * sigma(n)
         """
         # Catch negative n cases as well as 0 case here
-        if upper_bound < multiplier: return 0
-
-        n = math.floor(upper_bound / multiplier)
-        return multiplier * sigma_n(n)
+        if upper_bound < multiples_of: return 0
+        return multiples_of * sigma_n(upper_bound // multiples_of)
 
     number_up_to = 999
 
@@ -81,19 +71,12 @@ def q1():
 
 
 def q2():
-    # Needs Refactoring (tried something really fancy but was a train-wreck
-    from euler.even_fibonacci import N2FibonacciIterator
+    from euler.maths.fibonacci import NFibonacciIterator
 
-    upper_bound = 4000000
+    iterator = NFibonacciIterator.n3()
+    iterator.set_upper_bound(4 * MILLION)
 
-    #
-    fib_generator = FibonacciIterator()
-    fib_generator.set_upper_bound(upper_bound)
-
-    #
-    fib_generator = N2FibonacciIterator()
-    fib_generator.set_upper_bound(upper_bound)
-    return sum(fib_generator.sequence)
+    return sum(iterator.sequence)
 
 
 def q4(digit_given=3):
@@ -104,9 +87,9 @@ def q4(digit_given=3):
         for y in range(10 ** digit_given - 1, 10 ** (digit_given - 1), -1):
             number = x * y
             if number > largest_number:
-                if is_palindrome_simple_string(str(x * y)):
+                if is_palindrome_simple_string(str(number)):
                     largest_number = number
-                    if x_was > y: return number
+                    if x_was > y: return largest_number
                     x_was = x
             else:
                 break
@@ -218,8 +201,7 @@ def q16():
 def q18():
     from euler.maximum_path_sum import Tree
     tree = Tree(datafiles('p018_tree.txt'))
-    maximum_path_sum = tree.find_maximum_path_sum()
-    return maximum_path_sum
+    return tree.find_maximum_path_sum()
 
 
 def q19():
@@ -274,10 +256,9 @@ def q23():
 
 
 def q24():
-    nth = 1000000
+    nth = 1000000 - 1
     zero_to = 9
 
-    nth -= 1
     digit_offsets = []
     digits = list(range(zero_to + 1))
 
@@ -346,7 +327,7 @@ def q27():
                     if longest_consecutive_primes < consecutive_primes:
                         longest_a, longest_b = a, b
                         longest_consecutive_primes = consecutive_primes
-                        logging.debug(f'{a, b} just overtook with sequence_length={consecutive_primes}')
+                        logging.debug(f'{a, b} just overtook with sequence_length={longest_consecutive_primes}')
 
                     break
 
@@ -370,7 +351,7 @@ def q30(power=5):
     # Favour sum(element for <iterable>) over sum(map(lambda, <iterable>))
     answers = [
         number for number in range(2, upper_limit)
-        if sum([digit_powered[digit] for digit in all_digits(number)]) == number
+        if sum(digit_powered[digit] for digit in all_digits(number)) == number
     ]
 
     return sum(answers)
@@ -395,7 +376,7 @@ def q33():
                 ef = e * f
 
                 if ((a * c) + (bc // 10)) == (df + (ef // 10)) \
-                    and (bc % 10) == (ef % 10) and bc == df:
+                        and (bc % 10) == (ef % 10) and bc == df:
                     answers.add((original, denominator))
 
     top, bottom = 1, 1
@@ -419,7 +400,7 @@ def q34():
 
     answer = []
     for number in range(upper_limit):
-        factorial_sum = sum([precomputed_factorials[digit] for digit in all_digits(number)])
+        factorial_sum = sum(precomputed_factorials[digit] for digit in all_digits(number))
         if factorial_sum == number: answer.append(number)
 
     answer.remove(1)
@@ -437,11 +418,9 @@ def q35():
     lowests = set()
 
     for prime in prime_numbers:
-        digits = [character for character in str(prime)]
-        circular_primes = set()
-        for i in range(len(digits)):
-            circular_prime_digits = digits[i:len(digits)] + digits[0:i]
-            circular_primes.add(int(''.join(circular_prime_digits)))
+        digits = list(str(prime))
+        circular_primes = {int(''.join(digits[i:] + digits[:i]))
+                           for i in range(len(digits))}
 
         lowest_circular_primes = min(circular_primes)
         if lowest_circular_primes not in lowests:
@@ -490,10 +469,9 @@ def q45():
 
         # only need to check for last_hexagonal to current pentagonal
         for hn in range(last_hexagonal, pn):
-            if pentagonal_ == hexagonal(hn):
-                if pentagonal_ > 571:  # given in answer
-                    # Reconstruct triangle number
-                    return hn * (2 * hn - 1)
+            if pentagonal_ == hexagonal(hn) and pentagonal_ > 571:
+                # Reconstruct triangle number
+                return hn * (2 * hn - 1)
 
         # noinspection PyUnboundLocalVariable
         last_hexagonal = hn
@@ -646,11 +624,10 @@ def q60():
 
 
 def q66(max_value_d=1000):
-    from math import sqrt, floor
+    from math import sqrt
 
     prime_numbers = generate_to_sie(10 ** 6)
     x_to_minimal_ds = {}
-    max_len = max_value_d - floor(sqrt(max_value_d))
     x = 1
 
     while len(x_to_minimal_ds) < 10:
@@ -661,9 +638,11 @@ def q66(max_value_d=1000):
         d_y_squared = x ** 2 - 1
 
         prime_powers = decompose_to_prime_powers(d_y_squared, prime_numbers)
-        eligible_powers = [prime_number for prime_number, power in prime_powers.items() if power >= 2]
-
-        if eligible_powers:
+        if eligible_powers := [
+            prime_number
+            for prime_number, power in prime_powers.items()
+            if power >= 2
+        ]:
             d_decomposed = prime_powers
             d_decomposed[min(eligible_powers)] -= 2
             if d_decomposed[min(eligible_powers)] == 0:
@@ -684,8 +663,7 @@ def q66(max_value_d=1000):
 def q67():
     from euler.maximum_path_sum import Tree
     tree = Tree(datafiles('p067_triangle.txt'))
-    maximum_path_sum = tree.find_maximum_path_sum()
-    return maximum_path_sum
+    return tree.find_maximum_path_sum()
 
 
 def q76():

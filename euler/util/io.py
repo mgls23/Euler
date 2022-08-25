@@ -1,6 +1,13 @@
 import os
 
 
+def parse_matrix(filename: str):
+    with open(datafiles(filename)) as file:
+        raw_input = file.readlines()
+        matrix_string = [line.replace('\n', '').split(',') for line in raw_input]
+        return [[int(element) for element in row] for row in matrix_string]
+
+
 def datafiles(file_name):
     # answers.py and individual solutions file have different paths
     # so the path to data folder is different
