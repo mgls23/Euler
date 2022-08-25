@@ -622,41 +622,6 @@ def q60():
                         return sum(path_so_far)
 
 
-def q66(max_value_d=1000):
-    prime_numbers = generate_to_sie(10 ** 6)
-    x_to_minimal_ds = {}
-    x = 1
-
-    while len(x_to_minimal_ds) < 10:
-        x += 1
-        if math.sqrt(x) % 1 == 0:
-            continue
-
-        d_y_squared = x ** 2 - 1
-
-        prime_powers = decompose_to_prime_powers(d_y_squared, prime_numbers)
-        if eligible_powers := [
-            prime_number
-            for prime_number, power in prime_powers.items()
-            if power >= 2
-        ]:
-            d_decomposed = prime_powers
-            d_decomposed[min(eligible_powers)] -= 2
-            if d_decomposed[min(eligible_powers)] == 0:
-                del d_decomposed[min(eligible_powers)]
-
-            minimal_d = multiply_out_numbers_in_powers(d_decomposed)
-        else:
-            minimal_d = d_y_squared
-
-        if minimal_d < max_value_d:
-            x_to_minimal_ds[x] = minimal_d
-
-    print(x_to_minimal_ds)
-
-    return max(x_to_minimal_ds)
-
-
 def q67():
     from euler.maximum_path_sum import Tree
     tree = Tree(datafiles('p067_triangle.txt'))

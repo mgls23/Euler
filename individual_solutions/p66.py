@@ -2,7 +2,6 @@ from math import sqrt
 
 import sympy
 
-from euler.maths.prime import generate_to_sie
 from euler.util.decorators import timed_function
 
 
