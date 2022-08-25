@@ -1,0 +1,42 @@
+Companion
+1 Yorion, Sky Nomad (IKO) 232
+
+Deck
+2 Alrund's Epiphany (KHM) 41
+3 Barkchannel Pathway (KHM) 251
+1 Ketria Triome (IKO) 250
+2 Clearwater Pathway (ZNR) 260
+4 Zagoth Triome (IKO) 259
+5 Island (UST) 213
+2 Mystical Dispute (ELD) 58
+4 Heartless Act (IKO) 91
+3 Shadows' Verdict (ZNR) 124
+6 Swamp (UST) 214
+2 Kiora Bests the Sea God (THB) 52
+1 Fabled Passage (ELD) 244
+4 Cultivate (M21) 177
+3 Extinction Event (IKO) 88
+2 Sea Gate Restoration (ZNR) 76
+3 Emergent Ultimatum (IKO) 185
+4 Binding the Old Gods (KHM) 206
+4 Wolfwillow Haven (THB) 205
+1 Valki, God of Lies (KHM) 114
+5 Forest (UST) 216
+4 Omen of the Sea (THB) 58
+2 Darkbore Pathway (KHM) 254
+1 Polukranos, Unchained (THB) 224
+1 Temple of Malady (M21) 253
+2 Elder Gargaroth (M21) 179
+2 Bloodchief's Thirst (ZNR) 94
+2 Eliminate (STA) 30
+1 Vorinclex, Monstrous Raider (KHM) 199
+1 Professor Onyx (STX) 83
+1 Mountain (UST) 215
+1 Iymrith, Desert Doom (AFR) 62
+1 Esika's Chariot (KHM) 169
+
+Sideboard
+2 Teachings of the Archaics (STX) 57
+2 Confront the Past (STX) 67
+2 Mascot Exhibition (STX) 5
+1 Yorion, Sky Nomad (IKO) 232

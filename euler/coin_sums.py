@@ -28,7 +28,7 @@ def _permutations(number, coins_available, paths=None):
     for coin in coins_available:
         valid, path_generated = _permutations(number - coin, coins_available, paths)
         if not valid: break
-        for path in path_generated: result.append(path + [coin])
+        result.extend(path + [coin] for path in path_generated)
         if not path_generated: result.append([coin])
 
     print(f'Finished {number}')
@@ -39,7 +39,7 @@ def _permutations(number, coins_available, paths=None):
 HEY = {}
 
 
-def something(number, coins, max_coin):
+def digit_sum(number, coins, max_coin):
     available_coins = sorted(list(filter(lambda coin_: coin_ <= max_coin, coins)))
 
     result = []
@@ -53,9 +53,9 @@ def something(number, coins, max_coin):
         for multiplier in range(1, upper_range):
             remainder = number - coin * multiplier
             if remainder < 0: break
-            valid, possibles = better(remainder, coins, coins[coins.index(coin) - 1])
+            valid, possibles = better(remainder, coins, coins[coins.card_at(coin) - 1])
             if not valid: return result
-            for possible in possibles: result.append([coin] * multiplier + possible)
+            result.extend([coin] * multiplier + possible for possible in possibles)
             if not possibles: result.append([coin] * multiplier)
 
     return result
@@ -71,7 +71,7 @@ def better(number, coins, max_coin=None):
     memoization_key = (number, max_coin)
     if memoization_key in HEY: return True, HEY[memoization_key]
 
-    result = something(number, coins, max_coin)
+    result = digit_sum(number, coins, max_coin)
     # print(f'(number, max_coin)={memoization_key}, result={result}')
 
     HEY[memoization_key] = result
@@ -79,11 +79,10 @@ def better(number, coins, max_coin=None):
 
 
 # noinspection PyDefaultArgument
-def combinations(number, coins_available):
-    _, paths = _permutations(number, sorted(coins_available))
+def coin_sums(coin_total, coins_available):
+    _, paths = better(coin_total, sorted(coins_available))
 
-    unique_combinations = set(tuple(sorted(path)) for path in paths)
-    # for path in sorted(unique_combinations): print(path)
+    unique_combinations = {tuple(sorted(path)) for path in paths}
 
     return len(unique_combinations)
 
@@ -91,19 +90,7 @@ def combinations(number, coins_available):
 def combinations_debug(number, coins_available, reverse=True):
     _, paths = better(number, sorted(coins_available))
 
-    unique_combinations = set(tuple(sorted(path, reverse=reverse)) for path in paths)
+    unique_combinations = {tuple(sorted(path, reverse=reverse)) for path in paths}
     for path in sorted(unique_combinations, reverse=reverse): print(path)
 
     return len(unique_combinations), sorted(unique_combinations, reverse=reverse)
-
-
-# noinspection PyDefaultArgument
-def q31(number=200, coins_available=[1, 2, 5, 10, 20, 50, 100, 200]):
-    return combinations_debug(number, coins_available)
-
-
-# for i in range(21):
-#     print(f'{i}: {q31(number=i)}')
-
-i = 200
-print(f'{i}: {q31(number=i)}')

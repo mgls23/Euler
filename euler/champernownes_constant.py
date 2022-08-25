@@ -1,6 +1,3 @@
-from numpy import product
-
-
 def champernownes_constant(n):
     digit = 1
     upper_limit = 9
@@ -20,5 +17,8 @@ def champernownes_constant(n):
 
 
 def brute_force():
+    from functools import reduce
+    from operator import mul
+
     decimal = ''.join(map(str, range(1000000)))
-    return product([decimal[10 ** power] for power in range(7)])
+    return reduce(mul, map(lambda power: decimal[10 ** power], range(7)))

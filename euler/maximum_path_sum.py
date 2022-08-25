@@ -4,11 +4,7 @@ class Tree:
     def __init__(self, file_path):
         self.rows = []
         with open(file_path, 'r') as text_file:
-            for line in text_file.readlines():
-                numbers_string = line.split(' ')
-                numbers = [int(element) for element in numbers_string]
-
-                self.rows.append(numbers)
+            self.rows.extend(list(map(int, line.split(' '))) for line in text_file.readlines())
 
         self.validate_tree()
 
@@ -36,7 +32,7 @@ class Tree:
 
         rows_string = [
             pad_numbers(array, max_digit).center(maximum_length)
-            for index, array in enumerate(self.rows)
+            for array in self.rows
         ]
 
         return '\n'.join(rows_string)
