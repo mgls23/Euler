@@ -2,7 +2,7 @@
 My own implementation of Project Euler [https://projecteuler.net/archives], a set of mathematical computational challenges.
 
 I'm going to repeat the disclaimer on the website - try the challenges for yourself. I publish my solutions to give 
-a sense of what my Python coding looks like. It doesn't always include explanations.  
+a sense of what my Python coding looks like. It doesn't always include explanations.
 
 My take is - give at least 1 week on getting stuck on a problem before looking at solutions.
 

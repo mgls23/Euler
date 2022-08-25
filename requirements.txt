@@ -2,3 +2,4 @@ numpy
 sympy
 line_profiler
 pytest
+jupyter
