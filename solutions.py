@@ -600,7 +600,7 @@ def q60():
         return int(str(n1) + str(n2))
 
     # 10 ** 4 - there's no reason I just tried incrementally from 10**3
-    primes = generate_to_sie(int(5 * 10 ** 3))
+    primes = generate_to_sie(int(10 ** 4))
     graph = collections.defaultdict(set)
     for x, y in itertools.combinations(primes, 2):
         if is_prime_robin_miller(concatenate_numbers(x, y)) \
