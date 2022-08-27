@@ -78,7 +78,7 @@ def number_letter_counts(number: int):
     string = convert_to_string(number)
     character_count = len(remove_spaces_and_hyphens(string))
 
-    print(f'Number={number}, raw_string={string}, length={character_count}')
+    logging.debug(f'Number={number}, raw_string={string}, length={character_count}')
     return character_count
 
 
@@ -92,4 +92,8 @@ def q17(start=1, up_to=1000):
 
 
 if __name__ == '__main__':
+    import logging
+    import sys
+
+    logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
     assert (timed_function(q17)() == 21124)
