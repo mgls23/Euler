@@ -1,5 +1,6 @@
 import time
 
+from individual_solutions.p17 import q17
 from individual_solutions.p32 import q32
 from individual_solutions.p38 import q38
 from individual_solutions.p43 import q43
@@ -25,6 +26,7 @@ from individual_solutions.p82 import q82
 from individual_solutions.p83 import q83
 from individual_solutions.p87 import q87
 from individual_solutions.p97 import q97
+from individual_solutions.q111 import q111
 from individual_solutions.revisit.p12 import q12
 from individual_solutions.revisit.p39 import q39
 from individual_solutions.revisit.p9 import q9
@@ -125,6 +127,7 @@ ANSWERS = {
     q108: 180180,
 
     q110: 9350130049860600,
+    q111: 612407567715,
 }
 
 
@@ -160,7 +163,7 @@ def _solve_and_check_answers(my_implementations, ignored_questions):
 def check_answers(light_mode):
     logging.basicConfig(format="[%(levelname)6s] %(message)s", stream=sys.stderr, level=logging.INFO)
 
-    not_run = (q12, q17, q27, q31, q50, q68, q79, q83)
+    not_run = (q12, q27, q31, q50, q68, q79, q83)
     if light_mode: not_run += (q14, q23, q37, q44, q58, q60, q108, q110)  # Correct solutions, take long time
     ignored_questions = list(sorted(map(lambda q: q.__name__.capitalize(), not_run)))
 

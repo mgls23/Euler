@@ -1,10 +1,11 @@
 # Project Euler
 My own implementation of Project Euler [https://projecteuler.net/archives], a set of mathematical computational challenges.
 
-I'm going to repeat the disclaimer on the website - try the challenges for yourself. I publish my solutions to give 
-a sense of what my Python coding looks like. It doesn't always include explanations.
+If Google has somehow redirected you to my repository, I'm going to repeat the disclaimer on the website - try the challenges for yourself. I publish my solutions to give a sense of what my Python coding looks like. It doesn't always include explanations.  
 
-My take is - give at least 1 week on getting stuck on a problem before looking at solutions.
+My advice is: give it a week to try and solve it without any googling. Then use Google - especially if it mentions mathematical terms (for example Diophantine equation) to research on the topic to see what available solution is out there. I would recommend never looking at the solutions directly.
+
+In fairness, I definitely looked at solutions, and I cannot remember which ones. The important thing is that I can do it again. I will re-attempt these questions again without looking this time and with vigorous optimisations in CEuler. Same for you. No shame in looking, but if you do - make sure you can do it a year later.
 
 ## Requirements
 To run this project, you'll need the latest version of Python. Currently, this is Python 3.9 or above

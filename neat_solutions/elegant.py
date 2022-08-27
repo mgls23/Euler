@@ -13,7 +13,6 @@ from euler.maths.matrix import adjacent_multiplicand, horizontal, left_diagonal,
 from euler.maths.palindromes import generate_palindromes, is_palindrome_simple_string
 from euler.maths.prime import generate_to_sie, is_prime_robin_miller, decompose_to_prime_powers
 from euler.maths.triangle_numbers import is_triangle_number
-from euler.names_scores import translate
 from euler.strings.number_to_string import numerical_score, digit_sum_of_number
 from euler.util.io import datafiles
 
@@ -53,10 +52,6 @@ def q11():
 
     return max(map(lambda line: adjacent_multiplicand(line, 4),
                    grid + horizontal(grid) + left_diagonal(grid) + right_diagonal(grid)))
-
-
-def q17(start=1, up_to=1000):
-    return sum(map(translate, range(start, up_to)))
 
 
 def q20():

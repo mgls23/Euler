@@ -596,8 +596,8 @@ def q60():
     # robin_miller primality check takes up 60% of runtime
     # concatenate_numbers another 12.6%
     # I'm not sure how much faster this can go
-    def concatenate_numbers(n1, n2):
-        return pow(10, int(math.log10(n2)) + 1) * n1 + n2
+    def concatenate_numbers(n1: int, n2: int):
+        return int(str(n1) + str(n2))
 
     # 10 ** 4 - there's no reason I just tried incrementally from 10**3
     primes = generate_to_sie(int(10 ** 4))
@@ -710,7 +710,7 @@ def run():
 
     start_time = time.time()
 
-    print(q46())
+    print(q60())
 
     time_taken = (time.time() - start_time) * 1000
     print('Done: this took {}ms\n'.format(time_taken))
