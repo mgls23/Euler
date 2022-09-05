@@ -1,3 +1,18 @@
+""" If it requires any explanation, I was a little annoyed (rage-quit) that I couldn't make it into
+Top 1200 (within Mythic) in MTGA to compete professionally for this season.
+
+In the last matches that was the final blow, I didn't get any 'sweepers' in 8 games out of 10 while playing a control
+deck against "aggressive" decks.
+    - 'Control' decks generally have powerful cards, but have slow build-up curve.
+    - 'Aggressive' decks summon a lot of cheap creatures early on in the game.
+So it's important that control decks draw up sweepers to respond to aggressive decks.
+
+Note:
+    - I've discounted match-ups against control decks, but they weren't frequent in that 10
+
+I believe I can solve this statistically, but like there was any excuse to write up a program that simulates my
+favourite game (at the time) After this, I stopped MTGA, which probably is better for my career and wallet.
+"""
 import re
 from dataclasses import dataclass
 from random import randint
