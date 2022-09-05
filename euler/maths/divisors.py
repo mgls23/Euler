@@ -1,17 +1,14 @@
 import logging
-import operator
-from functools import reduce
+import math
 
 import sympy
 
-from euler.maths.multiplications import decompose_to_prime_powers
-from euler.maths.prime import is_prime
+from euler.maths.prime import is_prime, decompose_to_prime_powers
 
 
 def sum_of_divisors(n, primes):
-    return reduce(operator.mul,
-                  [_sum_of_divisors(prime_number, power)
-                   for prime_number, power in decompose_to_prime_powers(n, primes).items()])
+    return math.prod([_sum_of_divisors(prime_number, power)
+                      for prime_number, power in decompose_to_prime_powers(n, primes).items()])
 
 
 def _sum_of_divisors(prime_number, power):

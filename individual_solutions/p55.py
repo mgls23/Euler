@@ -3,7 +3,7 @@ from euler.util.decorators import timed_function
 
 
 def is_lychrel_number(number):
-    for iteration_count in range(50):
+    for _ in range(50):
         number += int(str(number)[::-1])
         if is_palindrome_simple_string(str(number)): return False
 

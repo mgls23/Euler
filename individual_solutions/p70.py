@@ -1,10 +1,10 @@
+import itertools
 from collections import Counter
 from fractions import Fraction
-from itertools import combinations
 from math import sqrt, ceil
 
 from euler.maths.prime import generate_to_sie
-from euler.maths.ungrouped import phi, slow_phi, calculate_number_of_divisors, _phi
+from euler.maths.ungrouped import _phi
 from euler.util.decorators import timed_function
 
 
@@ -31,7 +31,7 @@ def q70(given_number=10 ** 7):
     minimum_ratio = 2
     number_at_minimum = given_number
 
-    for prime1, prime2 in combinations(primes_in_range, 2):
+    for prime1, prime2 in itertools.combinations(primes_in_range, 2):
         number = prime1 * prime2
         if number > given_number: continue
 

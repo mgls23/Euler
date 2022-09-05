@@ -1,13 +1,11 @@
 import math
 
+from euler.util.decorators import timed_function
+
 
 def is_palindrome_string(string):
     half = int(math.ceil(len(string) / 2))
-    for index in range(half):
-        if string[index] != string[-index - 1]:
-            return False
-
-    return True
+    return all(string[index] == string[-index - 1] for index in range(half))
 
 
 def is_palindrome_simple_string(string):
@@ -41,10 +39,10 @@ def generate_palindromes(up_to_digit):
     palindromes = list(range(10))
     if up_to_digit > 1: palindromes += range(11, 100, 11)
 
-    digit_length = 3
-    while up_to_digit >= digit_length:
+    for digit_length in range(3, up_to_digit + 1):
+        template = 10 ** (digit_length - 1)
         for ending_digit in range(1, 10):
-            numbers = [10 ** (digit_length - 1) * ending_digit + ending_digit]
+            numbers = [template * ending_digit + ending_digit]
             for digit_index in range(1, digit_length // 2):
                 mirror_digit_index = digit_length - digit_index - 1
                 numbers = [
@@ -61,6 +59,35 @@ def generate_palindromes(up_to_digit):
                 ]
 
             palindromes += numbers
-        digit_length += 1
 
     return palindromes
+
+
+def _generate_palindromes_simpler(up_to_digit: int):
+    if up_to_digit < 1: return []
+    # Special cases for digit=1/2
+    palindromes = list(range(10))
+    if up_to_digit > 1: palindromes += range(11, 100, 11)
+
+    for digit_length in range(3, up_to_digit + 1):
+        for first_half in range(10, 10 ** (digit_length - 1)):
+            string = str(first_half)
+            string += string[:digit_length // 2][::-1]
+            palindromes.append(int(string))
+
+    return palindromes
+
+
+def benchmark_generate_palindromes():
+    timed_function(generate_palindromes, False)(7)
+    timed_function(_generate_palindromes_simpler, False)(7)
+
+
+def palindromes_with_even_number_of_digits_are_divisible_by_11():
+    for palindrome in generate_palindromes(10):
+        if len(str(palindrome)) % 2 == 0:
+            assert palindrome % 11 == 0, palindrome
+
+
+if __name__ == '__main__':
+    benchmark_generate_palindromes()

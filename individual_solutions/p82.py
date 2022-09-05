@@ -1,5 +1,8 @@
+import logging
+
 from euler.maths.matrix import debug_log_2d_matrix
 from euler.util.decorators import timed_function
+from euler.util.io import datafiles
 
 NOT_CALCULATED = 2 ** 32 - 1  # Something arbitrarily big
 
@@ -58,9 +61,10 @@ def object_oriented_approach():
 def traditional_approach():
     # runs within 98 milliseconds ish
     cost_matrix = read_input_file()
-    path_matrix = []
-    for y in range(len(cost_matrix)):
-        path_matrix.append([cost_matrix[y][0]] + [NOT_CALCULATED] * (len(cost_matrix[0]) - 1))
+    path_matrix = [
+        [cost_matrix[y][0]] + [NOT_CALCULATED] * (len(cost_matrix[0]) - 1)
+        for y in range(len(cost_matrix))
+    ]
 
     debug_log_2d_matrix(path_matrix)
     for x in range(1, len(cost_matrix[0])):
@@ -94,7 +98,7 @@ def q82():
 
 def read_input_file():
     # Duplication of p81
-    with open('../data/p082_matrix.txt') as file:
+    with open(datafiles('p082_matrix.txt')) as file:
         raw_input = file.readlines()
         matrix_string = [line.replace('\n', '').split(',') for line in raw_input]
         return [[int(element) for element in row] for row in matrix_string]
@@ -102,7 +106,6 @@ def read_input_file():
 
 if __name__ == '__main__':
     import logging
-
     import sys
 
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)

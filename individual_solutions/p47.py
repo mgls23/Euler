@@ -11,7 +11,6 @@ def number_of_distinct_primes(up_to):
     return distinct_primes
 
 
-@timed_function
 def q47(consecutive=4):
     upper_range = 150000
 
@@ -24,4 +23,4 @@ def q47(consecutive=4):
 
 
 if __name__ == '__main__':
-    assert (q47() == 134043)
+    assert (timed_function(q47)() == 134043)
