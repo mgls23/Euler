@@ -14,6 +14,33 @@ def dart_score_to_string(multiplier, score):
 
 
 def checkout(target_score):
+	valid_checkout_paths = 0
+
+	def helper(checkout_path_length, remaining_score, previous_multiplier, previous_score):
+		if checkout_path_length == 3 or remaining_score <= 0:
+			if remaining_score == 0:
+				nonlocal valid_checkout_paths
+				valid_checkout_paths += 1
+
+			return
+
+		for score in list(range(1, 20 + 1)) + [BULLS_EYE]:
+			multiplier_range = range(previous_multiplier, TRIPLE + 1)
+			if score == BULLS_EYE: multiplier_range = range(previous_multiplier, DOUBLE + 1)
+
+			for multiplier in multiplier_range:
+				if multiplier == previous_multiplier and score < previous_score:
+					continue
+
+				helper(checkout_path_length + 1, remaining_score - score * multiplier, multiplier, score)
+
+	for double_score in list(range(1, 20 + 1)) + [BULLS_EYE]:
+		helper(1, target_score - DOUBLE * double_score, 1, 0)
+
+	return valid_checkout_paths
+
+
+def checkout_slower(target_score):
 	valid_checkout_paths = set()
 
 	def helper(remaining_score):
@@ -38,17 +65,12 @@ def checkout(target_score):
 		chosen_darts = [(DOUBLE, double_score)]
 		helper(target_score - DOUBLE * double_score)
 
-	return valid_checkout_paths
+	return len(valid_checkout_paths)
 
 
 def q109():
 	# LESS THAN A HUNDRED!
-	all_possible_scores = 0
-	for possible_score in range(2, 100):
-		result = checkout(possible_score)
-		all_possible_scores += len(result)
-
-	return all_possible_scores
+	return sum(map(checkout, range(2, 100)))
 
 
 if __name__ == '__main__':
