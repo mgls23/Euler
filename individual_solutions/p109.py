@@ -2,6 +2,7 @@ from euler.util.decorators import timed_function
 import logging
 
 SINGLE, DOUBLE, TRIPLE = 1, 2, 3
+BULLS_EYE = 25
 
 
 def dart_score_tuple_to_string(tuple_):
@@ -33,18 +34,24 @@ def checkout(target_score):
 				helper(remaining_score - new_score, new_score)
 				chosen_darts.pop()
 
+		for multiplier in range(SINGLE, DOUBLE + 1):
+			new_score = BULLS_EYE * multiplier
+			if new_score < last_score and multiplier != DOUBLE: continue
+
+			chosen_darts.append((multiplier, BULLS_EYE))
+			helper(remaining_score - new_score, new_score)
+			chosen_darts.pop()
+
 	helper(target_score, 0)
 	return valid_checkout_paths
 
 
 def q109():
-	# print(checkout(2), len(checkout(2)))
-	# print(checkout(4), len(checkout(4)))
-	# print(checkout(6), len(checkout(6)))
-
+	# LESS THAN A HUNDRED!
 	all_possible_scores = 0
-	for possible_score in range(2, 170):
-		all_possible_scores += len(checkout(possible_score))
+	for possible_score in range(2, 100):
+		result = checkout(possible_score)
+		all_possible_scores += len(result)
 
 	return all_possible_scores
 
@@ -54,4 +61,4 @@ if __name__ == '__main__':
 
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
-	assert (timed_function(q109)() == 37820)
+	assert (timed_function(q109)() == 38182)
