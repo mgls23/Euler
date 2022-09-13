@@ -3,6 +3,29 @@ import logging
 from euler.util.decorators import timed_function
 
 
+def dynamic_programming_solution(total_blocks):
+	results = [
+		[],  # 0
+		[[1]],  # 1
+		[[1, 1]],  # 2
+	]
+	for _ in range(total_blocks - len(results) + 1): results.append([])
+
+	def helper(blocks):
+		if not results[blocks] and blocks > 0:
+			for first_block in [1] + list(range(3, blocks + 1)):
+				for result in helper(blocks - first_block):
+					if first_block > 1 and result[0] > 1: continue
+					results[blocks].append([first_block] + result)
+
+			results[blocks].append([blocks])
+
+		return results[blocks]
+
+	helper(total_blocks)
+	return results[total_blocks]
+
+
 def brute_force(total_blocks):
 	solutions = []
 
@@ -22,10 +45,7 @@ def brute_force(total_blocks):
 
 
 def q114():
-	result = brute_force(50)
-	# this does not work and neither do I expect it to
-	print(result)
-	return len(result)
+	return len(brute_force(30))
 
 
 if __name__ == '__main__':
