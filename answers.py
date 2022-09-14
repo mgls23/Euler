@@ -1,5 +1,6 @@
 import time
 
+from individual_solutions.p114 import q114
 from individual_solutions.p17 import q17
 from individual_solutions.p32 import q32
 from individual_solutions.p38 import q38
@@ -128,6 +129,8 @@ ANSWERS = {
 
     q110: 9350130049860600,
     q111: 612407567715,
+
+    q114: 16475640049,
 }
 
 

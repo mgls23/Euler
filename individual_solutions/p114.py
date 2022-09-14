@@ -3,6 +3,32 @@ import logging
 from euler.util.decorators import timed_function
 
 
+def dynamic_programming_simple(total_blocks):
+	starts_1, starts_non_1 = 0, 1
+	results = [
+		[0, 0],  # 0
+		[1, 0],  # 1
+		[1, 0],  # 2
+	]
+	for _ in range(total_blocks - len(results) + 1): results.append([])
+
+	def helper(blocks):
+		if not results[blocks]:
+			result_minus_1 = helper(blocks - 1)
+			results[blocks] = [
+				result_minus_1[starts_1] + result_minus_1[starts_non_1],  # starts_1
+				1,  # starts_non_1: start with [blocks]
+			]
+
+			for block in range(3, blocks + 1):
+				result_minus_block = helper(blocks - block)
+				results[blocks][starts_non_1] += result_minus_block[starts_1]
+
+		return results[blocks]
+
+	return sum(helper(total_blocks))
+
+
 def dynamic_programming_solution(total_blocks):
 	results = [
 		[],  # 0
@@ -13,9 +39,12 @@ def dynamic_programming_solution(total_blocks):
 
 	def helper(blocks):
 		if not results[blocks] and blocks > 0:
-			for first_block in [1] + list(range(3, blocks + 1)):
+			for result in helper(blocks - 1):
+				results[blocks].append([1] + result)
+
+			for first_block in range(3, blocks + 1):
 				for result in helper(blocks - first_block):
-					if first_block > 1 and result[0] > 1: continue
+					if result[0] > 1: continue
 					results[blocks].append([first_block] + result)
 
 			results[blocks].append([blocks])
@@ -44,8 +73,8 @@ def brute_force(total_blocks):
 	return solutions
 
 
-def q114():
-	return len(brute_force(30))
+def q114(number=50):
+	return dynamic_programming_simple(number)
 
 
 if __name__ == '__main__':
@@ -53,4 +82,4 @@ if __name__ == '__main__':
 
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
-	assert (timed_function(q114)() == 38182)
+	assert (timed_function(q114)(50) == 16475640049)

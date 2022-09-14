@@ -1,4 +1,4 @@
-from individual_solutions.p114 import dynamic_programming_solution, brute_force
+from individual_solutions.p114 import dynamic_programming_solution, brute_force, dynamic_programming_simple
 
 
 def test_q114_sample():
@@ -24,5 +24,5 @@ def test_q114_sample():
 
 
 def test_q114_against_brute_force():
-	for i in range(1, 20):
-		assert dynamic_programming_solution(i) == brute_force(i)
+	for i in range(3, 20):
+		assert dynamic_programming_simple(i) == len(brute_force(i))
