@@ -1,4 +1,4 @@
-from individual_solutions.q111 import primes_with_runs_m_1, find_primes_with_runs, q111
+from individual_solutions.p111 import find_primes_with_runs, q111
 
 
 def test_function_m_example():
