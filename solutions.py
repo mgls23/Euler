@@ -22,7 +22,7 @@ from euler.maths.multiplications import (
     greatest_common_denominator,
     multiply_out_numbers_in_powers
 )
-from euler.maths.palindromes import is_palindrome_simple_string
+from euler.maths.palindromes import is_palindrome
 from euler.maths.prime import (
     generate_to_sie,
     is_prime,
@@ -87,7 +87,7 @@ def q4(digit_given=3):
         for y in range(10 ** digit_given - 1, 10 ** (digit_given - 1), -1):
             number = x * y
             if number > largest_number:
-                if is_palindrome_simple_string(str(number)):
+                if is_palindrome(str(number)):
                     largest_number = number
                     if x_was > y: return largest_number
                     x_was = x

@@ -1,11 +1,11 @@
-from euler.maths.palindromes import is_palindrome_simple_string
+from euler.maths.palindromes import is_palindrome
 from euler.util.decorators import timed_function
 
 
 def is_lychrel_number(number):
     for _ in range(50):
         number += int(str(number)[::-1])
-        if is_palindrome_simple_string(str(number)): return False
+        if is_palindrome(str(number)): return False
 
     return True
 

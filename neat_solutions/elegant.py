@@ -10,7 +10,7 @@ from operator import mul
 from euler.champernownes_constant import champernownes_constant
 from euler.maths import prime
 from euler.maths.matrix import adjacent_multiplicand, horizontal, left_diagonal, right_diagonal
-from euler.maths.palindromes import generate_palindromes, is_palindrome_simple_string
+from euler.maths.palindromes import generate_palindromes, is_palindrome
 from euler.maths.prime import generate_to_sie, is_prime_robin_miller, decompose_to_prime_powers
 from euler.maths.triangle_numbers import is_triangle_number
 from euler.strings.number_to_string import numerical_score, digit_sum_of_number
@@ -70,7 +70,7 @@ def q22():
 def q36(up_to_digit=6):
     double_base_palindromes = [
         palindrome for palindrome in generate_palindromes(up_to_digit)
-        if palindrome % 2 == 1 and is_palindrome_simple_string(bin(palindrome)[2:])
+        if palindrome % 2 == 1 and is_palindrome(bin(palindrome)[2:])
     ]
 
     return sum(double_base_palindromes)
