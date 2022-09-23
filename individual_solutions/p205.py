@@ -114,21 +114,14 @@ def nine_of_4():
 
 def q205():
 	nine_4s, six_6s = graphic_9_4s(), graphic_6_6s()
-	sum4s, sum6s = sum(nine_4s), sum(six_6s)
 
 	assert len(nine_4s) == len(six_6s)
 
-	lcm = lowest_common_multiple(sum4s, sum6s)
-	adjust_4, adjust_6 = lcm / sum4s, lcm / sum6s
-
-	nine_4s_adjusted = list(map(lambda count: count * adjust_4, nine_4s))
-	six_6s_adjusted = list(map(lambda count: count * adjust_6, six_6s))
-
-	six_6s_cumulate = list(accumulate(six_6s_adjusted))
+	six_6s_cumulate = list(accumulate(six_6s))
 	nine_4s_victories = sum(value * six_6s_cumulate[i]
-	                        for i, value in enumerate(nine_4s_adjusted[1:]))
+	                        for i, value in enumerate(nine_4s[1:]))
 
-	return nine_4s_victories / (lcm * lcm)
+	return round(nine_4s_victories / (sum(nine_4s) * sum(six_6s)), 7)
 
 
 if __name__ == '__main__':
@@ -137,4 +130,4 @@ if __name__ == '__main__':
 
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
-	assert (timed_function(q205)() == -1)
+	assert (timed_function(q205)() == 0.5731441)
