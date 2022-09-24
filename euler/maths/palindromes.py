@@ -3,17 +3,17 @@ import math
 from euler.util.decorators import timed_function
 
 
-def is_palindrome_string(string):
-    half = int(math.ceil(len(string) / 2))
-    return all(string[index] == string[-index - 1] for index in range(half))
-
-
-def is_palindrome_simple_string(string):
+def is_palindrome(string: str):
     # Seems to be the fastest way of checking for palindromes
     return string == string[::-1]
 
 
-def is_palindrome(number):
+def _is_palindrome_string(string: str):
+    half = int(math.ceil(len(string) / 2))
+    return all(string[index] == string[-index - 1] for index in range(half))
+
+
+def _is_palindrome(number):
     if number < 10: return True
 
     digit_length = int(math.floor(math.log10(number))) + 1  # can skip +1 for efficiency, but for readability
@@ -31,7 +31,7 @@ def convert_to_binary_string(number):
 
 def is_binary_palindrome(number):
     string = convert_to_binary_string(number)
-    return is_palindrome_simple_string(string)
+    return is_palindrome(string)
 
 
 def generate_palindromes(up_to_digit):
