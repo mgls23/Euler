@@ -1,6 +1,7 @@
 import logging
 
 from euler.util.decorators import timed_function
+from individual_solutions.p115 import dp_variable_min
 
 
 def dynamic_programming_simple(total_blocks):
@@ -74,7 +75,7 @@ def brute_force(total_blocks):
 
 
 def q114(number=50):
-	return dynamic_programming_simple(number)
+	return dp_variable_min(number, 3)
 
 
 if __name__ == '__main__':
