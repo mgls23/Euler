@@ -4,7 +4,10 @@ from functools import lru_cache
 
 def debug_run():
 	for i in range(1, 100):
-		print(i, top_down(i))
+		print(i, top_down(i), list(sorted(list(sorted(i)) for i in top_down_helper(i))))
+
+
+# def bottom_up():
 
 
 @lru_cache(maxsize=None)
