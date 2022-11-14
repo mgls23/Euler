@@ -1,5 +1,5 @@
 import logging
-from math import log
+from itertools import accumulate
 
 
 def investigate_7s():
@@ -12,14 +12,52 @@ def investigate_7s():
 		print(multiple, len([i for i in pascal(multiple + 1, kind='lower')[-1] if i % 7 == 0]))
 
 
-def not_optimal_but_pretty_good(upper_bound):
-	powers_of_seven = [0] + [int(log(number, 7)) for number in range(1, upper_bound + 1)]
+def brute_force(upper_bound):
+	from scipy.linalg import pascal
 
-	def cool_function(number):
-		sevens_in_number = powers_of_seven[number]
-		for n in range(0, number + 1):
+	triangle = pascal(upper_bound + 1, kind='lower')
+	logging.debug(triangle)
+	return sum(element % 7 != 0
+	           for row in triangle for element in row)
+
+
+def slightly_faster(upper_bound, debug_output=True):
+	def powers_of_seven(number):
+		power = 0
+		while number % 7 == 0:
+			power += 1
+			number //= 7
+
+		return power
+
+	sevens = [0] + list(map(powers_of_seven, range(1, upper_bound + 1)))
+	cumulative_sevens = list(accumulate(sevens))
+
+	logging.debug(f'Cumulative = {list(enumerate(cumulative_sevens))}')
+
+	def count_not_divisible_by_7(number):
+		sevens_in_number = cumulative_sevens[number]
+		not_sevens = []
+
+		for n in range(number + 1):
 			r = number - n
-			
+			if sevens_in_number == cumulative_sevens[r] + cumulative_sevens[n]:
+				not_sevens.append((n, r))
+			else:
+				assert sevens_in_number > cumulative_sevens[r] + cumulative_sevens[n], (number, n, r)
+
+		return not_sevens
+
+	if debug_output:
+		sum_ = 0
+		for i in range(upper_bound):
+			non_multiples = count_not_divisible_by_7(i)
+			logging.debug(f'{i, len(non_multiples), non_multiples}')
+			sum_ += len(non_multiples)
+
+		return sum_
+	else:
+		return sum(map(len, map(count_not_divisible_by_7, range(upper_bound))))
 
 
 def q148(number):
@@ -27,11 +65,7 @@ def q148(number):
 	satisfying_part = 21 * q * (q - 1) // 2
 
 	# I can use formula here, but I'm tired
-	dirty_part = 0
-	for i in range(q * 7 + 1, number + 1):
-		count = 6 - (i % 7)
-		dirty_part += q * count
-
+	dirty_part = sum(q * (6 - (i % 7)) for i in range(q * 7 + 1, number + 1))
 	return satisfying_part + dirty_part
 
 
@@ -41,5 +75,6 @@ if __name__ == '__main__':
 
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
-	not_optimal_but_pretty_good(200)
-	assert (timed_function(q148)(100) == 2361)
+	print(brute_force(10 ** 2))
+	print(slightly_faster(8))
+# assert (timed_function(q148)(100) == 2361)

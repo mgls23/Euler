@@ -1,4 +1,13 @@
-from individual_solutions.q148 import q148
+from individual_solutions.q148 import q148, brute_force, slightly_faster
+
+
+def test_is_brute_force_correct():
+	assert brute_force(100 - 1) == 2361
+
+
+def test_brute_force_against_better():
+	assert brute_force(7) == slightly_faster(7 + 1, debug_output=False)
+	assert brute_force(100) == slightly_faster(100 + 1, debug_output=False)
 
 
 def test_q148_simple():
