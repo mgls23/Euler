@@ -10,6 +10,11 @@ def test_brute_force_against_better():
 	assert brute_force(100) == slightly_faster(100 + 1, debug_output=False)
 
 
+def test_multiples_of_7s():
+	for i in range(49, 10 ** 4, 49):
+		assert slightly_faster(i) == q148(i), i
+
+
 def test_q148_simple():
 	# Multiple of 7 :: +multiple of 6
 	assert q148(7) == 6

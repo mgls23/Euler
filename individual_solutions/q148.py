@@ -1,6 +1,8 @@
 import logging
 from itertools import accumulate
 
+from euler.maths.sigma import sigma_n
+
 
 def investigate_7s():
 	# observation 1: multiples of 7 follow the pattern of +6, +5, +4, +3... but with jumps
@@ -52,7 +54,8 @@ def slightly_faster(upper_bound, debug_output=True):
 		sum_ = 0
 		for i in range(upper_bound):
 			non_multiples = count_not_divisible_by_7(i)
-			logging.debug(f'{i, len(non_multiples), non_multiples}')
+			# logging.debug(f'{i, len(non_multiples), non_multiples}')
+			logging.debug(f'{i, len(non_multiples)}')
 			sum_ += len(non_multiples)
 
 		return sum_
@@ -61,12 +64,13 @@ def slightly_faster(upper_bound, debug_output=True):
 
 
 def q148(number):
-	q = number // 7
-	satisfying_part = 21 * q * (q - 1) // 2
+	sum_to_7 = sigma_n(7)
+	cycle = sum_to_7 * sum_to_7
 
-	# I can use formula here, but I'm tired
-	dirty_part = sum(q * (6 - (i % 7)) for i in range(q * 7 + 1, number + 1))
-	return satisfying_part + dirty_part
+	complete_cycles = number // 49
+	complete_part = cycle * sigma_n(complete_cycles)
+
+	return complete_part + 0
 
 
 if __name__ == '__main__':
@@ -75,6 +79,6 @@ if __name__ == '__main__':
 
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
-	print(brute_force(10 ** 2))
-	print(slightly_faster(8))
+	# print(brute_force(10 ** 2))
+	print(slightly_faster(392))
 # assert (timed_function(q148)(100) == 2361)
