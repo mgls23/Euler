@@ -15,6 +15,21 @@ def test_multiples_of_7s():
 		assert slightly_faster(i) == q148(i), i
 
 
+def test_better_against_optimal():
+	# Complete parts first
+	# for power in range(1, 5):
+	# 	number = 7 ** power
+	# 	assert slightly_faster(number) == q148(number)
+
+	# Slowly reduce
+	assert slightly_faster(343 + 49 + 7) == q148(343 + 49 + 7)
+	assert slightly_faster(343 + 7) == q148(343 + 7)
+	#
+	# # Then the incomplete parts individually
+	# for number in range(6, 100):
+	# 	assert slightly_faster(number) == q148(number)
+
+
 def test_q148_simple():
 	# Multiple of 7 :: +multiple of 6
 	assert q148(7) == 6

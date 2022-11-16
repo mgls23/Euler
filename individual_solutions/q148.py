@@ -1,5 +1,6 @@
 import logging
 from itertools import accumulate
+from math import log
 
 from euler.maths.sigma import sigma_n
 
@@ -63,14 +64,29 @@ def slightly_faster(upper_bound, debug_output=True):
 		return sum(map(len, map(count_not_divisible_by_7, range(upper_bound))))
 
 
-def q148(number):
-	sum_to_7 = sigma_n(7)
-	cycle = sum_to_7 * sum_to_7
+def q148(number):  # sourcery skip: for-append-to-extend
+	sum_7 = sigma_n(7)
+	sum_2_7 = sum_7 - 1
 
-	complete_cycles = number // 49
-	complete_part = cycle * sigma_n(complete_cycles)
+	biggest_power = int(log(number, 7))
 
-	return complete_part + 0
+	# +1 is for first (0) row in Pascal's Triangle
+
+	accumulated: list = [1]
+	for power in range(biggest_power):
+		accumulated.append(accumulated[-1] + sum_2_7 * (sum_7 ** power))
+
+	print(accumulated)
+
+	non_multiples = 0
+	for power in range(biggest_power, -1, -1):
+		candidate = 7 ** power
+		print(number, candidate)
+		if number >= candidate:
+			non_multiples += accumulated[power]
+			number -= candidate
+
+	return accumulated[-1]
 
 
 if __name__ == '__main__':
@@ -80,5 +96,5 @@ if __name__ == '__main__':
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
 	# print(brute_force(10 ** 2))
-	print(slightly_faster(392))
+	print(slightly_faster(686))
 # assert (timed_function(q148)(100) == 2361)
