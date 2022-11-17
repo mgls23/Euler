@@ -1,3 +1,4 @@
+import logging
 from euler.util.decorators import timed_function
 
 SINGLE_DIGITS = {
