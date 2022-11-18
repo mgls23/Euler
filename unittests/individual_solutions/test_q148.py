@@ -1,4 +1,4 @@
-from individual_solutions.q148 import q148, brute_force, slightly_faster
+from individual_solutions.p148 import q148, brute_force, slightly_faster
 
 
 def test_is_brute_force_correct():
@@ -17,17 +17,17 @@ def test_multiples_of_7s():
 
 def test_better_against_optimal():
 	# Complete parts first
-	# for power in range(1, 5):
-	# 	number = 7 ** power
-	# 	assert slightly_faster(number) == q148(number)
+	for power in range(1, 5):
+		number = 7 ** power
+		assert slightly_faster(number) == q148(number)
 
-	# Slowly reduce
-	assert slightly_faster(343 + 49 + 7) == q148(343 + 49 + 7)
-	assert slightly_faster(343 + 7) == q148(343 + 7)
-	#
-	# # Then the incomplete parts individually
-	# for number in range(6, 100):
-	# 	assert slightly_faster(number) == q148(number)
+	# # Slowly reduce
+	# assert slightly_faster(343 + 49 + 7) == q148(343 + 49 + 7)
+	# assert slightly_faster(343 + 7) == q148(343 + 7)
+
+	# Then the incomplete parts individually
+	for number in range(6, 100):
+		assert slightly_faster(number) == q148(number)
 
 
 def test_q148_simple():
