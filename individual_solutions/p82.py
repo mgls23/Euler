@@ -51,10 +51,10 @@ def object_oriented_approach():
             nodes[y][x].check_with(nodes[y][x - 1].path)
 
     for row in nodes:
-        print(', '.join(map(str, row)))
+        logging.debug(', '.join(map(str, row)))
 
     right_column = [nodes[y][-1].path for y in range(len(nodes))]
-    print(right_column)
+    logging.debug(right_column)
     return min(right_column)
 
 
