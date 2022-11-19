@@ -21,11 +21,18 @@ def test_better_against_optimal():
 		number = 7 ** power
 		assert slightly_faster(number) == q148(number)
 
-	# # Slowly reduce
-	# assert slightly_faster(343 + 49 + 7) == q148(343 + 49 + 7)
-	# assert slightly_faster(343 + 7) == q148(343 + 7)
+	# Weird cases
+	seven_0, seven_1, seven_2, seven_3 = (7 ** power for power in range(4))
+	combinations = [
+		seven_3 + seven_1,
+		seven_3 + seven_2 + seven_1,
 
-	# Then the incomplete parts individually
+		3 * seven_3 + 5 * seven_2 + seven_1 + 4 * seven_0
+	]
+
+	for number in combinations:
+		assert slightly_faster(number) == q148(number)
+
 	for number in range(6, 100):
 		assert slightly_faster(number) == q148(number)
 

@@ -69,14 +69,20 @@ def q148(number):  # sourcery skip: for-append-to-extend
     biggest_power = int(log(number, 7))
 
     accumulated = 0
+    multiplier = 1
     for power in range(biggest_power, -1, -1):
         seven_powered = 7 ** power
         quotient = number // seven_powered
-        multiplier = sigma_n(biggest_power - power + 1)
 
         accumulated += sigma_n(quotient) * (sum_7 ** power) * multiplier
-        if (number := number - seven_powered) == 0:
+        if (number := number - (seven_powered * quotient)) == 0:
             break
+
+        # Ugly, but special case for cases like 50
+        if biggest_power >= 2 and quotient == 0:
+            multiplier = max(multiplier, 2)
+        else:
+            multiplier *= quotient + 1
 
     return accumulated
 
@@ -87,5 +93,4 @@ if __name__ == '__main__':
 
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
-    print(slightly_faster(3000))
-# assert (timed_function(q148)(100) == 2361)
+    assert (timed_function(q148)(10 ** 9) == 2129970655314432)
