@@ -1,10 +1,11 @@
+from functools import lru_cache
+
 from euler.strings.number_to_string import MILLION
 from euler.util.decorators import timed_function
 
 
 def coin_partition(number):
-	# TODO :: construct 2D matrix and use DP
-
+	@lru_cache(maxsize=None)
 	def helper(remaining, no_higher_than):
 		if no_higher_than == 1: return 1
 		if remaining <= 2: return max(remaining, 1)
@@ -15,14 +16,13 @@ def coin_partition(number):
 	return helper(number, number)
 
 
-def q78(number=MILLION):
-	# for i in range(2, 100000):
-	# 	result = coin_partition(i)
-	# 	if result % number == 0:
-	# 		return result
-
-	for i in range(100):
-		print(f'{i} = {coin_partition(i)}')
+def q78(divisible_by=10):
+	for i in range(2, 100000):
+		result = coin_partition(i)
+		print(i, result)
+		# if result % divisible_by == 0:
+		# 	print(i, result)
+			# return result
 
 
 if __name__ == '__main__':
