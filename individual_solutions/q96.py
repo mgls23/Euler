@@ -1,8 +1,6 @@
-import copy
 import logging
 import re
 import sys
-from itertools import permutations
 from typing import List, Set
 
 from euler.util.decorators import timed_function
@@ -10,10 +8,6 @@ from euler.util.io import datafiles
 
 NOT_SOLVED = 0
 SIZE = 9
-
-
-class SolvedException(Exception):
-    pass
 
 
 class Solver:
@@ -71,12 +65,6 @@ class Solver:
         return int(''.join(map(str, self.board[0][:3])))
 
     @staticmethod
-    def check_is_solved_board(iterable):
-        """ Solved != Valid. This checks if the board is actually solved """
-        unique_elements = set(iterable)
-        return len(unique_elements) == 9 and NOT_SOLVED not in unique_elements
-
-    @staticmethod
     def to_square_index(row_index, col_index):
         return (row_index // 3) * 3 + col_index // 3
 
@@ -122,7 +110,7 @@ def q96():
                     # logging.debug(f'Solving {sudoku_index}...')
                     solver = Solver.from_string(lines_read)
                     solver.solve()
-                    # logging.debug('Solution\n' + solver.string())
+                    logging.debug('Solution\n' + solver.string())
                     digit_sum += solver.top_3_digit()
 
                 lines_read.clear()
