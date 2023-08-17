@@ -1,5 +1,6 @@
 import logging
-from functools import lru_cache
+import pprint
+from collections import defaultdict
 from itertools import combinations
 from typing import Iterable, List, Tuple
 
@@ -7,45 +8,10 @@ STARTING_PLAYER_LOSS = 0
 STARTING_PLAYER_WIN = 1
 UNDETERMINED = 2
 
-HARD_CODED_RULES = {
-	1: {
-		2: 3,
-		4: 5,
-		6: 7,
-		8: 9,
-		10: 11,
-		12: 13,
-	},
-	2: {
-		4: 6,
-		5: 7,
-		8: 10,
-		9: 11,
-	},
-	3: {
-		4: 7,
-		5: 6,
-		8: 11,
-		9: 10,
-	},
-}
+WINS = defaultdict(lambda: defaultdict(set))
+LOSS = defaultdict(dict)
 
 
-@lru_cache
-def base_case_with_rules(discs: Tuple[int]) -> Tuple[int, str]:
-	result, reason = base_case(discs)
-	if result == UNDETERMINED:
-		disc1, disc2, disc3 = discs
-		if disc1 in HARD_CODED_RULES and disc2 in HARD_CODED_RULES[disc1]:
-			if HARD_CODED_RULES[disc1][disc2] == disc3:
-				return STARTING_PLAYER_LOSS, f'{disc1}{disc2}x rule'
-			else:
-				return STARTING_PLAYER_WIN, f'{disc1}{disc2}x rule'
-
-	return result, reason
-
-
-@lru_cache
 def base_case(discs: Tuple[int]) -> Tuple[int, str]:
 	if len(discs) == 0:
 		return STARTING_PLAYER_LOSS, '0 pile rule'
@@ -67,13 +33,39 @@ def base_case(discs: Tuple[int]) -> Tuple[int, str]:
 	assert len(discs) == 3
 	for disc1, disc2 in combinations(discs, 2):
 		if disc1 == disc2:
-			return STARTING_PLAYER_WIN, f'3 piles, but {disc1} is duplicating'
+			return STARTING_PLAYER_WIN, f'Duplicate: {disc1}'
+
+	result, message = check_memoized(*discs)
+	if result != UNDETERMINED:
+		return result, message
 
 	return UNDETERMINED, ''
 
 
-WINS = set()
-LOSS = set()
+def check_memoized(disc1, disc2, disc3) -> Tuple[int, str]:
+	if disc1 in LOSS:
+		if disc2 in LOSS[disc1]:
+			if LOSS[disc1][disc2] == disc3:
+				save_loss(disc1, disc2, disc3)
+				return STARTING_PLAYER_LOSS, f'Memoized'
+			elif LOSS[disc1][disc2] <= disc3:
+				return STARTING_PLAYER_WIN, f'{(disc1, disc2, disc3)} -> {(disc1, disc2, LOSS[disc1][disc2])}'
+
+	if disc3 in WINS[disc1][disc2]:
+		return STARTING_PLAYER_WIN, f'Memoized'
+
+	return UNDETERMINED, ''
+
+
+def save_loss(disc1, disc2, disc3):
+	if disc2 in LOSS[disc1]:
+		assert LOSS[disc1][disc2] == disc3, f'{disc1, disc2, disc3}, {LOSS}'
+	else:
+		LOSS[disc1][disc2] = disc3
+
+
+def save_win(disc1, disc2, disc3):
+	WINS[disc1][disc2].add(disc3)
 
 
 def process_disc(raw_discs: Iterable[int]) -> Tuple[int]:
@@ -81,61 +73,61 @@ def process_disc(raw_discs: Iterable[int]) -> Tuple[int]:
 	return tuple(sorted(non_zero_discs))
 
 
-@lru_cache
-def brute_force(raw_discs: Tuple[int]):
+def print_result(status, indent_count: int, discs, comment: str = ''):
+	indent = ' ' * indent_count
+
+	status_shorthand = {
+		STARTING_PLAYER_LOSS: 'L',
+		STARTING_PLAYER_WIN: 'W',
+		UNDETERMINED: 'U',
+	}[status]
+	lhs = f'{indent}{status_shorthand}: {str(discs).ljust(15)}'.ljust(40)
+
+	print(f'{lhs}{comment}')
+
+
+def brute_force(raw_discs: Tuple[int], indent_count=0):
 	discs = process_disc(raw_discs)
 
-	base_case_result, reason = base_case_with_rules(discs)
+	base_case_result, reason = base_case(discs)
 	if base_case_result != UNDETERMINED:
+		print_result(base_case_result, indent_count, discs, f'{reason}')
 		if base_case_result == STARTING_PLAYER_LOSS:
-			# print(f'L: {str(discs).ljust(15)} REASON: {reason}')
-			LOSS.add(discs)
-		else:
-			# print(f'W: {str(discs).ljust(15)} REASON: {reason}')
-			WINS.add(discs)
+			save_loss(*discs)
+
 		return base_case_result
 
 	assert len(discs) == 3
-	print(f'U: {discs}')
-	for index, disc in enumerate(discs):
+	print_result(UNDETERMINED, indent_count, discs)
+	for disc_index in reversed(range(len(discs))):
+		disc = discs[disc_index]
 		for offset in range(1, disc + 1):
 			new_discs = list(discs)
-			new_discs[index] -= offset
+			new_discs[disc_index] -= offset
 			after_move_state = process_disc(new_discs)
-			if brute_force(after_move_state) == STARTING_PLAYER_LOSS:
-				# print(f'W: {str(discs).ljust(15)} MOVE: {after_move_state}')
-				WINS.add(discs)
+
+			if brute_force(after_move_state, indent_count + 1) == STARTING_PLAYER_LOSS:
+				print_result(STARTING_PLAYER_WIN, indent_count, discs, comment=f'{discs} -> {after_move_state}')
+				save_win(*discs)
 				return STARTING_PLAYER_WIN
 
-	# print(f'L: {str(discs).ljust(15)}')
-	LOSS.add(discs)
+	print_result(STARTING_PLAYER_LOSS, indent_count, discs, comment=f'No more moves left')
+	save_loss(*discs)
 	return STARTING_PLAYER_LOSS
 
 
 def q301():
-	# number = 13
-	# for a in range(3, 5):
-	# 	for b in range(number):
-	# 		for c in range(number):
-	# 			brute_force((a, b, c))
-
 	# 0 cannot be a win
-	for n in range(1, 5):
+	for n in range(1, 10):
 		config = (n, n * 2, n * 3)
 
 		print('-' * 50)
 		print(f'START: {config}')
-
-		outcome = brute_force(config)
+		brute_force(config)
 
 	print('-' * 50)
-	print('WINS')
-	for win in sorted(WINS):
-		print(win)
-
-	print('LOSS')
-	for loss in sorted(LOSS):
-		print(loss)
+	print('LOSING CASES')
+	pprint.pprint(dict(LOSS))
 
 	return -1
 
