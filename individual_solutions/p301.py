@@ -1,6 +1,8 @@
 import logging
+import operator
 import pprint
 from collections import defaultdict
+from functools import reduce
 from itertools import combinations
 from typing import Iterable, List, Tuple
 
@@ -116,9 +118,37 @@ def brute_force(raw_discs: Tuple[int], indent_count=0):
 	return STARTING_PLAYER_LOSS
 
 
-def q301():
+def xor_solution(board_state: List[int]):
+	"""
+	1. Convert each of the piles (number of tiles in each pillar) into binary
+		e.g. 1, 2, 3
+			 1 = 001
+			 2 = 010
+			 3 = 011
+
+	2. If XOR product of all the numbers (of each digits) is 0, that means there are even number of 1s
+		in each digits.
+
+	3. That means the second player can always mirror the starting player's move in any given digit
+		in another digit. If this is not true, XOR is not 0 in the first place
+	"""
+	return reduce(operator.xor, board_state) != 0 and STARTING_PLAYER_WIN or STARTING_PLAYER_LOSS
+
+
+def insight():
+	# n XOR 2n is always 0
+	for i in range(1, 100000):
+		assert xor_solution([i, i * 2]) == STARTING_PLAYER_WIN
+
+	for i in range(1, 10000):
+		result = xor_solution([i * 3])
+		if result == STARTING_PLAYER_LOSS:
+			print(i)
+
+
+def _investigation():
 	# 0 cannot be a win
-	for n in range(1, 10):
+	for n in range(1, 19):
 		config = (n, n * 2, n * 3)
 
 		print('-' * 50)
@@ -129,7 +159,9 @@ def q301():
 	print('LOSING CASES')
 	pprint.pprint(dict(LOSS))
 
-	return -1
+
+def q301():
+	insight()
 
 
 if __name__ == '__main__':
