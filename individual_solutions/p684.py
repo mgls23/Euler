@@ -65,7 +65,7 @@ def q684(lower_bound=2, upper_bound=90):
 
     fibonacci_sequence = [0, 1]
     for i in range(lower_bound, upper_bound + 1):
-        fibonacci_sequence.append(fibonacci_sequence[i - 2] + fibonacci_sequence[i - 1])
+        fibonacci_sequence.append(sum(fibonacci_sequence[-2:]))
         sum_ += big_s_efficient(inverse_digit_sum(fibonacci_sequence[i]))
 
     return sum_ % SPECIAL_MODULO
