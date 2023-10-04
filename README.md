@@ -3,8 +3,6 @@ My own implementation of Project Euler [https://projecteuler.net/archives], a se
 
 If Google has somehow redirected you to my repository, I'm going to repeat the disclaimer on the website - try the challenges for yourself. I publish my solutions to give a sense of what my Python coding looks like. It doesn't always include explanations.  
 
-My advice is: give it a week to try and solve it without any googling. Then use Google - especially if it mentions mathematical terms (for example Diophantine equation) to research on the topic to see what available solution is out there. I would recommend never looking at the solutions directly.
-
 ## Try these Questions again!
 ### Looked at solutions
   * 78

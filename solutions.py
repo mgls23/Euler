@@ -39,7 +39,7 @@ from euler.maths.triangle_numbers import (
 from euler.maths.ungrouped import calculate_number_of_divisors
 from euler.strings.digits import all_digits_sorted, all_digits
 from euler.strings.number_to_string import MILLION
-from euler.util.dates import calculate_number_of_days_in_month
+from euler.util.dates import get_number_of_days_in_month
 from euler.util.io import datafiles
 
 
@@ -210,7 +210,7 @@ def q19():
 
     for year in range(1901, 2001):
         for month in range(1, 13):
-            number_of_days_in_month = calculate_number_of_days_in_month(year, month)
+            number_of_days_in_month = get_number_of_days_in_month(year, month)
             sunday_is_on = ((sunday_is_on - (number_of_days_in_month % 7)) % 7) or 7
             if sunday_is_on == 1: number_of_sundays_on_first += 1
 
