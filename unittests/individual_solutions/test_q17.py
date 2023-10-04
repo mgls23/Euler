@@ -1,7 +1,7 @@
 from individual_solutions.p17 import number_letter_counts, remove_spaces_and_hyphens
 
 
-def test_translate(number: int, string: str, score: int):
+def _test_translate(number: int, string: str, score: int):
     result = number_letter_counts(number)
     stripped_string = remove_spaces_and_hyphens(string)
 
@@ -11,9 +11,9 @@ def test_translate(number: int, string: str, score: int):
 
 def test():
     # No need to test any entries in NUMBER_TO_STRING other than 1
-    test_translate(1, "one", score=3)
-    test_translate(12, "twelve", score=6)
-    test_translate(14, "fourteen", score=8)
-    test_translate(40, "forty", score=5)
-    test_translate(100, "one-hundred", score=10)
-    test_translate(256, "two-hundred and fifty-six", score=21)
+    _test_translate(1, "one", score=3)
+    _test_translate(12, "twelve", score=6)
+    _test_translate(14, "fourteen", score=8)
+    _test_translate(40, "forty", score=5)
+    _test_translate(100, "one-hundred", score=10)
+    _test_translate(256, "two-hundred and fifty-six", score=21)
