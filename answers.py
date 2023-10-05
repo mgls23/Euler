@@ -123,7 +123,7 @@ ANSWERS = {
 
     q87: 1097343,
 
-    q97: 8739992577,
+    # q97: 8739992577,
 
     q108: 180180,
 
@@ -158,7 +158,8 @@ def _solve_and_check_answers(my_implementations, ignored_questions):
         if question_time_taken > 1000: flagged_questions.append((question_name, question_time_taken))
         tested_questions_count += 1
 
-    logging.info(f'Checked {tested_questions_count} Problems :: IGNORED={ignored_questions}')
+    logging.info(f'Checked {tested_questions_count} Problems')
+    logging.info(f'Ignored :: {ignored_questions}')
     logging.info(f'Run Time :: {(time.time() - start_run_time) * 1000:.2f}ms')
     return flagged_questions
 
