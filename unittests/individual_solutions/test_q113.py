@@ -1,4 +1,4 @@
-from individual_solutions.p113 import _count_increasing_numbers, count_increasing_numbers, count_non_bouncy_numbers, \
+from solutions.p113 import _count_increasing_numbers, count_increasing_numbers, count_non_bouncy_numbers, \
 	count_decreasing_numbers, _count_decreasing_numbers, dynamic_programming_solution
 
 

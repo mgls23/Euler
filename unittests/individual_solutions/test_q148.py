@@ -1,4 +1,4 @@
-from individual_solutions.p148 import q148, brute_force, slightly_faster
+from solutions.p148 import q148, brute_force, slightly_faster
 
 
 # def test_is_brute_force_correct():

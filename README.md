@@ -31,4 +31,4 @@ These folders show roughly the new direction this project is headed to - althoug
 altogether anyway (the first 100 aren't supposed to be difficult) I'm also thinking of a way to make it integrate 
 nicely with the solutions I make on OneNote (to actually solve these questions) 
 - neat_solutions
-- individual_solutions
+- solutions

@@ -1,4 +1,4 @@
-from individual_solutions.p17 import number_letter_counts, remove_spaces_and_hyphens
+from solutions.p17 import number_letter_counts, remove_spaces_and_hyphens
 
 
 def _test_translate(number: int, string: str, score: int):

@@ -9,7 +9,7 @@ def parse_matrix(filename: str):
 
 
 def datafiles(file_name):
-    # answers.py and individual solutions file have different paths
+    # answers.py and solutions file have different paths
     # so the path to data folder is different
     # bit of a hack - the simplest solution did for now
     in_right_directory = any(filename for filename in os.listdir(".")

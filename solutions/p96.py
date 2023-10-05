@@ -1,8 +1,6 @@
-import copy
 import logging
 import re
 import sys
-from itertools import permutations
 from typing import List, Set
 
 from euler.util.decorators import timed_function

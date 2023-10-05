@@ -2,7 +2,7 @@ from euler.maths import prime
 from euler.maths.multiplications import lowest_common_multiple
 from euler.maths.sigma import sigma_n, sigma_n2
 
-from individual_solutions.p62 import q62
+from solutions.p62 import q62
 
 
 def q5(up_to=20):

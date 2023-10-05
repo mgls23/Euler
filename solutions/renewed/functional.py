@@ -1,7 +1,4 @@
-"""
-Written in a way I feel is 'elegant' - not necessarily most readable or maintainable.
-Only some questions can be solved like this (readability and/or performance usually comes first)
-"""
+""" Written in functional programming style - not necessarily most readable or maintainable. """
 import itertools
 import math
 from functools import reduce

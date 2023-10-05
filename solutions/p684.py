@@ -2,7 +2,7 @@ import math
 
 from euler.strings.number_to_string import SPECIAL_MODULO, BILLION
 from euler.util.decorators import timed_function
-from individual_solutions.p72 import geometric_sum
+from solutions.p72 import geometric_sum
 
 
 def inverse_digit_sum(number):

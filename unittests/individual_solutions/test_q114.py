@@ -1,4 +1,4 @@
-from individual_solutions.p114 import dynamic_programming_solution, brute_force, dynamic_programming_simple
+from solutions.p114 import dynamic_programming_solution, brute_force, dynamic_programming_simple
 
 
 def test_q114_sample():

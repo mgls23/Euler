@@ -1,4 +1,4 @@
-from individual_solutions.p116 import *
+from solutions.p116 import *
 
 
 def test_example():

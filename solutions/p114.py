@@ -1,7 +1,7 @@
 import logging
 
 from euler.util.decorators import timed_function
-from individual_solutions.p115 import dp_variable_min
+from solutions.p115 import dp_variable_min
 
 
 def dynamic_programming_simple(total_blocks):

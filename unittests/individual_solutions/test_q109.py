@@ -1,4 +1,4 @@
-# from individual_solutions.p109 import checkout_slower, checkout
+# from solutions.p109 import checkout_slower, checkout
 
 
 # def test_checkout():
