@@ -1,12 +1,4 @@
-"""
-While efforts were made to refactor the code in here, the structure of the file is not scalable and
-    the legacy code is still here. Later neat_solutions have better coding standards and smarter solutions
-
-    See neat_solutions for completed questions
-
-    TODO :: consider Jupyter as a blog-like way of explaining my answers
-        -> importing common functions wasn't easy from my brief look
-"""
+""" TODO - split each functions into jupyter notebooks """
 import collections
 import itertools
 import logging

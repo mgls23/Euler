@@ -31,9 +31,9 @@ from solutions.p111 import q111
 from solutions.revisit.p12 import q12
 from solutions.revisit.p39 import q39
 from solutions.revisit.p9 import q9
-from neat_solutions.concise import *
-from neat_solutions.simple import *
-from solutions import *
+from solutions.renewed.functional import *
+from solutions.renewed.simple import *
+from solutions.all_solutions import *
 
 ANSWERS = {
     q1: 233168,
