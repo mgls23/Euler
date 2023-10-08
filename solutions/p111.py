@@ -6,7 +6,8 @@ from .euler.util.decorators import timed_function
 
 def find_primes_with_runs(repeating_number: str, digit: int):
     # All this for a drop of blood - for 5ms difference...
-    if primes := primes_with_runs_m_1(repeating_number, digit): return primes
+    if primes := primes_with_runs_m_1(repeating_number, digit):
+        return primes
 
     def helper(repeated_count, different_count):
         if len(string_buffer) == digit:
@@ -56,8 +57,7 @@ def primes_with_runs_m_1(repeating_number: str, digit: int):
             string_buffer[index] = different_number
             generated_number = int(''.join(string_buffer))
 
-            if is_prime_robin_miller(generated_number) \
-                    and generated_number >= smallest_possible:
+            if is_prime_robin_miller(generated_number) and generated_number >= smallest_possible:
                 primes.append(generated_number)
 
         string_buffer[-1] = repeating_number

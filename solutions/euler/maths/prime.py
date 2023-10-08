@@ -65,7 +65,7 @@ def generate_to_sie(upper_bound):
     return prime_numbers
 
 
-def is_prime_robin_miller(n, k=2):
+def is_prime_robin_miller(n, k=4):
     if n <= 1: return False
     if n <= 3: return True
     if (n % 2 == 0) or (n % 3 == 0): return False
