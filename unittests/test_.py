@@ -1,6 +1,6 @@
 import unittest
 
-from euler.something import ways_to_express_number, ways_to_express, _f_
+from solutions.euler.something import ways_to_express_number, ways_to_express, _f_
 
 
 class TestSomething(unittest.TestCase):
