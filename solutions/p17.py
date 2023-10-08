@@ -1,5 +1,5 @@
 import logging
-from solutions.euler.util.decorators import timed_function
+from .euler.util.decorators import timed_function
 
 SINGLE_DIGITS = {
     0: '',

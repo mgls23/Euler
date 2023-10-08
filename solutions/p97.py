@@ -1,4 +1,4 @@
-from solutions.euler.util.decorators import timed_function
+from .euler.util.decorators import timed_function
 
 
 def find_digits(power, last_digit_index):

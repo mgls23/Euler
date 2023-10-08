@@ -1,7 +1,7 @@
 import math
 
-from solutions.euler.sequence.polygonal import Pentagonal
-from solutions.euler.util.decorators import timed_function
+from .euler.sequence.polygonal import Pentagonal
+from .euler.util.decorators import timed_function
 
 
 def q44():

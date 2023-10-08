@@ -1,7 +1,7 @@
 import logging
 from functools import lru_cache
 
-from solutions.euler.util.decorators import timed_function
+from .euler.util.decorators import timed_function
 
 RED, GREEN, BLUE = 2, 3, 4
 

@@ -1,7 +1,7 @@
 import math
 
-from solutions.euler.strings.number_to_string import SPECIAL_MODULO, BILLION
-from solutions.euler.util.decorators import timed_function
+from .euler.strings.number_to_string import SPECIAL_MODULO, BILLION
+from .euler.util.decorators import timed_function
 from solutions.p72 import geometric_sum
 
 

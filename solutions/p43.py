@@ -2,7 +2,7 @@ import logging
 import sys
 from math import ceil
 
-from solutions.euler.util.decorators import timed_function
+from .euler.util.decorators import timed_function
 
 
 def is_partially_pandigital(number_string):

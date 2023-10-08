@@ -1,5 +1,5 @@
-from solutions.euler.sequence.continued_fraction import square_root_2_generator
-from solutions.euler.util.decorators import timed_function
+from .euler.sequence.continued_fraction import square_root_2_generator
+from .euler.util.decorators import timed_function
 
 
 def numerator_has_more_digits(numerator, denominator):

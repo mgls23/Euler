@@ -1,5 +1,5 @@
-from solutions.euler.maths.palindromes import is_palindrome
-from solutions.euler.util.decorators import timed_function
+from .euler.maths.palindromes import is_palindrome
+from .euler.util.decorators import timed_function
 
 
 def is_lychrel_number(number):

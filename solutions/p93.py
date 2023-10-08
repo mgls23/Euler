@@ -2,7 +2,7 @@ import itertools
 import logging
 from operator import add, mul, sub, truediv
 
-from solutions.euler.util.decorators import timed_function
+from .euler.util.decorators import timed_function
 
 
 def find_combinations(numbers):

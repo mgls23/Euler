@@ -1,5 +1,5 @@
-from solutions.euler.strings.number_to_string import MILLION
-from solutions.euler.util.decorators import timed_function
+from .euler.strings.number_to_string import MILLION
+from .euler.util.decorators import timed_function
 
 
 def coin_partition(number):

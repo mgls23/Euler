@@ -1,6 +1,6 @@
 from math import factorial
 
-from solutions.euler.util.decorators import timed_function
+from .euler.util.decorators import timed_function
 
 
 def brute_force():

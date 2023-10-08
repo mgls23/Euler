@@ -1,6 +1,6 @@
 import logging
 
-from solutions.euler.util.decorators import timed_function
+from .euler.util.decorators import timed_function
 
 
 def q63():

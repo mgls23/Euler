@@ -2,7 +2,7 @@ import logging
 from itertools import accumulate
 from math import log
 
-from solutions.euler.maths.sigma import sigma_n
+from .euler.maths.sigma import sigma_n
 
 
 def investigate_7s():
@@ -89,7 +89,7 @@ def q148(number):  # sourcery skip: for-append-to-extend
 
 if __name__ == '__main__':
     import sys
-    from solutions.euler.util.decorators import timed_function
+    from .euler.util.decorators import timed_function
 
     logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 

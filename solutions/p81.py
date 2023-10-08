@@ -2,9 +2,9 @@ import logging
 from itertools import accumulate
 from typing import List
 
-from solutions.euler.maths.matrix import debug_log_2d_matrix
-from solutions.euler.util.decorators import timed_function
-from solutions.euler.util.io import datafiles, parse_matrix
+from .euler.maths.matrix import debug_log_2d_matrix
+from .euler.util.decorators import timed_function
+from .euler.util.io import datafiles, parse_matrix
 
 
 def dijkstra_cost_search_fast(matrix: List[List[int]]):
