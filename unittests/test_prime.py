@@ -1,6 +1,6 @@
 import unittest
 
-from euler.maths.prime import is_prime_robin_miller
+from solutions.euler.maths.prime import is_prime_robin_miller
 
 
 class TestRobinMillerPrime(unittest.TestCase):

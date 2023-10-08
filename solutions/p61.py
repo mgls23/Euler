@@ -4,8 +4,8 @@ import logging
 from collections import deque
 from itertools import permutations
 
-from euler.sequence.polygonal import Triangle, Square, Pentagonal, Hexagonal, Heptagonal, Octagonal, Polygonal
-from euler.util.decorators import timed_function
+from solutions.euler.sequence.polygonal import Triangle, Square, Pentagonal, Hexagonal, Heptagonal, Octagonal, Polygonal
+from solutions.euler.util.decorators import timed_function
 
 
 class PolygonalNode:

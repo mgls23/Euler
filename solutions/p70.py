@@ -3,9 +3,9 @@ from collections import Counter
 from fractions import Fraction
 from math import sqrt, ceil
 
-from euler.maths.prime import generate_to_sie
-from euler.maths.ungrouped import _phi
-from euler.util.decorators import timed_function
+from solutions.euler.maths.prime import generate_to_sie
+from solutions.euler.maths.ungrouped import _phi
+from solutions.euler.util.decorators import timed_function
 
 
 # Not tested - need to be profiled

@@ -1,7 +1,7 @@
 from itertools import combinations
 
-from euler.maths.prime import is_prime_robin_miller
-from euler.util.decorators import timed_function
+from solutions.euler.maths.prime import is_prime_robin_miller
+from solutions.euler.util.decorators import timed_function
 
 
 def find_primes_with_runs(repeating_number: str, digit: int):

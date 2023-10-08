@@ -1,6 +1,6 @@
 import math
 
-from euler.util.decorators import memoised
+from solutions.euler.util.decorators import memoised
 
 
 def triangle_numbers_generator(number):

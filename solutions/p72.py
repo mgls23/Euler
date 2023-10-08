@@ -1,6 +1,6 @@
 from sympy import totient
 
-from euler.util.decorators import timed_function
+from solutions.euler.util.decorators import timed_function
 
 
 def q72(number=1000000):

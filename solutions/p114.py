@@ -1,6 +1,6 @@
 import logging
 
-from euler.util.decorators import timed_function
+from solutions.euler.util.decorators import timed_function
 from solutions.p115 import dp_variable_min
 
 

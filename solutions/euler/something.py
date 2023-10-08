@@ -1,4 +1,4 @@
-from euler.util.decorators import memoised
+from solutions.euler.util.decorators import memoised
 
 
 @memoised

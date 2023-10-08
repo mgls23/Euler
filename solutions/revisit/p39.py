@@ -1,7 +1,7 @@
 from functools import reduce
 from math import gcd, sqrt
 
-from euler.util.decorators import timed_function
+from solutions.euler.util.decorators import timed_function
 
 
 # TODO :: after q9 is re-implemented after learning Euclidean formula - revisit this also

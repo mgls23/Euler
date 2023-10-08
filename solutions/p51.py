@@ -1,8 +1,8 @@
 import logging
 from itertools import combinations
 
-from euler.maths.prime import generate_to_sie
-from euler.util.decorators import timed_function
+from solutions.euler.maths.prime import generate_to_sie
+from solutions.euler.util.decorators import timed_function
 
 
 def q51() -> int:

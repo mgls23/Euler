@@ -1,6 +1,6 @@
-from euler.maths.prime import generate_to_sie
+from solutions.euler.maths.prime import generate_to_sie
 
-from euler.maths.ungrouped import calculate_number_of_divisors
+from solutions.euler.maths.ungrouped import calculate_number_of_divisors
 
 
 def q12():

@@ -1,6 +1,6 @@
 import math
 
-from euler.util.decorators import timed_function
+from solutions.euler.util.decorators import timed_function
 
 
 def is_palindrome(string: str):

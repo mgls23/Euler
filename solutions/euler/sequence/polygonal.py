@@ -1,6 +1,6 @@
 from abc import ABCMeta
 
-from euler.sequence.sequence import SequenceGenerator
+from solutions.euler.sequence.sequence import SequenceGenerator
 
 
 class Polygonal(SequenceGenerator, metaclass=ABCMeta):

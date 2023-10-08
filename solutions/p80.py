@@ -1,6 +1,6 @@
 from decimal import Decimal, getcontext
 
-from euler.util.decorators import timed_function
+from solutions.euler.util.decorators import timed_function
 
 
 def square_root_2(iteration_count=200):

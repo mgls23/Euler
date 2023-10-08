@@ -1,4 +1,4 @@
-from euler.sequence.sequence import SequenceGenerator
+from solutions.euler.sequence.sequence import SequenceGenerator
 
 
 class Polynomial(SequenceGenerator):

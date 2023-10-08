@@ -2,8 +2,8 @@ import logging
 
 from bisect import insort
 
-from euler.util.decorators import timed_function
-from euler.util.io import parse_matrix
+from solutions.euler.util.decorators import timed_function
+from solutions.euler.util.io import parse_matrix
 
 NOT_CALCULATED = 2 ** 32 - 1  # Something arbitrarily big
 

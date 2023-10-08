@@ -3,7 +3,7 @@ import math
 
 import sympy
 
-from euler.maths.prime import is_prime, decompose_to_prime_powers
+from solutions.euler.maths.prime import is_prime, decompose_to_prime_powers
 
 
 def sum_of_divisors(n, primes):

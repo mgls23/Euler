@@ -4,14 +4,14 @@ import math
 from functools import reduce
 from operator import mul
 
-from euler.champernownes_constant import champernownes_constant
-from euler.maths import prime
-from euler.maths.matrix import adjacent_multiplicand, horizontal, left_diagonal, right_diagonal
-from euler.maths.palindromes import generate_palindromes, is_palindrome
-from euler.maths.prime import generate_to_sie, is_prime_robin_miller, decompose_to_prime_powers
-from euler.maths.triangle_numbers import is_triangle_number
-from euler.strings.number_to_string import numerical_score, digit_sum_of_number
-from euler.util.io import datafiles
+from solutions.euler.champernownes_constant import champernownes_constant
+from solutions.euler.maths import prime
+from solutions.euler.maths.matrix import adjacent_multiplicand, horizontal, left_diagonal, right_diagonal
+from solutions.euler.maths.palindromes import generate_palindromes, is_palindrome
+from solutions.euler.maths.prime import generate_to_sie, is_prime_robin_miller, decompose_to_prime_powers
+from solutions.euler.maths.triangle_numbers import is_triangle_number
+from solutions.euler.strings.number_to_string import numerical_score, digit_sum_of_number
+from solutions.euler.util.io import datafiles
 
 
 def q3(number=600851475143):

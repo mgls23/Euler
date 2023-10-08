@@ -1,8 +1,8 @@
 import logging
 
-from euler.maths.palindromes import is_palindrome
-from euler.maths.prime import generate_to_sie, is_prime_robin_miller
-from euler.util.decorators import timed_function
+from solutions.euler.maths.palindromes import is_palindrome
+from solutions.euler.maths.prime import generate_to_sie, is_prime_robin_miller
+from solutions.euler.util.decorators import timed_function
 
 
 def see_pattern():

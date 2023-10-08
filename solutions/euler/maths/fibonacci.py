@@ -1,4 +1,4 @@
-from euler.util.exceptions import NotSupportedException
+from solutions.euler.util.exceptions import NotSupportedException
 
 
 class FibonacciIterator:

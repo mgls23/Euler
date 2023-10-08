@@ -1,5 +1,5 @@
-from euler.maths.fibonacci import FibonacciIterator, NFibonacciIterator
-from euler.strings.number_to_string import MILLION
+from solutions.euler.maths.fibonacci import FibonacciIterator, NFibonacciIterator
+from solutions.euler.strings.number_to_string import MILLION
 
 
 def test_fibonacci_sequence():

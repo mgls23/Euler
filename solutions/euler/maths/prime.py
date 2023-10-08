@@ -2,7 +2,7 @@ import collections
 import math
 import random
 
-from euler.util.decorators import memoised, timed_function
+from solutions.euler.util.decorators import memoised, timed_function
 
 
 class PrimeGenerator:

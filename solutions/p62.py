@@ -1,7 +1,7 @@
 from collections import Counter
 
-from euler.sequence.polynomial import Polynomial
-from euler.util.decorators import timed_function
+from solutions.euler.sequence.polynomial import Polynomial
+from solutions.euler.util.decorators import timed_function
 
 
 def q62(number_of_matches=5):
