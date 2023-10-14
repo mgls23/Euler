@@ -6,38 +6,36 @@ import math
 import sys
 from string import ascii_lowercase
 
-from .euler.maths.divisors import sum_of_proper_divisors, is_abundant_number
-from .euler.maths.matrix import (
+from solutions.euler.maths.divisors import sum_of_proper_divisors, is_abundant_number
+from solutions.euler.maths.matrix import (
     adjacent_multiplicand_string
 )
-from .euler.maths.multiplications import (
+from solutions.euler.maths.multiplications import (
     greatest_common_denominator,
     multiply_out_numbers_in_powers
 )
-from .euler.maths.palindromes import is_palindrome
-from .euler.maths.prime import (
+from solutions.euler.maths.palindromes import is_palindrome
+from solutions.euler.maths.prime import (
     generate_to_sie,
     is_prime,
     is_truncable_prime,
     generate_primes_in_digit_range,
     is_prime_robin_miller, decompose_to_prime_powers,
 )
-from .euler.maths.sigma import (sigma_n, )
-from .euler.maths.triangle_numbers import (
+from solutions.euler.maths.triangle_numbers import (
     pentagonal,
     hexagonal,
     is_pentagonal_number,
 )
-from .euler.maths.ungrouped import calculate_number_of_divisors
-from .euler.strings.digits import all_digits_sorted, all_digits
-from .euler.strings.number_to_string import MILLION
-from .euler.util.dates import get_number_of_days_in_month
-from .euler.util.io import datafiles
+from solutions.euler.maths.ungrouped import calculate_number_of_divisors
+from solutions.euler.strings.digits import all_digits_sorted, all_digits
+from solutions.euler.strings.number_to_string import MILLION
+from solutions.euler.util.dates import get_number_of_days_in_month
+from solutions.euler.util.io import datafiles
 
 
 def q1():
-    def fizz_buzz(x, lower_bound=2, fizz=3, buzz=5):
-        return [number for number in range(lower_bound, x + 1) if (number % fizz) == 0 or (number % buzz) == 0]
+    from solutions.euler.maths.sigma import sigma_n
 
     def sigma_n_with_multiplier(upper_bound: int, multiples_of: int):
         """ Finds sum of all `multiples_of` from 1 to upper bound
@@ -63,7 +61,7 @@ def q1():
 
 
 def q2():
-    from .euler.maths.fibonacci import NFibonacciIterator
+    from solutions.euler.maths.fibonacci import NFibonacciIterator
 
     iterator = NFibonacciIterator.n3()
     iterator.set_upper_bound(4 * MILLION)
@@ -119,7 +117,7 @@ def q13():
     Work out the first ten digits of the sum of the following
         one-hundred 50-digit numbers.
     """
-    from .euler.largest_sum import first_n_digits_of_sum
+    from solutions.euler.largest_sum import first_n_digits_of_sum
 
     with open(datafiles('p013_numbers.txt')) as numbers_file:
         numbers = [number.replace('\n', '') for number in numbers_file.readlines()]
@@ -131,7 +129,7 @@ def q14():
 
     Which starting number, under one million, produces the longest chain?
     """
-    from .euler.longest_collatz_sequence import collatz_length
+    from solutions.euler.longest_collatz_sequence import collatz_length
 
     # This cannot be speed-up further without using Cython
     max_sequence_length = max_collatz_number = 0
@@ -191,7 +189,7 @@ def q16():
 
 
 def q18():
-    from .euler.maximum_path_sum import Tree
+    from solutions.euler.maximum_path_sum import Tree
     tree = Tree(datafiles('p018_tree.txt'))
     return tree.find_maximum_path_sum()
 
@@ -350,7 +348,7 @@ def q30(power=5):
 
 
 def q31():
-    from .euler.coin_sums import coin_sums
+    from solutions.euler.coin_sums import coin_sums
     return coin_sums(coin_total=200, coins_available=[1, 2, 5, 10, 20, 50, 100, 200])
 
 
@@ -489,7 +487,7 @@ def q46():
 
 
 def q49(given_digit=4, repeating_count=3):
-    from .euler.util.array import is_all_same
+    from solutions.euler.util.array import is_all_same
     import operator
 
     grouped_by_digits = {}
@@ -653,13 +651,13 @@ def q66(max_value_d=1000):
 
 
 def q67():
-    from .euler.maximum_path_sum import Tree
+    from solutions.euler.maximum_path_sum import Tree
     tree = Tree(datafiles('p067_triangle.txt'))
     return tree.find_maximum_path_sum()
 
 
 def q76():
-    from .euler.something import ways_to_express_number
+    from solutions.euler.something import ways_to_express_number
     return ways_to_express_number(100) - 1
 
 

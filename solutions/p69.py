@@ -2,9 +2,9 @@ from functools import reduce
 from math import sqrt, ceil
 from operator import mul
 
-from .euler.maths.prime import generate_to_sie
-from .euler.maths.ungrouped import phi
-from .euler.util.decorators import timed_function
+from solutions.euler.maths.prime import generate_to_sie
+from solutions.euler.maths.ungrouped import phi
+from solutions.euler.util.decorators import timed_function
 
 
 def q69(upper_limit=10 ** 6):

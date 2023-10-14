@@ -1,4 +1,4 @@
-from .euler.util.decorators import timed_function
+from solutions.euler.util.decorators import timed_function
 
 
 def is_partially_1_to_9_pandigital(number_string):

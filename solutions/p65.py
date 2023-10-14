@@ -1,6 +1,6 @@
 import itertools
 
-from .euler.util.decorators import timed_function
+from solutions.euler.util.decorators import timed_function
 
 
 def q65(n=100):

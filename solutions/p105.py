@@ -2,7 +2,7 @@ import logging
 from collections import defaultdict
 from itertools import combinations
 
-from .euler.util.io import datafiles
+from solutions.euler.util.io import datafiles
 
 SubsetType = list
 
@@ -70,7 +70,7 @@ def q105():
 
 if __name__ == '__main__':
 	import sys
-	from .euler.util.decorators import timed_function
+	from solutions.euler.util.decorators import timed_function
 
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 	assert (timed_function(q105)() == 73702)

@@ -1,7 +1,7 @@
 import math
 
-from .euler.strings.number_to_string import MILLION, TEN
-from .euler.util.decorators import timed_function
+from solutions.euler.strings.number_to_string import MILLION, TEN
+from solutions.euler.util.decorators import timed_function
 
 INPUT = TEN * MILLION
 
