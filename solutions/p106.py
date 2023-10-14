@@ -44,7 +44,7 @@ def q106(n=12):
 
 if __name__ == '__main__':
 	import sys
-	from .euler.util.decorators import timed_function
+	from solutions.euler.util.decorators import timed_function
 
 	# Logging adds on a lot of time
 	# logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)

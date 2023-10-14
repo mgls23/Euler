@@ -1,6 +1,6 @@
 from math import factorial
 
-from .euler.util.decorators import timed_function
+from solutions.euler.util.decorators import timed_function
 
 
 # If this extended (such that ncr_requirement can be smaller than n, this function will need to be modified

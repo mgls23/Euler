@@ -1,7 +1,7 @@
 import logging
 
-from .euler.util.decorators import timed_function
-from .euler.util.io import datafiles
+from solutions.euler.util.decorators import timed_function
+from solutions.euler.util.io import datafiles
 
 
 def test_roman_numerals():

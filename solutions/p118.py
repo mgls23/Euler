@@ -1,7 +1,7 @@
 import logging
 from math import prod
 
-from .euler.maths.prime import generate_to_sie
+from solutions.euler.maths.prime import generate_to_sie
 
 
 def find_pandigital_combinations(numbers: dict):
@@ -55,7 +55,7 @@ def q118():
 
 if __name__ == '__main__':
 	import sys
-	from .euler.util.decorators import timed_function
+	from solutions.euler.util.decorators import timed_function
 
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
