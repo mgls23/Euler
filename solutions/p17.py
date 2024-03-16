@@ -1,3 +1,5 @@
+import logging
+
 from solutions.euler.util.decorators import timed_function
 
 SINGLE_DIGITS = {
@@ -90,7 +92,6 @@ def q17(start=1, up_to=1000):
 
 
 if __name__ == '__main__':
-	import logging
 	import sys
 
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
