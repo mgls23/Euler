@@ -11,8 +11,8 @@ from solutions.euler.maths.matrix import (
     adjacent_multiplicand_string
 )
 from solutions.euler.maths.multiplications import (
-    greatest_common_denominator,
-    multiply_out_numbers_in_powers
+	gcd,
+	multiply_out_numbers_in_powers
 )
 from solutions.euler.maths.palindromes import is_palindrome
 from solutions.euler.maths.prime import (
@@ -374,7 +374,7 @@ def q33():
         top *= min(a, b)
         bottom *= max(a, b)
 
-    return int(bottom / greatest_common_denominator(top, bottom))
+    return int(bottom / gcd(top, bottom))
 
 
 def q34():

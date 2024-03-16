@@ -1,6 +1,6 @@
 from fractions import Fraction
 
-from solutions.euler.maths.multiplications import greatest_common_denominator as gcd
+from solutions.euler.maths.multiplications import gcd as gcd
 from solutions.euler.maths.prime import decompose_to_prime_powers
 
 
