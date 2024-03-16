@@ -1,6 +1,8 @@
 import logging
 from collections import Counter
 
+from solutions.euler.util.io import datafiles
+
 
 class Card:
 	SUITS = ['C', 'D', 'H', 'S']
@@ -149,7 +151,7 @@ def q54():
 	number_of_players = 2
 	number_of_times_player_1_wins = 0
 
-	with open('../data/p054_poker.txt') as input_file:
+	with open(datafiles('p054_poker.txt')) as input_file:
 		for line in input_file:
 			game = PokerGame.from_string(number_of_players, line.strip('\n'), )
 			game.determine_winner()
