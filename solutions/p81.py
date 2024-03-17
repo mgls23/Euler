@@ -3,7 +3,7 @@ from itertools import accumulate
 from typing import List
 
 from solutions.euler.util.decorators import timed_function
-from solutions.euler.util.io import parse_matrix
+from solutions.euler.util.io_utils import parse_matrix
 
 
 def dijkstra_cost_search_fast(matrix: List[List[int]]):

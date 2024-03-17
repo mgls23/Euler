@@ -11,7 +11,7 @@ from solutions.euler.maths.palindromes import generate_palindromes, is_palindrom
 from solutions.euler.maths.prime import generate_to_sie, is_prime_robin_miller, decompose_to_prime_powers
 from solutions.euler.maths.triangle_numbers import is_triangle_number
 from solutions.euler.strings.number_to_string import numerical_score, digit_sum_of_number
-from solutions.euler.util.io import datafiles
+from solutions.euler.util.io_utils import datafiles
 
 
 def q3(number=600851475143):

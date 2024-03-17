@@ -3,8 +3,8 @@
     <module name="Euler" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
-    <option name="SDK_HOME" value="$PROJECT_DIR$/venv3/bin/python" />
-    <option name="SDK_NAME" value="Python 3.11 (Euler)" />
+    <option name="SDK_HOME" value="$PROJECT_DIR$/venv3.11_test/bin/python" />
+    <option name="SDK_NAME" value="Python 3.11 (Euler) [TEST]" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
     <option name="IS_MODULE_SDK" value="false" />
     <option name="ADD_CONTENT_ROOTS" value="true" />

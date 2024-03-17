@@ -1,7 +1,7 @@
 import logging
 from collections import Counter
 
-from solutions.euler.util.io import datafiles
+from solutions.euler.util.io_utils import datafiles
 
 
 class Card:

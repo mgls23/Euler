@@ -31,7 +31,7 @@ from solutions.euler.maths.ungrouped import calculate_number_of_divisors
 from solutions.euler.strings.digits import all_digits_sorted, all_digits
 from solutions.euler.strings.number_to_string import MILLION
 from solutions.euler.util.dates import get_number_of_days_in_month
-from solutions.euler.util.io import datafiles
+from solutions.euler.util.io_utils import datafiles
 
 
 def q1():
