@@ -1,3 +1,5 @@
+import logging
+
 from solutions.euler.maths.matrix import debug_log_2d_matrix
 from solutions.euler.util.decorators import timed_function
 from solutions.euler.util.io_utils import datafiles
@@ -103,7 +105,6 @@ def read_input_file():
 
 
 if __name__ == '__main__':
-	import logging
 	import sys
 
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)

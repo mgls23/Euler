@@ -133,7 +133,7 @@ def compare():
 	assert correct_solution == solution
 
 
-def q113(total_digits):
+def q113(total_digits=100):
 	return count_non_bouncy_numbers(total_digits)
 
 
@@ -143,4 +143,4 @@ if __name__ == '__main__':
 
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
-	assert (timed_function(q113)(100) == 51161058134250)
+	assert (timed_function(q113)() == 51161058134250)

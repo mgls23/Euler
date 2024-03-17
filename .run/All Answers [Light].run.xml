@@ -1,10 +1,11 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="All Answers" type="PythonConfigurationType" factoryName="Python">
+  <configuration default="false" name="All Answers [Light]" type="PythonConfigurationType" factoryName="Python">
     <module name="Euler" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
     <envs>
       <env name="PYTHONUNBUFFERED" value="1" />
+      <env name="LIGHT_MODE" value="1" />
     </envs>
     <option name="SDK_HOME" value="" />
     <option name="SDK_NAME" value="Python 3.11 (Euler) [DEV]" />

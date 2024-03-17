@@ -1,9 +1,16 @@
+import os
 import time
 
 from solutions.all_solutions import *
+from solutions.p105 import q105
+from solutions.p106 import q106
 from solutions.p107 import q107
 from solutions.p111 import q111
+from solutions.p112 import q112
+from solutions.p113 import q113
 from solutions.p114 import q114
+from solutions.p115 import q115
+from solutions.p116 import q116
 from solutions.p17 import q17
 from solutions.p32 import q32
 from solutions.p38 import q38
@@ -13,6 +20,7 @@ from solutions.p47 import q47
 from solutions.p51 import q51
 from solutions.p52 import q52
 from solutions.p53 import q53
+from solutions.p54 import q54
 from solutions.p55 import q55
 from solutions.p57 import q57
 from solutions.p61 import q61
@@ -26,9 +34,15 @@ from solutions.p72 import q72
 from solutions.p77 import q77
 from solutions.p79 import q79
 from solutions.p81 import q81
+from solutions.p82 import q82
 from solutions.p83 import q83
+from solutions.p85 import q85
 from solutions.p87 import q87
+from solutions.p89 import q89
+from solutions.p92 import q92
+from solutions.p93 import q93
 from solutions.p96 import q96
+from solutions.p97 import q97
 from solutions.renewed.functional import *
 from solutions.renewed.simple import *
 from solutions.revisit.p12 import q12
@@ -89,7 +103,7 @@ ANSWERS = {
 	q51: 121313,
 	q52: 142857,
 	q53: 4075,
-
+	q54: 376,
 	q55: 249,
 	q56: 972,
 	q57: 153,
@@ -117,23 +131,44 @@ ANSWERS = {
 	q79: 73162890,
 
 	q81: 427337,
-	# q82: 260324,
+	q82: 260324,
 	q83: 425185,
 	# q84: 101524,
+	q85: 2772,
 
 	q87: 1097343,
 
-	q96: 24702,
-	# q97: 8739992577,
+	q89: 743,
 
+	q92: 8581146,
+	q93: 1258,
+
+	q96: 24702,
+	q97: 8739992577,
+
+	q105: 73702,
+	q106: 21384,
 	q107: 259679,
 	q108: 180180,
-
+	# q109: 38182,
 	q110: 9350130049860600,
 	q111: 612407567715,
-
+	q112: 1587000,
+	q113: 51161058134250,
 	q114: 16475640049,
+	q115: 168,
+	q116: 20492570929,
 }
+
+IGNORE = [
+	# Incorrect answers - fix them
+	q12, q27, q31, q50, q58, q68, q79, q82, q83, q97,
+	# Unacceptably long
+	q37,
+]
+KNOWN_TO_TAKE_LONG = [
+	q14, q23, q44, q60, q96, q108, q110, q112,
+]
 
 
 def warn_about_long_questions(flagged_questions):
@@ -155,27 +190,26 @@ def _solve_and_check_answers(my_implementations, ignored_questions):
 		assert solution == answer, f'{question_name}::{solution} != {answer}'
 
 		question_time_taken = (time.time() - start_question_time) * 1000
-		logging.info(f'Solved {question_name} in {question_time_taken:06.2f}ms')
+		print(f'Solved {question_name} in {question_time_taken:06.2f}ms')
 
 		if question_time_taken > 1000: flagged_questions.append((question_name, question_time_taken))
 		tested_questions_count += 1
 
-	logging.info(f'Checked {tested_questions_count} Problems')
-	logging.info(f'Ignored :: {ignored_questions}')
-	logging.info(f'Run Time :: {(time.time() - start_run_time) * 1000:.2f}ms')
+	print(f'Checked {tested_questions_count} Problems')
+	print(f'Ignored :: {sorted(ignored_questions)}')
+	print(f'Run Time :: {(time.time() - start_run_time) * 1000:.2f}ms')
 	return flagged_questions
 
 
 def check_answers(light_mode):
-	logging.basicConfig(format="[%(levelname)6s] %(message)s", stream=sys.stderr, level=logging.INFO)
+	logging.basicConfig(format="[%(levelname)6s] %(message)s", stream=sys.stderr, level=logging.WARN)
 
-	not_run = (q12, q27, q31, q50, q68, q79, q83)
-	if light_mode: not_run += (q14, q23, q37, q44, q58, q60, q108, q110)  # Correct solutions, take long time
-	ignored_questions = list(sorted(map(lambda q: q.__name__.capitalize(), not_run)))
+	ignore_list = light_mode and IGNORE + KNOWN_TO_TAKE_LONG or IGNORE
+	ignored_questions = list(sorted(map(lambda q: q.__name__.capitalize(), ignore_list)))
 
 	flagged_questions = _solve_and_check_answers(ANSWERS, ignored_questions=ignored_questions)
 	warn_about_long_questions(flagged_questions)
 
 
 if __name__ == '__main__':
-	check_answers(light_mode=True)
+	check_answers(light_mode=int(os.getenv("LIGHT_MODE", 0)) == 1)

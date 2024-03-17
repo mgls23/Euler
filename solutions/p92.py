@@ -1,3 +1,4 @@
+import logging
 import math
 
 from solutions.euler.strings.number_to_string import MILLION, TEN
@@ -7,8 +8,9 @@ INPUT = TEN * MILLION
 
 
 def q92(upper_bound=INPUT):
-	_, chain_89 = memoised_chain(upper_bound)
-	return len(chain_89)
+	return most_optimal_answer()
+	# _, chain_89 = memoised_chain(upper_bound)
+	# return len(chain_89)
 
 
 def memoised_chain(upper_bound):
@@ -78,7 +80,7 @@ def most_optimal_answer():
 						next_[number_total] += result
 					except KeyError:
 						next_[number_total] = result
-			print(next_)
+			logging.info(next_)
 			last = next_
 
 		result = {1: 0, 89: 0}
@@ -93,10 +95,9 @@ def most_optimal_answer():
 
 
 if __name__ == '__main__':
-	import logging
 	import sys
 
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
-	# assert (timed_function(q92)() == 8581146)
+	assert (timed_function(q92)() == 8581146)
 	# assert (timed_function(most_optimal_answer)() == 8581146)
-	assert (timed_function(semi_optimal)() == 8581146)
+	# assert (timed_function(semi_optimal)() == 8581146)
