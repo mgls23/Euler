@@ -1,7 +1,7 @@
-jupyter
+# For Matrices & Graphs
 numpy
+networkx
+
+# These 2 can move to dev.txt
 scipy
 sympy
-
-# Testing
-pytest

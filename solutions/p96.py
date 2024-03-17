@@ -4,7 +4,7 @@ import sys
 from collections import Counter
 
 from solutions.euler.util.decorators import timed_function
-from solutions.euler.util.io import datafiles
+from solutions.euler.util.io_utils import datafiles
 
 ROW_SIZE = 3
 COL_SIZE = 3
@@ -132,7 +132,6 @@ class Solver:
 		return '\n'.join(string_output)
 
 
-@timed_function
 def q96():
 	digit_sum = 0
 
@@ -156,4 +155,4 @@ def q96():
 
 if __name__ == '__main__':
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
-	assert q96() == 24702
+	assert timed_function(q96)() == 24702

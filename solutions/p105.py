@@ -2,7 +2,7 @@ import logging
 from collections import defaultdict
 from itertools import combinations
 
-from solutions.euler.util.io import datafiles
+from solutions.euler.util.io_utils import datafiles
 
 SubsetType = list
 

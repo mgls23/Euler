@@ -1,6 +1,6 @@
 from solutions.euler.maths.matrix import debug_log_2d_matrix
 from solutions.euler.util.decorators import timed_function
-from solutions.euler.util.io import datafiles
+from solutions.euler.util.io_utils import datafiles
 
 NOT_CALCULATED = 2 ** 32 - 1  # Something arbitrarily big
 
