@@ -5,7 +5,7 @@ from solutions.euler.util.io_utils import datafiles
 
 
 def test_roman_numerals():
-	assert roman_numerals(1) == 1
+	assert roman_numerals('I') == 1
 
 
 def roman_numerals_optimal(number: int) -> int:

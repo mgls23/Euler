@@ -35,11 +35,14 @@ def calculate_number_of_divisors(n, prime_numbers, n_multiplier=1):
 	raise Exception(n)
 
 
-def phi(number, primes):
-	return _phi(number, *decompose_to_prime_powers(number, primes).keys())
+def euler_totient(number, primes):
+	return _euler_totient(number, *decompose_to_prime_powers(number, primes).keys())
 
 
-def _phi(number, *calculated_primes):
+def _euler_totient(number, *calculated_primes):
+	"""
+	Euler's totient function
+	"""
 	for prime_number in calculated_primes:
 		number *= 1 - Fraction(1, prime_number)
 

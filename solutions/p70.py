@@ -4,7 +4,7 @@ from fractions import Fraction
 from math import sqrt, ceil
 
 from solutions.euler.maths.prime import generate_to_sie
-from solutions.euler.maths.ungrouped import _phi
+from solutions.euler.maths.ungrouped import _euler_totient
 from solutions.euler.util.decorators import timed_function
 
 
@@ -35,7 +35,7 @@ def q70(given_number=10 ** 7):
 		number = prime1 * prime2
 		if number > given_number: continue
 
-		result = _phi(number, prime1, prime2)
+		result = _euler_totient(number, prime1, prime2)
 		if Counter(str(result)) == Counter(str(number)):
 			ratio = number / result
 			if ratio < minimum_ratio:
