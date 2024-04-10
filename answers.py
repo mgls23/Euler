@@ -33,6 +33,7 @@ from solutions.p70 import q70
 from solutions.p72 import q72
 from solutions.p77 import q77
 from solutions.p79 import q79
+from solutions.p80 import q80
 from solutions.p81 import q81
 from solutions.p82 import q82
 from solutions.p83 import q83
@@ -129,7 +130,7 @@ ANSWERS = {
 	q77: 71,
 
 	q79: 73162890,
-
+	q80: 40886,
 	q81: 427337,
 	q82: 260324,
 	q83: 425185,
