@@ -1,6 +1,6 @@
 -r requirements.txt
 
-# For easy built-in functions we can levearage. However, I should build them myself
+# For easy built-in functions we can leverage. However, I should build them myself
 scipy
 sympy
 
