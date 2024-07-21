@@ -20,7 +20,7 @@ from solutions.euler.maths.prime import (
 	is_prime,
 	is_truncable_prime,
 	generate_primes_in_digit_range,
-	is_prime_robin_miller, decompose_to_prime_powers,
+	is_prime_robin_miller, prime_factorize,
 )
 from solutions.euler.maths.triangle_numbers import (
 	pentagonal,
@@ -109,6 +109,24 @@ def q8():
 		'52963450',
 		13,
 	)
+
+
+def q12(min_divisor_count=500):
+	sensible_upper_bound = min_divisor_count ** 2
+	primes = generate_to_sie(sensible_upper_bound)
+
+	for n in range(1, sensible_upper_bound):
+		if n % 2 == 0:
+			# n is even
+			a = calculate_number_of_divisors(n // 2, primes)
+			b = calculate_number_of_divisors(n + 1, primes)
+		else:
+			# n is odd
+			a = calculate_number_of_divisors((n + 1) // 2, primes)
+			b = calculate_number_of_divisors(n, primes)
+
+		if (a * b) > min_divisor_count:
+			return (n * (n + 1)) // 2
 
 
 def q13():
@@ -410,7 +428,7 @@ def q35():
 	for prime in prime_numbers:
 		digits = list(str(prime))
 		circular_primes = {int(''.join(digits[i:] + digits[:i]))
-		                   for i in range(len(digits))}
+											 for i in range(len(digits))}
 
 		lowest_circular_primes = min(circular_primes)
 		if lowest_circular_primes not in lowests:
@@ -474,7 +492,7 @@ def q46():
 
 	def fits_goldbach_conjecture(candidate):
 		return any(math.sqrt((candidate - prime_number) / 2).is_integer()
-		           for prime_number in filter(candidate.__ge__, prime_numbers))
+							 for prime_number in filter(candidate.__ge__, prime_numbers))
 
 	previous_primality = True  # prime + 2*1**2 always fits goldbach_conjecture.
 	for number in range(9, upper_bound, 2):
@@ -627,7 +645,7 @@ def q66(max_value_d=1000):
 
 		d_y_squared = x ** 2 - 1
 
-		prime_powers = decompose_to_prime_powers(d_y_squared, prime_numbers)
+		prime_powers = prime_factorize(d_y_squared, prime_numbers)
 		if eligible_powers := [
 			prime_number
 			for prime_number, power in prime_powers.items()

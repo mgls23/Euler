@@ -1,14 +1,14 @@
 import logging
 import math
 
-import sympy
-
-from solutions.euler.maths.prime import is_prime, decompose_to_prime_powers
+from solutions.euler.maths.prime import is_prime, prime_factorize
 
 
 def sum_of_divisors(n, primes):
-	return math.prod([_sum_of_divisors(prime_number, power)
-	                  for prime_number, power in decompose_to_prime_powers(n, primes).items()])
+	return math.prod(
+		[_sum_of_divisors(prime_number, power)
+		 for prime_number, power in prime_factorize(n, primes).items()]
+	)
 
 
 def _sum_of_divisors(prime_number, power):
@@ -80,15 +80,6 @@ def generate_abundant_number(n, prime_powers):
 		return abundant_number
 
 	return -1
-
-
-def break_down(number):
-	# generate args for generate_abundant_number
-	factorised = sympy.factorint(number)
-	n = factorised.get(2, 0)
-	del factorised[2]
-
-	return n, factorised
 
 
 def multiply_out(prime_number, power):
