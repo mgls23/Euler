@@ -5,7 +5,11 @@ challenges.
 
 ## Requirements
 
-To run this project, you'll need the latest version of Python. Currently, this is Python 3.9 or above
+To run this project, you'll need the latest version of Python. Currently, this is Python 3.11 or above.
+
+### Python 3.11
+
+* walrus operator (:=)
 
 ### Python 3.9
 
@@ -20,7 +24,7 @@ To run this project, you'll need the latest version of Python. Currently, this i
 ## Technical Debt
 
 I used Project Euler to get better at programming, and this includes my early days of programming.
-There are a lot of legacy + ugly code I hdsdfasdfasdfen't got around to fixing.
+There are a lot of legacy + ugly code I haven't got around to fixing.
 
 I'll get around to re-writing all solutions in jupyter notebook. One-day.
 
