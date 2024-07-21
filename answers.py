@@ -46,7 +46,6 @@ from solutions.p96 import q96
 from solutions.p97 import q97
 from solutions.renewed.functional import *
 from solutions.renewed.simple import *
-from solutions.revisit.p12 import q12
 from solutions.revisit.p39 import q39
 from solutions.p0009 import q9
 
@@ -163,7 +162,7 @@ ANSWERS = {
 
 IGNORE = [
 	# Incorrect answers - fix them
-	q12, q27, q31, q50, q58, q68, q79, q82, q83, q97,
+	q27, q31, q50, q58, q68, q79, q82, q83, q97,
 	# Unacceptably long
 	q37,
 ]

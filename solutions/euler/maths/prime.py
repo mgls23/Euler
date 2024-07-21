@@ -92,8 +92,11 @@ def is_prime_robin_miller(n, k=2):
 	return True
 
 
-@memoised
-def is_prime(number):
+def is_prime(number: int):
+	""" Checks whether the given number is prime
+
+	Use sympy.isprime for better performance
+	"""
 	if number <= 1: return False
 	if number <= 3: return True
 	if (number % 2 == 0) or (number % 3 == 0): return False
@@ -126,7 +129,7 @@ def _benchmark_for_generate_sie(lower_range_digit=6, upper_range_digit=7):
 @timed_function
 def _benchmark_generate_by_robin_miller(lower_range_digit=5, upper_range_digit=6):
 	return [number for number in range(10 ** lower_range_digit, 10 ** upper_range_digit) if
-	        is_prime_robin_miller(number)]
+					is_prime_robin_miller(number)]
 
 
 if __name__ == '__main__':
@@ -137,27 +140,23 @@ if __name__ == '__main__':
 	_benchmark_generate_by_robin_miller(lower_range_digit=5, upper_range_digit=6)
 
 
-def decompose_to_prime_powers(number, primes=None):
-	""" Decomposes a given number into a set of prime number paired with
-	powers which multiplied out, gives the original number
+def prime_factorize(number: int, primes: list = None):
+	""" Decompose the given number into its prime divisors and their powers
 
-			Args
-			----
-					:param number: int
-							The given number to decompose
+	Args
+	----
+	:param number: int - The given number to decompose
+	:param primes: list - Prime numbers that does not exceed the number
 
-					:param primes: list
-							Prime numbers that does not exceed the number
-
-			Returns
-			-------
-					{
-							N1: P1,
-							N2: P2,
-							N3: P3,
-							...
-							Nm, Pm,
-					} ... (N1 ^ P1) * (N2 ^ P2) * ... = number
+	Returns
+	-------
+	{
+			p1: x1,
+			p2: x2,
+			p3: x3,
+			...
+			p(x): x(n)
+	} where (p1 ^ x1) * (p2 ^ x2) * ... = number
 	"""
 	assert number > 0
 	if number == 1: return {}

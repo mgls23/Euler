@@ -1,7 +1,7 @@
 from fractions import Fraction
 
 from solutions.euler.maths.multiplications import gcd as gcd
-from solutions.euler.maths.prime import decompose_to_prime_powers
+from solutions.euler.maths.prime import prime_factorize
 
 
 def slow_phi(number):
@@ -36,7 +36,7 @@ def calculate_number_of_divisors(n, prime_numbers, n_multiplier=1):
 
 
 def phi(number, primes):
-	return _phi(number, *decompose_to_prime_powers(number, primes).keys())
+	return _phi(number, *prime_factorize(number, primes).keys())
 
 
 def _phi(number, *calculated_primes):

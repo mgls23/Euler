@@ -1,5 +1,9 @@
 -r requirements.txt
 
+# These should have my own internal equivalents, but would be useful to have for quick scripting
+scipy
+sympy
+
 # Visualising internal data is not needed to run Euler itself
 deepdiff
 matplotlib
