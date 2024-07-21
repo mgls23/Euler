@@ -2,6 +2,9 @@
 numpy
 networkx
 
+# For visualisation of differences
+deepdiff
+
 # These 2 can move to dev.txt
 scipy
 sympy
