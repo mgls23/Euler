@@ -1,5 +1,3 @@
-from sympy import totient
-
 from solutions.euler.util.decorators import timed_function
 
 
@@ -25,6 +23,8 @@ def q72(number=1000000):
 
 def brute_force(number):
 	# for i in range(2, number): logging.debug(i, totient(i))
+
+	from sympy import totient
 	return sum(map(totient, range(2, number + 1)))
 
 
