@@ -1,10 +1,7 @@
 -r requirements.txt
 
-# For easy built-in functions we can levearage. However, I should build them myself
-scipy
-sympy
-
-# Visualising graphs are not needed elsewhere
+# Visualising internal data is not needed to run Euler itself
+deepdiff
 matplotlib
 
 # Jupyter notebooks are not needed for the sake of tests

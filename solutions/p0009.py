@@ -1,7 +1,7 @@
 import logging
 
 
-def q9_improved(perimeter=1000):
+def q9(perimeter=1000):
 	min_c, max_c = perimeter // 3, perimeter // 2
 	logging.debug("min_c=%s, max_c=%s", min_c, max_c)
 
@@ -17,33 +17,6 @@ def q9_improved(perimeter=1000):
 				return a * b * c
 
 	raise ValueError("No solution found")
-
-
-def q9_adapted_to_hackerrank(perimeter=1000):
-	""" This approach times out because of the 2 for-loops (which makes the solution O(a * c))
-
-	The improved version of this solution (accepted by HackerRank) can be found in online, explained in p009.ipynb
-	"""
-	if perimeter % 2 != 0:
-		return -1
-
-	max_multiplier = -1
-
-	min_c, max_c = perimeter // 3, perimeter // 2
-	logging.debug("min_c=%s, max_c=%s", min_c, max_c)
-
-	for c in range(min_c, max_c + 1):
-		min_a, max_a = perimeter - (2 * c) + 1, min(perimeter // 3, (perimeter - c) // 2)
-		logging.debug("min_a=%s, max_a=%s", min_a, max_a)
-
-		for a in range(min_a, max_a + 1):
-			b = perimeter - a - c
-
-			if a * a + b * b == c * c:
-				logging.info("S=%s::%s", perimeter, (a, b, c))
-				max_multiplier = max(max_multiplier, a * b * c)
-
-	return max_multiplier
 
 
 def sieve_of_factors(upper_bound: int):
@@ -99,8 +72,4 @@ if __name__ == '__main__':
 
 	log_format = '[%(levelname)s] %(asctime)s (%(name)s) %(pathname)s:%(lineno)d::%(funcName)s - %(message)s'
 	logging.basicConfig(stream=sys.stderr, level=logging.INFO, format=log_format)
-	# timed_function(test_q9)()
-	assert timed_function(q9_improved)() == 31875000
-	# print(list(generate_coprime_pairs(1, 100)))
-
-	# print(euclid_formula(50))
+	assert timed_function(q9)() == 31875000
