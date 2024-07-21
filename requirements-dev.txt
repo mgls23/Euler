@@ -1,9 +1,5 @@
 -r requirements.txt
 
-# For easy built-in functions we can leverage. However, I should build them myself
-scipy
-sympy
-
 # Visualising internal data is not needed to run Euler itself
 deepdiff
 matplotlib
