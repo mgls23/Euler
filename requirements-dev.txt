@@ -4,7 +4,8 @@
 scipy
 sympy
 
-# Visualising graphs are not needed elsewhere
+# Visualising internal data is not needed to run Euler itself
+deepdiff
 matplotlib
 
 # Jupyter notebooks are not needed for the sake of tests
