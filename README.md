@@ -5,7 +5,11 @@ challenges.
 
 ## Requirements
 
-To run this project, you'll need the latest version of Python. Currently, this is Python 3.9 or above
+To run this project, you'll need the latest version of Python. Currently, this is Python 3.11 or above.
+
+### Python 3.11
+
+* walrus operator (:=)
 
 ### Python 3.9
 
