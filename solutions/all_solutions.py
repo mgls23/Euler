@@ -365,11 +365,6 @@ def q30(power=5):
 	return sum(answers)
 
 
-def q31():
-	from solutions.euler.coin_sums import coin_sums
-	return coin_sums(coin_total=200, coins_available=[1, 2, 5, 10, 20, 50, 100, 200])
-
-
 def q33():
 	answers = set()
 	for a, b in itertools.product(set(range(1, 10)), repeat=2):

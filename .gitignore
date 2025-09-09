@@ -2,3 +2,7 @@
 venv
 .idea
 .ipynb_checkpoints
+
+# Non-negotiable
+.claude
+.DS_Store
