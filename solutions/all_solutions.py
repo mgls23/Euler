@@ -284,38 +284,6 @@ def q25():
 	return 4782
 
 
-def q26():
-	""" Q26 :: Reciprocal cycles [https://projecteuler.net/problem=26]
-
-	Find value of d for which 1/d contains the longest recurring cycle
-			in its decimal fraction part
-	"""
-
-	def string_division(divisor, dividend=1):
-		dividends = []
-		quotients = []
-
-		while dividend > 0:
-			if dividend >= divisor:
-				for start, number in enumerate(dividends):
-					if number == dividend:
-						return len(quotients) - start
-
-				quotients.append(int(dividend / divisor))
-				dividends.append(dividend)
-				dividend %= divisor
-
-			else:
-				quotients.append(0)
-				dividends.append(dividend)
-
-			dividend *= 10
-
-		return 0
-
-	return max(generate_to_sie(1000), key=lambda number: string_division(number))
-
-
 def q27():
 	upper_bound = 1000
 	primes = generate_to_sie(upper_bound)

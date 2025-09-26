@@ -1,5 +1,14 @@
 import os
 import time
+from typing import Dict, Tuple, List
+
+import yaml
+from colorama import init, Fore, Style
+
+from solutions.p26 import q26
+
+# Initialize colorama for colored output
+init(autoreset=True)
 
 from solutions.all_solutions import *
 from solutions.p105 import q105
@@ -167,48 +176,177 @@ IGNORE = [
 	# Unacceptably long
 	q37,
 ]
+
 KNOWN_TO_TAKE_LONG = [
 	q14, q23, q44, q60, q96, q108, q110, q112,
 ]
 
 
-def warn_about_long_questions(flagged_questions):
-	if flagged_questions: logging.warning('FLAGGED')
-	for flagged_question in flagged_questions: logging.warning(flagged_question)
+def load_benchmarks(filepath: str = "performance-benchmarks.yaml") -> Dict:
+	"""Load performance benchmarks from YAML file."""
+	try:
+		with open(filepath, 'r') as f:
+			return yaml.safe_load(f)
+
+	except FileNotFoundError:
+		logging.warning(f"Benchmark file {filepath} not found. Using default thresholds.")
+		return {
+			'global_thresholds': {
+				'elite': 10,
+				'good': 100,
+				'acceptable': 1000
+			},
+			'problems': {}
+		}
 
 
-def _solve_and_check_answers(my_implementations, ignored_questions):
+def get_performance_category(time_ms: float, problem_num: int, benchmarks: Dict) -> Tuple[str, Dict]:
+	"""Determine performance category for a given solution time."""
+	# Extract problem number from function name (e.g., q1 -> 1)
+	if problem_num in benchmarks['problems']:
+		thresholds = benchmarks['problems'][problem_num]
+	else:
+		thresholds = benchmarks['global_thresholds']
+
+	if time_ms <= thresholds['elite']:
+		return 'ELITE', thresholds
+	elif time_ms <= thresholds['good']:
+		return 'GOOD', thresholds
+	elif time_ms <= thresholds['acceptable']:
+		return 'ACCEPTABLE', thresholds
+	else:
+		return 'NEEDS_OPTIMIZATION', thresholds
+
+
+def format_time_with_color(time_ms: float, category: str) -> str:
+	"""Format time with appropriate color based on performance category."""
+	time_str = f"{time_ms:06.2f}ms"
+
+	if category == 'ELITE':
+		return f"{Fore.GREEN}{time_str}{Style.RESET_ALL} ⚡"
+	elif category == 'GOOD':
+		return f"{Fore.CYAN}{time_str}{Style.RESET_ALL} ✓"
+	elif category == 'ACCEPTABLE':
+		return f"{Fore.YELLOW}{time_str}{Style.RESET_ALL} ⚠"
+	else:  # NEEDS_OPTIMIZATION
+		return f"{Fore.RED}{time_str}{Style.RESET_ALL} ✗"
+
+
+def print_performance_summary(performance_stats: Dict[str, List]):
+	"""Print a summary of performance statistics."""
+	print("\n" + "=" * 60)
+	print("PERFORMANCE SUMMARY")
+	print("=" * 60)
+
+	total = sum(len(v) for v in performance_stats.values())
+
+	if performance_stats['ELITE']:
+		print(f"{Fore.GREEN}⚡ ELITE ({len(performance_stats['ELITE'])}/{total}):{Style.RESET_ALL}")
+		for problem, time_ms in performance_stats['ELITE']:
+			print(f"   {problem}: {time_ms:.2f}ms")
+
+	if performance_stats['GOOD']:
+		print(f"{Fore.CYAN}✓ GOOD ({len(performance_stats['GOOD'])}/{total}):{Style.RESET_ALL}")
+		for problem, time_ms in performance_stats['GOOD']:
+			print(f"   {problem}: {time_ms:.2f}ms")
+
+	if performance_stats['ACCEPTABLE']:
+		print(f"{Fore.YELLOW}⚠ ACCEPTABLE ({len(performance_stats['ACCEPTABLE'])}/{total}):{Style.RESET_ALL}")
+		for problem, time_ms in performance_stats['ACCEPTABLE']:
+			print(f"   {problem}: {time_ms:.2f}ms")
+
+	if performance_stats['NEEDS_OPTIMIZATION']:
+		print(f"{Fore.RED}✗ NEEDS OPTIMIZATION ({len(performance_stats['NEEDS_OPTIMIZATION'])}/{total}):{Style.RESET_ALL}")
+		for problem, time_ms, thresholds in performance_stats['NEEDS_OPTIMIZATION']:
+			print(f"   {problem}: {time_ms:.2f}ms (target: <{thresholds['acceptable']}ms)")
+
+	# Performance score
+	elite_score = len(performance_stats['ELITE']) * 3
+	good_score = len(performance_stats['GOOD']) * 2
+	acceptable_score = len(performance_stats['ACCEPTABLE']) * 1
+	max_score = total * 3
+	actual_score = elite_score + good_score + acceptable_score
+
+	percentage = (actual_score / max_score * 100) if max_score > 0 else 0
+	print(f"\n{Fore.MAGENTA}Performance Score: {actual_score}/{max_score} ({percentage:.1f}%){Style.RESET_ALL}")
+
+
+def _solve_and_check_answers(my_implementations, ignored_questions, benchmarks):
 	tested_questions_count = 0
 	flagged_questions = []
+	performance_stats = {
+		'ELITE': [],
+		'GOOD': [],
+		'ACCEPTABLE': [],
+		'NEEDS_OPTIMIZATION': []
+	}
 	start_run_time = time.time()
 
 	for question_number, answer in my_implementations.items():
 		question_name = question_number.__name__.capitalize()
-		if question_name in ignored_questions: continue
-		start_question_time = time.time()
+		if question_name in ignored_questions:
+			continue
 
+		# Extract problem number for benchmark lookup
+		problem_num = int(question_name[1:])  # Remove 'Q' prefix
+
+		start_question_time = time.time()
 		solution = int(question_number())
 		assert solution == answer, f'{question_name}::{solution} != {answer}'
 
 		question_time_taken = (time.time() - start_question_time) * 1000
-		print(f'Solved {question_name} in {question_time_taken:06.2f}ms')
 
-		if question_time_taken > 1000: flagged_questions.append((question_name, question_time_taken))
+		# Get performance category
+		category, thresholds = get_performance_category(question_time_taken, problem_num, benchmarks)
+
+		# Format and print with color
+		formatted_time = format_time_with_color(question_time_taken, category)
+
+		# Add notes if available
+		notes = ""
+		if problem_num in benchmarks['problems'] and 'notes' in benchmarks['problems'][problem_num]:
+			notes = f" - {benchmarks['problems'][problem_num]['notes']}"
+
+		print(f'Solved {question_name} in {formatted_time}{notes}')
+
+		# Track performance statistics
+		if category == 'NEEDS_OPTIMIZATION':
+			performance_stats[category].append((question_name, question_time_taken, thresholds))
+			flagged_questions.append((question_name, question_time_taken))
+		else:
+			performance_stats[category].append((question_name, question_time_taken))
+
 		tested_questions_count += 1
 
-	print(f'Checked {tested_questions_count} Problems')
+	print(f'\nChecked {tested_questions_count} Problems')
 	print(f'Ignored :: {sorted(ignored_questions)}')
 	print(f'Run Time :: {(time.time() - start_run_time) * 1000:.2f}ms')
+
+	# Print performance summary
+	print_performance_summary(performance_stats)
+
 	return flagged_questions
+
+
+def warn_about_long_questions(flagged_questions):
+	if flagged_questions:
+		print(f"\n{Fore.RED}{'=' * 60}")
+		print(f"⚠️  PERFORMANCE ISSUES DETECTED")
+		print(f"{'=' * 60}{Style.RESET_ALL}")
+		for question, time_ms in flagged_questions:
+			print(f"{Fore.RED}   {question}: {time_ms:.2f}ms - NEEDS OPTIMIZATION{Style.RESET_ALL}")
 
 
 def check_answers(light_mode):
 	logging.basicConfig(format="[%(levelname)6s] %(message)s", stream=sys.stderr, level=logging.WARN)
 
+	# Load benchmarks
+	benchmarks = load_benchmarks()
+
 	ignore_list = light_mode and IGNORE + KNOWN_TO_TAKE_LONG or IGNORE
 	ignored_questions = list(sorted(map(lambda q: q.__name__.capitalize(), ignore_list)))
 
-	flagged_questions = _solve_and_check_answers(ANSWERS, ignored_questions=ignored_questions)
+	flagged_questions = _solve_and_check_answers(ANSWERS, ignored_questions=ignored_questions, benchmarks=benchmarks)
 	warn_about_long_questions(flagged_questions)
 
 

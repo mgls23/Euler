@@ -1,0 +1,618 @@
+# Project Euler Performance Benchmarks
+# All times in milliseconds
+# Categories: Elite, Good, Acceptable, Needs Optimization
+
+metadata:
+  description: "Performance benchmarks for Project Euler solutions"
+  last_updated: "2025-01-09"
+  author: "Tae"
+  
+# Global thresholds (default for uncategorized problems)
+global_thresholds:
+  elite: 10         # < 10ms
+  good: 100         # < 100ms  
+  acceptable: 1000  # < 1s
+  # > 1s = needs optimization
+
+# Problem-specific benchmarks
+# Format: problem_number: {elite, good, acceptable}
+problems:
+  1:
+    elite: 0.5
+    good: 1
+    acceptable: 5
+    notes: "Simple arithmetic, should be instant"
+    
+  2:
+    elite: 0.5
+    good: 1
+    acceptable: 5
+    notes: "Fibonacci with memoization"
+    
+  3:
+    elite: 50
+    good: 200
+    acceptable: 500
+    notes: "Prime factorization of large number"
+    
+  4:
+    elite: 30
+    good: 100
+    acceptable: 300
+    notes: "Palindrome check with string operations"
+    
+  5:
+    elite: 1
+    good: 5
+    acceptable: 10
+    notes: "GCD/LCM calculations"
+    
+  6:
+    elite: 0.1
+    good: 0.5
+    acceptable: 1
+    notes: "Simple formula"
+    
+  7:
+    elite: 20
+    good: 50
+    acceptable: 200
+    notes: "10001st prime"
+    
+  8:
+    elite: 2
+    good: 10
+    acceptable: 50
+    notes: "String sliding window"
+    
+  9:
+    elite: 5
+    good: 20
+    acceptable: 100
+    notes: "Pythagorean triplet search"
+    
+  10:
+    elite: 200
+    good: 500
+    acceptable: 2000
+    notes: "Sum of primes below 2 million"
+    
+  11:
+    elite: 5
+    good: 20
+    acceptable: 50
+    notes: "Grid traversal"
+    
+  12:
+    elite: 100
+    good: 500
+    acceptable: 2000
+    notes: "Triangle number with many divisors"
+    
+  13:
+    elite: 1
+    good: 5
+    acceptable: 10
+    notes: "Large number addition"
+    
+  14:
+    elite: 500
+    good: 2000
+    acceptable: 5000
+    notes: "Collatz sequence - cache friendly"
+    
+  15:
+    elite: 0.5
+    good: 2
+    acceptable: 10
+    notes: "Combinatorics formula"
+    
+  16:
+    elite: 0.5
+    good: 2
+    acceptable: 10
+    notes: "Power digit sum"
+    
+  17:
+    elite: 10
+    good: 50
+    acceptable: 200
+    notes: "Number to words conversion"
+    
+  18:
+    elite: 5
+    good: 20
+    acceptable: 50
+    notes: "Dynamic programming path sum"
+    
+  19:
+    elite: 2
+    good: 10
+    acceptable: 50
+    notes: "Calendar calculation"
+    
+  20:
+    elite: 0.5
+    good: 2
+    acceptable: 10
+    notes: "Factorial digit sum"
+    
+  21:
+    elite: 50
+    good: 200
+    acceptable: 1000
+    notes: "Amicable numbers search"
+    
+  22:
+    elite: 20
+    good: 100
+    acceptable: 500
+    notes: "Name scoring with file I/O"
+    
+  23:
+    elite: 200
+    good: 1000
+    acceptable: 5000
+    notes: "Abundant number sums"
+    
+  24:
+    elite: 50
+    good: 200
+    acceptable: 1000
+    notes: "Lexicographic permutations"
+    
+  25:
+    elite: 5
+    good: 20
+    acceptable: 100
+    notes: "1000-digit Fibonacci"
+    
+  26:
+    elite: 20
+    good: 100
+    acceptable: 500
+    notes: "Recurring cycle detection"
+    
+  27:
+    elite: 100
+    good: 500
+    acceptable: 2000
+    notes: "Quadratic primes"
+    
+  28:
+    elite: 1
+    good: 5
+    acceptable: 20
+    notes: "Number spiral diagonals"
+    
+  29:
+    elite: 2
+    good: 10
+    acceptable: 50
+    notes: "Distinct powers with sets"
+    
+  30:
+    elite: 50
+    good: 200
+    acceptable: 1000
+    notes: "Fifth power digit sum"
+    
+  31:
+    elite: 5
+    good: 20
+    acceptable: 100
+    notes: "Coin sums dynamic programming"
+    
+  32:
+    elite: 20
+    good: 100
+    acceptable: 500
+    notes: "Pandigital products"
+    
+  33:
+    elite: 5
+    good: 20
+    acceptable: 100
+    notes: "Digit cancelling fractions"
+    
+  34:
+    elite: 100
+    good: 500
+    acceptable: 2000
+    notes: "Digit factorials"
+    
+  35:
+    elite: 200
+    good: 1000
+    acceptable: 5000
+    notes: "Circular primes"
+    
+  36:
+    elite: 50
+    good: 200
+    acceptable: 1000
+    notes: "Double-base palindromes"
+    
+  37:
+    elite: 100
+    good: 500
+    acceptable: 2000
+    notes: "Truncatable primes"
+    
+  38:
+    elite: 10
+    good: 50
+    acceptable: 200
+    notes: "Pandigital multiples"
+    
+  39:
+    elite: 100
+    good: 500
+    acceptable: 2000
+    notes: "Integer right triangles"
+    
+  40:
+    elite: 5
+    good: 20
+    acceptable: 100
+    notes: "Champernowne's constant"
+    
+  41:
+    elite: 50
+    good: 200
+    acceptable: 1000
+    notes: "Pandigital prime"
+    
+  42:
+    elite: 10
+    good: 50
+    acceptable: 200
+    notes: "Coded triangle numbers"
+    
+  43:
+    elite: 200
+    good: 1000
+    acceptable: 5000
+    notes: "Sub-string divisibility"
+    
+  44:
+    elite: 500
+    good: 2000
+    acceptable: 10000
+    notes: "Pentagon numbers"
+    
+  45:
+    elite: 20
+    good: 100
+    acceptable: 500
+    notes: "Triangular, pentagonal, hexagonal"
+    
+  46:
+    elite: 20
+    good: 100
+    acceptable: 500
+    notes: "Goldbach's other conjecture"
+    
+  47:
+    elite: 200
+    good: 1000
+    acceptable: 5000
+    notes: "Distinct primes factors"
+    
+  48:
+    elite: 2
+    good: 10
+    acceptable: 50
+    notes: "Self powers modulo"
+    
+  49:
+    elite: 50
+    good: 200
+    acceptable: 1000
+    notes: "Prime permutations"
+    
+  50:
+    elite: 100
+    good: 500
+    acceptable: 2000
+    notes: "Consecutive prime sum"
+    
+  51:
+    elite: 200
+    good: 1000
+    acceptable: 5000
+    notes: "Prime digit replacements"
+    
+  52:
+    elite: 50
+    good: 200
+    acceptable: 1000
+    notes: "Permuted multiples"
+    
+  53:
+    elite: 10
+    good: 50
+    acceptable: 200
+    notes: "Combinatoric selections"
+    
+  54:
+    elite: 50
+    good: 200
+    acceptable: 1000
+    notes: "Poker hands"
+    
+  55:
+    elite: 100
+    good: 500
+    acceptable: 2000
+    notes: "Lychrel numbers"
+    
+  56:
+    elite: 50
+    good: 200
+    acceptable: 1000
+    notes: "Powerful digit sum"
+    
+  57:
+    elite: 10
+    good: 50
+    acceptable: 200
+    notes: "Square root convergents"
+    
+  58:
+    elite: 200
+    good: 1000
+    acceptable: 5000
+    notes: "Spiral primes"
+    
+  59:
+    elite: 20
+    good: 100
+    acceptable: 500
+    notes: "XOR decryption"
+    
+  60:
+    elite: 500
+    good: 2000
+    acceptable: 10000
+    notes: "Prime pair sets - complex search"
+    
+  61:
+    elite: 50
+    good: 200
+    acceptable: 1000
+    notes: "Cyclical figurate numbers"
+    
+  62:
+    elite: 100
+    good: 500
+    acceptable: 2000
+    notes: "Cubic permutations"
+    
+  63:
+    elite: 5
+    good: 20
+    acceptable: 100
+    notes: "Powerful digit counts"
+    
+  64:
+    elite: 50
+    good: 200
+    acceptable: 1000
+    notes: "Odd period square roots"
+    
+  65:
+    elite: 5
+    good: 20
+    acceptable: 100
+    notes: "Convergents of e"
+    
+  66:
+    elite: 50
+    good: 200
+    acceptable: 1000
+    notes: "Diophantine equation"
+    
+  67:
+    elite: 10
+    good: 50
+    acceptable: 200
+    notes: "Maximum path sum II"
+    
+  68:
+    elite: 20
+    good: 100
+    acceptable: 500
+    notes: "Magic 5-gon ring"
+    
+  69:
+    elite: 20
+    good: 100
+    acceptable: 500
+    notes: "Totient maximum"
+    
+  70:
+    elite: 500
+    good: 2000
+    acceptable: 10000
+    notes: "Totient permutation"
+    
+  71:
+    elite: 100
+    good: 500
+    acceptable: 2000
+    notes: "Ordered fractions"
+    
+  72:
+    elite: 200
+    good: 1000
+    acceptable: 5000
+    notes: "Counting fractions"
+    
+  73:
+    elite: 500
+    good: 2000
+    acceptable: 10000
+    notes: "Counting fractions in range"
+    
+  74:
+    elite: 500
+    good: 2000
+    acceptable: 10000
+    notes: "Digit factorial chains"
+    
+  75:
+    elite: 200
+    good: 1000
+    acceptable: 5000
+    notes: "Singular integer right triangles"
+    
+  76:
+    elite: 5
+    good: 20
+    acceptable: 100
+    notes: "Counting summations"
+    
+  77:
+    elite: 20
+    good: 100
+    acceptable: 500
+    notes: "Prime summations"
+    
+  78:
+    elite: 500
+    good: 2000
+    acceptable: 10000
+    notes: "Coin partitions"
+    
+  79:
+    elite: 10
+    good: 50
+    acceptable: 200
+    notes: "Passcode derivation"
+    
+  80:
+    elite: 50
+    good: 200
+    acceptable: 1000
+    notes: "Square root digital expansion"
+    
+  81:
+    elite: 5
+    good: 20
+    acceptable: 100
+    notes: "Path sum: two ways"
+    
+  82:
+    elite: 10
+    good: 50
+    acceptable: 200
+    notes: "Path sum: three ways"
+    
+  83:
+    elite: 20
+    good: 100
+    acceptable: 500
+    notes: "Path sum: four ways"
+    
+  84:
+    elite: 100
+    good: 500
+    acceptable: 2000
+    notes: "Monopoly odds simulation"
+    
+  85:
+    elite: 100
+    good: 500
+    acceptable: 2000
+    notes: "Counting rectangles"
+    
+  86:
+    elite: 200
+    good: 1000
+    acceptable: 5000
+    notes: "Cuboid route"
+    
+  87:
+    elite: 500
+    good: 2000
+    acceptable: 10000
+    notes: "Prime power triples"
+    
+  88:
+    elite: 500
+    good: 2000
+    acceptable: 10000
+    notes: "Product-sum numbers"
+    
+  89:
+    elite: 10
+    good: 50
+    acceptable: 200
+    notes: "Roman numerals"
+    
+  90:
+    elite: 50
+    good: 200
+    acceptable: 1000
+    notes: "Cube digit pairs"
+    
+  91:
+    elite: 2
+    good: 10
+    acceptable: 50
+    notes: "Right triangles with integer coordinates"
+    
+  92:
+    elite: 500
+    good: 2000
+    acceptable: 10000
+    notes: "Square digit chains"
+    
+  93:
+    elite: 200
+    good: 1000
+    acceptable: 5000
+    notes: "Arithmetic expressions"
+    
+  94:
+    elite: 100
+    good: 500
+    acceptable: 2000
+    notes: "Almost equilateral triangles"
+    
+  95:
+    elite: 500
+    good: 2000
+    acceptable: 10000
+    notes: "Amicable chains"
+    
+  96:
+    elite: 200
+    good: 1000
+    acceptable: 5000
+    notes: "Su Doku solver"
+    
+  97:
+    elite: 10
+    good: 50
+    acceptable: 200
+    notes: "Large non-Mersenne prime"
+    
+  98:
+    elite: 500
+    good: 2000
+    acceptable: 10000
+    notes: "Anagramic squares"
+    
+  99:
+    elite: 10
+    good: 50
+    acceptable: 200
+    notes: "Largest exponential"
+    
+  100:
+    elite: 5
+    good: 20
+    acceptable: 100
+    notes: "Arranged probability"
