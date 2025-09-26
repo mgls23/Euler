@@ -5,6 +5,8 @@ from typing import Dict, Tuple, List
 import yaml
 from colorama import init, Fore, Style
 
+from solutions.euler.p0014 import q14
+from solutions.p0016 import q16
 from solutions.p26 import q26
 
 # Initialize colorama for colored output
@@ -182,7 +184,7 @@ KNOWN_TO_TAKE_LONG = [
 ]
 
 
-def load_benchmarks(filepath: str = "performance-benchmarks.yaml") -> Dict:
+def load_benchmarks(filepath: str = "performance-benchmarks-modern.yaml") -> Dict:
 	"""Load performance benchmarks from YAML file."""
 	try:
 		with open(filepath, 'r') as f:
@@ -256,7 +258,8 @@ def print_performance_summary(performance_stats: Dict[str, List]):
 			print(f"   {problem}: {time_ms:.2f}ms")
 
 	if performance_stats['NEEDS_OPTIMIZATION']:
-		print(f"{Fore.RED}✗ NEEDS OPTIMIZATION ({len(performance_stats['NEEDS_OPTIMIZATION'])}/{total}):{Style.RESET_ALL}")
+		print(
+			f"{Fore.RED}✗ NEEDS OPTIMIZATION ({len(performance_stats['NEEDS_OPTIMIZATION'])}/{total}):{Style.RESET_ALL}")
 		for problem, time_ms, thresholds in performance_stats['NEEDS_OPTIMIZATION']:
 			print(f"   {problem}: {time_ms:.2f}ms (target: <{thresholds['acceptable']}ms)")
 

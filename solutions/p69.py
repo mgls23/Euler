@@ -2,14 +2,14 @@ from functools import reduce
 from math import sqrt, ceil
 from operator import mul
 
-from solutions.euler.maths.prime import generate_to_sie
+from solutions.euler.maths.prime import generate_to_sieve
 from solutions.euler.maths.ungrouped import phi
 from solutions.euler.util.decorators import timed_function
 
 
 def q69(upper_limit=10 ** 6):
-	prime_numbers = generate_to_sie(ceil(sqrt(upper_limit)))
-	highly_divisible_number = reduce(mul, generate_to_sie(17 + 1))
+	prime_numbers = generate_to_sieve(ceil(sqrt(upper_limit)))
+	highly_divisible_number = reduce(mul, generate_to_sieve(17 + 1))
 
 	maximum_ratio = 1
 	number_at_maximum = 1

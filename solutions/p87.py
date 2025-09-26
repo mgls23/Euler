@@ -1,10 +1,10 @@
-from solutions.euler.maths.prime import generate_to_sie
+from solutions.euler.maths.prime import generate_to_sieve
 from solutions.euler.strings.number_to_string import MILLION
 from solutions.euler.util.decorators import timed_function
 
 
 def q87(upper_bound=50 * MILLION):
-	possible_primes = generate_to_sie(int((upper_bound - 2 ** 3 - 2 ** 4) ** 0.5))
+	possible_primes = generate_to_sieve(int((upper_bound - 2 ** 3 - 2 ** 4) ** 0.5))
 	prime_power_triple = list()
 
 	for fourth_power in possible_primes:

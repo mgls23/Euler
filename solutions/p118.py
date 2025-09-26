@@ -1,7 +1,7 @@
 import logging
 from math import prod
 
-from solutions.euler.maths.prime import generate_to_sie
+from solutions.euler.maths.prime import generate_to_sieve
 
 
 def find_pandigital_combinations(numbers: dict):
@@ -35,11 +35,11 @@ def wrong_approach_q118():
 	 - assumption was that the biggest pandigital number is 7652413 (as per Q41)
 	    => However, this is not true. This is because what Q41 gives me is the largest consecutive pandigital primes
 	    => There are definitely 8-digit pandigital prime numbers that can form a set. Therefore, this is wrong
-	        and assumed to be impossible approach. (I try to avoid cases where I have to call generate_to_sie > 10 ** 7)
+	        and assumed to be impossible approach. (I try to avoid cases where I have to call generate_to_sieve > 10 ** 7)
 	"""
 	pandigital_numbers = {}
 
-	prime_numbers = generate_to_sie(7652413 + 1)
+	prime_numbers = generate_to_sieve(7652413 + 1)
 	for prime_number in map(str, prime_numbers):
 		unique_digits = set(prime_number)
 		if '0' not in unique_digits and len(prime_number) == len(unique_digits):

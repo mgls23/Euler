@@ -45,14 +45,14 @@ class PrimeGenerator:
 
 
 def generate_primes_in_range(lower_limit, upper_limit):
-	return filter(lambda n: n >= lower_limit, generate_to_sie(upper_limit))
+	return filter(lambda n: n >= lower_limit, generate_to_sieve(upper_limit))
 
 
 def generate_primes_in_digit_range(lower_limit_digit, upper_limit_digit):
 	return generate_primes_in_range(10 ** lower_limit_digit, 10 ** upper_limit_digit)
 
 
-def generate_to_sie(upper_bound):
+def generate_to_sieve(upper_bound):
 	""" Prime numbers generation using Sieve of Eratosthenes [https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes]"""
 	prime_numbers = []
 	considered = [True] * upper_bound
@@ -160,7 +160,7 @@ def prime_factorize(number: int, primes: list = None):
 	"""
 	assert number > 0
 	if number == 1: return {}
-	if primes is None: primes = generate_to_sie(number)
+	if primes is None: primes = generate_to_sieve(number)
 
 	prime_composition = collections.defaultdict(int)
 	for prime_number in primes:

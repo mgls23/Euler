@@ -1,12 +1,12 @@
 import logging
 from itertools import combinations
 
-from solutions.euler.maths.prime import generate_to_sie
+from solutions.euler.maths.prime import generate_to_sieve
 from solutions.euler.util.decorators import timed_function
 
 
 def q51() -> int:
-	prime_numbers = generate_to_sie(10 ** 7)
+	prime_numbers = generate_to_sieve(10 ** 7)
 
 	explored = 10
 	dictionary = {}
@@ -14,9 +14,10 @@ def q51() -> int:
 		if prime_number >= explored:
 			explored *= 10
 			max_family = max(dictionary, key=lambda key: len(dictionary[key]))
-			# print('MAX', max_format, dictionary[max_format])
+			# print('MAX', max_family, dictionary[max_family])
 			if len(dictionary[max_family]) >= 8:
 				return int(max_family.replace('X', dictionary[max_family][0]))
+
 			dictionary.clear()
 
 		digits = list(str(prime_number))

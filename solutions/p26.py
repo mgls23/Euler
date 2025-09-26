@@ -1,7 +1,7 @@
 import logging
 import sys
 
-from solutions.euler.maths.prime import generate_to_sie
+from solutions.euler.maths.prime import generate_to_sieve
 from solutions.euler.util.decorators import timed_function
 
 
@@ -63,13 +63,13 @@ def q26():
 		# No recurring cycle found
 		return 0
 
-	return max(generate_to_sie(1000), key=lambda number: string_division(1, number))
+	return max(generate_to_sieve(1000), key=lambda number: string_division(1, number))
 
 
 if __name__ == '__main__':
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
-	for prime in generate_to_sie(100):
+	for prime in generate_to_sieve(100):
 		_string_division_verbose(1, prime)
 
 	assert (timed_function(q26)() == 983)

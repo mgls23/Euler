@@ -16,7 +16,7 @@ from solutions.euler.maths.multiplications import (
 )
 from solutions.euler.maths.palindromes import is_palindrome
 from solutions.euler.maths.prime import (
-	generate_to_sie,
+	generate_to_sieve,
 	is_prime,
 	is_truncable_prime,
 	generate_primes_in_digit_range,
@@ -113,7 +113,7 @@ def q8():
 
 def q12(min_divisor_count=500):
 	sensible_upper_bound = min_divisor_count ** 2
-	primes = generate_to_sie(sensible_upper_bound)
+	primes = generate_to_sieve(sensible_upper_bound)
 
 	for n in range(1, sensible_upper_bound):
 		if n % 2 == 0:
@@ -142,25 +142,6 @@ def q13():
 		return first_n_digits_of_sum(10, numbers)
 
 
-def q14():
-	""" Q14 :: Longest Collatz sequence [https://projecteuler.net/problem=14]
-
-	Which starting number, under one million, produces the longest chain?
-	"""
-	from solutions.euler.longest_collatz_sequence import collatz_length
-
-	# This cannot be speed-up further without using Cython
-	max_sequence_length = max_collatz_number = 0
-
-	for number in range(1, 1000000):
-		sequence_length = collatz_length(number)
-		if max_sequence_length < sequence_length:
-			max_sequence_length = sequence_length
-			max_collatz_number = number
-
-	return max_collatz_number
-
-
 def q15(n=20):
 	""" Triangle number with 'various degrees'
 
@@ -179,31 +160,6 @@ def q15(n=20):
 			paths[index] += paths[index - 1]
 
 	return paths[-1]
-
-
-def q16():
-	""" Q16 :: Digit of 2^1000"""
-	# Do not use this method of digit sum - it's much faster to use
-	#   power and digit_sum_of_number - it's for the sake of question
-	#   (what if I had to do this only with multiplication and arrays?)
-
-	#     return digit_sum_of_number(pow(2, 1000)) # Much faster, concise - just better in every way variant
-	number, power = 2, 1000
-
-	digits = [1]
-	for _ in range(power):
-		digits = [digit * number for digit in digits]
-		for digit_index in range(len(digits)):
-			# We can achieve the same with div operation but it's faster this way
-			while digits[digit_index] >= 10:
-				digits[digit_index] -= 10
-				try:
-					digits[digit_index + 1] += 1
-
-				except IndexError:
-					digits.append(1)
-
-	return sum(digits)
 
 
 def q18():
@@ -226,7 +182,7 @@ def q19():
 
 
 def q21(upper_bound=10000):
-	primes = generate_to_sie(upper_bound * 2)
+	primes = generate_to_sieve(upper_bound * 2)
 
 	def is_amicable_number_group(tuple_):
 		n1, n2 = tuple_
@@ -242,7 +198,7 @@ def q21(upper_bound=10000):
 
 def q23():
 	upper_bound = 28123
-	primes = generate_to_sie(upper_bound)
+	primes = generate_to_sieve(upper_bound)
 
 	abundant_numbers = list(filter(lambda number: is_abundant_number(number, primes), range(2, upper_bound)))
 	logging.debug(f'Abundant Numbers are {abundant_numbers}')
@@ -286,7 +242,7 @@ def q25():
 
 def q27():
 	upper_bound = 1000
-	primes = generate_to_sie(upper_bound)
+	primes = generate_to_sieve(upper_bound)
 	primes_with_negatives = primes + list(map(lambda x: x * -1, primes))
 
 	longest_consecutive_primes = 0
@@ -347,7 +303,7 @@ def q33():
 				ef = e * f
 
 				if ((a * c) + (bc // 10)) == (df + (ef // 10)) \
-						and (bc % 10) == (ef % 10) and bc == df:
+					and (bc % 10) == (ef % 10) and bc == df:
 					answers.add((original, denominator))
 
 	top, bottom = 1, 1
@@ -384,14 +340,14 @@ def q35():
 	number = 1000000
 
 	circular_prime_numbers = []
-	prime_numbers = generate_to_sie(number + 1)
+	prime_numbers = generate_to_sieve(number + 1)
 	prime_number_set = set(prime_numbers)
 	lowests = set()
 
 	for prime in prime_numbers:
 		digits = list(str(prime))
 		circular_primes = {int(''.join(digits[i:] + digits[:i]))
-											 for i in range(len(digits))}
+								 for i in range(len(digits))}
 
 		lowest_circular_primes = min(circular_primes)
 		if lowest_circular_primes not in lowests:
@@ -404,7 +360,7 @@ def q35():
 
 
 def q37():
-	truncatable_primes = list(filter(lambda prime_number: is_truncable_prime(prime_number), generate_to_sie(100)))
+	truncatable_primes = list(filter(lambda prime_number: is_truncable_prime(prime_number), generate_to_sieve(100)))
 
 	middle_digits = [1, 3, 7, 9]
 	ending_digits = [3, 7]  # on either ends
@@ -451,11 +407,11 @@ def q45():
 
 def q46():
 	upper_bound = 10000  # Random - I would have increased it as I went
-	prime_numbers = generate_to_sie(upper_bound)
+	prime_numbers = generate_to_sieve(upper_bound)
 
 	def fits_goldbach_conjecture(candidate):
 		return any(math.sqrt((candidate - prime_number) / 2).is_integer()
-							 for prime_number in filter(candidate.__ge__, prime_numbers))
+					  for prime_number in filter(candidate.__ge__, prime_numbers))
 
 	previous_primality = True  # prime + 2*1**2 always fits goldbach_conjecture.
 	for number in range(9, upper_bound, 2):
@@ -488,7 +444,7 @@ def q49(given_digit=4, repeating_count=3):
 
 
 def q50(upper_limit=10 ** 6):
-	prime_numbers = generate_to_sie(upper_limit)
+	prime_numbers = generate_to_sieve(upper_limit)
 	all_added = sum(prime_numbers)
 
 	longest_prime_sum, longest_sequence_length = 0, 0
@@ -497,7 +453,7 @@ def q50(upper_limit=10 ** 6):
 
 		consecutive_sum = all_added
 		for sequence_length, current in reversed(
-				list(enumerate(prime_numbers[index + 1:]))):
+			list(enumerate(prime_numbers[index + 1:]))):
 			consecutive_sum -= current
 
 			if consecutive_sum > upper_limit: continue
@@ -571,11 +527,11 @@ def q60():
 		return int(str(n1) + str(n2))
 
 	# 10 ** 4 - there's no reason I just tried incrementally from 10**3
-	primes = generate_to_sie(int(10 ** 4))
+	primes = generate_to_sieve(int(10 ** 4))
 	graph = collections.defaultdict(set)
 	for x, y in itertools.combinations(primes, 2):
 		if is_prime_robin_miller(concatenate_numbers(x, y)) \
-				and is_prime_robin_miller(concatenate_numbers(y, x)):
+			and is_prime_robin_miller(concatenate_numbers(y, x)):
 			graph[x].add(y)
 			graph[y].add(x)
 
@@ -597,7 +553,7 @@ def q60():
 def q66(max_value_d=1000):
 	from math import sqrt
 
-	prime_numbers = generate_to_sie(10 ** 6)
+	prime_numbers = generate_to_sieve(10 ** 6)
 	x_to_minimal_ds = {}
 	x = 1
 
@@ -644,7 +600,7 @@ def q76():
 
 def q108(given_number=1000):
 	minimum_number = None
-	primes = generate_to_sie(1000)
+	primes = generate_to_sieve(1000)
 
 	precomputed = {
 		prime_number: {i: pow(prime_number, i) for i in range(200)}
@@ -664,7 +620,7 @@ def q108(given_number=1000):
 
 
 def q110(given_number=4 * (10 ** 6)):
-	primes = generate_to_sie(10 ** 6)
+	primes = generate_to_sieve(10 ** 6)
 
 	nice_multiple = math.prod(primes[:11])
 	i = nice_multiple

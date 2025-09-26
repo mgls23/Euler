@@ -3,14 +3,14 @@ from collections import Counter
 from fractions import Fraction
 from math import sqrt, ceil
 
-from solutions.euler.maths.prime import generate_to_sie
+from solutions.euler.maths.prime import generate_to_sieve
 from solutions.euler.maths.ungrouped import _phi
 from solutions.euler.util.decorators import timed_function
 
 
 # Not tested - need to be profiled
 def ranged_phi(upper_limit):
-	prime_numbers = generate_to_sie(upper_limit)
+	prime_numbers = generate_to_sieve(upper_limit)
 
 	calculated_phis = list(range(upper_limit + 1))
 	for prime_number in prime_numbers:
@@ -25,7 +25,7 @@ def ranged_phi(upper_limit):
 def q70(given_number=10 ** 7):
 	range_multiplier = 1.5
 
-	primes = generate_to_sie(ceil(sqrt(given_number) * range_multiplier))
+	primes = generate_to_sieve(ceil(sqrt(given_number) * range_multiplier))
 	primes_in_range = [prime for prime in primes if ceil(sqrt(given_number) / range_multiplier) < prime]
 
 	minimum_ratio = 2

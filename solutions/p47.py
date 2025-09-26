@@ -1,11 +1,11 @@
-from solutions.euler.maths.prime import generate_to_sie
+from solutions.euler.maths.prime import generate_to_sieve
 from solutions.euler.util.decorators import timed_function
 
 
 def number_of_distinct_primes(up_to):
 	""" Use reversed version of sieve to generate this """
 	distinct_primes = [0] * up_to
-	for prime in generate_to_sie(up_to):
+	for prime in generate_to_sieve(up_to):
 		distinct_primes[prime::prime] = [distinct_prime + 1 for distinct_prime in distinct_primes[prime::prime]]
 
 	return distinct_primes

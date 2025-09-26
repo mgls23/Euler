@@ -1,9 +1,9 @@
-from solutions.euler.maths.prime import generate_to_sie
+from solutions.euler.maths.prime import generate_to_sieve
 from solutions.euler.util.decorators import timed_function
 
 
 def prime_summation_leaner(number):
-	prime_numbers = list(reversed(generate_to_sie(number + 1)))
+	prime_numbers = list(reversed(generate_to_sieve(number + 1)))
 
 	count = 0
 
@@ -23,7 +23,7 @@ def prime_summation_leaner(number):
 
 
 def prime_summation(number):
-	prime_numbers = list(reversed(generate_to_sie(number + 1)))
+	prime_numbers = list(reversed(generate_to_sieve(number + 1)))
 	logging.debug(f'Input = {number}, Prime Numbers = {prime_numbers}')
 
 	results = []

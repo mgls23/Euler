@@ -1,12 +1,12 @@
 import logging
 
 from solutions.euler.maths.palindromes import is_palindrome
-from solutions.euler.maths.prime import generate_to_sie, is_prime_robin_miller
+from solutions.euler.maths.prime import generate_to_sieve, is_prime_robin_miller
 from solutions.euler.util.decorators import timed_function
 
 
 def see_pattern():
-	prime_numbers = generate_to_sie(10 ** 6)
+	prime_numbers = generate_to_sieve(10 ** 6)
 
 	squared = set()
 	reversible_prime_squares = []
