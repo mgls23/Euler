@@ -1,4 +1,4 @@
-# LLM Code Review Preferences
+# Coding Preferences
 
 ## Variable Naming
 - **Suggest** better names, but **work with existing** unless clear ROI
@@ -12,11 +12,18 @@
 - Prefer `n + 1` over magic numbers when accounting for range exclusivity
 
 ## Commit Message Style
-- Format: `[Problem#] Short description (#PR)`
+- Format: `[Problem#] Short description`
+- Keep messages **concise** - use bullet points for multi-item changes
+- No "Generated with Claude Code" footer or co-author tags
 - Include `(#PR)` only if a PR was made
 - Omit PR reference for minor fixes / direct commits
 - Separate commits for orthogonal changes
-- Examples:
-  - `[9] Pythagorean Triplet (#37)`
-  - `[14] Collatz Sequence + generate_to_sieve`
-  - `Fix Failing CI (update requirements.txt) (#38)`
+
+Example:
+```
+[p001] Reorganize notebook structure and add styling
+
+- Move p001 to notebook/, extract q1() to latest/p0001.py
+- Add notebook import guidelines and Jupyter preferences docs
+- Add custom CSS styling for Project Euler notebooks
+```
