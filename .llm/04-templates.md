@@ -11,11 +11,6 @@ https://projecteuler.net/problem={N}
 Answer: {answer}
 """
 
-import logging
-
-from solutions.euler.util.decorators import timed_function
-
-
 def q{N}() -> int:
    """
    {Short description of approach}
@@ -28,10 +23,7 @@ def q{N}() -> int:
 
 
 if __name__ == '__main__':
-   import sys
-   from tests.config.answers import ANSWERS
+   from solutions.euler.util.runner import run_solution
 
-   log_format = '[%(levelname)s] %(asctime)s (%(name)s) %(pathname)s:%(lineno)d::%(funcName)s - %(message)s'
-   logging.basicConfig(stream=sys.stderr, level=logging.INFO, format=log_format)
-   assert timed_function(q{N})() == ANSWERS[{N}]
+   run_solution(q{N}, {N})
 ```

@@ -8,8 +8,8 @@ echo "Stage 1: Running Unit Tests"
 echo "======================================"
 
 pytest unittests/ -v
-#pytest tests/unit/euler -v
-#pytest tests/unit/problems -v
+pytest tests/unit/euler -v
+pytest tests/unit/problems -v
 
 echo ""
 echo "✓ Unit tests passed!"
