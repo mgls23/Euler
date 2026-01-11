@@ -21,6 +21,9 @@ def q16() -> int:
 
 
 if __name__ == '__main__':
+	from tests.config.answers import ANSWERS
+
 	result = q16()
-	print(f"Sum of digits of 2^1000 = {result}")
-	assert result == 1366
+	expected = ANSWERS[16]
+	assert result == expected, f"Expected {expected}, got {result}"
+	print(f"Problem 16: {result} ✓")

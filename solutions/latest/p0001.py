@@ -51,4 +51,9 @@ def q1(upper_bound: int = 999) -> int:
 
 
 if __name__ == '__main__':
-	print(q1())
+	from tests.config.answers import ANSWERS
+
+	result = q1()
+	expected = ANSWERS[1]
+	assert result == expected, f"Expected {expected}, got {result}"
+	print(f"Problem 1: {result} ✓")

@@ -40,9 +40,9 @@ jobs:
     - name: Set PythonPath
       run: echo "PYTHONPATH=${PYTHONPATH}:solutions/" >> $GITHUB_ENV
 
-    - name: Test with pytest
-      run: pytest unittests
+    - name: Run unit tests
+      run: pytest tests/unit/ -v
 
-    - name: Check Solutions
-      run: python answers.py
+    - name: Run benchmark tests
+      run: pytest tests/benchmark/ -v
       
