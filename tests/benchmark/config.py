@@ -4,6 +4,7 @@ Central module for benchmark configuration that all testing modules import from.
 Provides pythonic access to performance thresholds from YAML config.
 """
 from pathlib import Path
+
 import yaml
 
 

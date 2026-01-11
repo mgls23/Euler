@@ -8,7 +8,7 @@ challenges.
 Run all solutions and benchmarks:
 
 ```bash
-python answers.py                        # Test all 98 solutions
+python answers.py                        # Test all 102 solutions (5s timeout per solution)
 python answers.py --fail-mode=expected   # Strict mode: fail if doesn't meet expected speed
 ```
 

@@ -40,6 +40,7 @@ Standalone runner for quick testing and benchmarking:
 - Tests correctness
 - Benchmarks performance with colored output
 - Categorizes as ELITE/GOOD/ACCEPTABLE/NEEDS_OPTIMIZATION
+- **Global 5-second timeout** per solution (prevents hanging on slow/infinite loops)
 
 **Usage:**
 ```bash
@@ -179,3 +180,11 @@ These can be refined as solutions are optimized.
 7. `solutions/all_solutions.py` - Legacy all_solutions.py (fallback)
 
 This allows for gradual migration and testing of improved solutions while maintaining backward compatibility.
+
+**Current Status:**
+- **102 solutions** imported automatically (updated from 98)
+- Outputs: "Loaded N solutions: [list]" on import
+- Problems 1-116 plus additional problems (118, 148, 684, 808)
+- **101 problems** have correct answers in config
+- Recently added: 66, 118, 148, 684, 808
+- Incomplete implementations (not in config): 78, 100

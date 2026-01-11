@@ -7,15 +7,16 @@ This file contains pytest test classes for:
 
 Run with: pytest tests/benchmark/test_all_solutions.py -v
 """
-import time
-import pytest
-
-from tests.config.answers import PROBLEMS, ANSWERS
-from tests.benchmark.config import benchmarks
-
 # Import solutions from answers.py
 import sys
+import time
 from pathlib import Path
+
+import pytest
+
+from tests.benchmark.config import benchmarks
+from tests.config.answers import ANSWERS
+
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 from answers import solutions
 

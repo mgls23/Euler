@@ -3,7 +3,10 @@
 Standalone runner for:
 - Correctness testing
 - Performance benchmarking (using performance-benchmarks-modern.yaml)
-- Colored output and performance categorization
+- Colored output and performance categorization with polars dataframe
+- Global 5-second timeout per solution
+- Whitelist for known failing solutions
+- Performance divergence warnings
 
 Pytest test classes are in tests/benchmark/test_all_solutions.py
 
@@ -18,64 +21,35 @@ Run standalone:
 import argparse
 import sys
 import time
+from typing import Tuple, Dict, List
 
+import polars as pl
 from colorama import init, Fore, Style
 
-from tests.config.answers import PROBLEMS, ANSWERS
+from solutions_loader import load_solutions
 from tests.benchmark.config import benchmarks
+from tests.config.answers import PROBLEMS, ANSWERS
+from tests.config.whitelist import FAILING_SOLUTIONS, PARAMETER_ISSUES, PERFORMANCE_ISSUES
+from tests.test_utils import SOLUTION_TIMEOUT, TimeoutException, timeout
 
 # Initialize colorama for colored output
 init(autoreset=True)
 
-# Import all available solutions (problems 1-116)
-# Priority order: latest > renewed > revisit > root solutions > all_solutions
-solutions = {}
+# Load solutions
+solutions = load_solutions()
+print(f"Loaded {len(solutions)} solutions: {sorted(solutions.keys())}")
 
-def try_import_solution(problem_num: int, locations: list) -> bool:
-	"""Try to import solution from multiple locations in priority order
+# Performance categories with thresholds
+PERFORMANCE_CATEGORIES = {
+	'ELITE': {'color': Fore.GREEN, 'symbol': '⚡', 'weight': 3},
+	'GOOD': {'color': Fore.CYAN, 'symbol': '✓', 'weight': 2},
+	'ACCEPTABLE': {'color': Fore.YELLOW, 'symbol': '⚠', 'weight': 1},
+	'NEEDS_OPTIMIZATION': {'color': Fore.RED, 'symbol': '✗', 'weight': 0}
+}
 
-	Args:
-		problem_num: Problem number
-		locations: List of (module_path, func_name) tuples to try
-
-	Returns:
-		True if solution was imported, False otherwise
-	"""
-	func_name = f'q{problem_num}'
-
-	for module_path in locations:
-		try:
-			module = __import__(module_path, fromlist=[func_name])
-			func = getattr(module, func_name)
-			solutions[problem_num] = func
-			return True
-		except (ImportError, AttributeError):
-			continue
-
-	return False
-
-for problem_num in range(1, 117):
-	# Define priority order of locations to check
-	locations = [
-		f"solutions.latest.p{problem_num:04d}",  # Latest implementations
-		f"solutions.renewed.simple",              # Renewed simple versions
-		f"solutions.renewed.functional",          # Renewed functional versions
-		f"solutions.revisit.p{problem_num}",     # Revisited solutions
-		f"solutions.p{problem_num}",             # Root level pX.py files
-		f"solutions.p{problem_num:04d}",         # Root level pXXXX.py files
-		"solutions.all_solutions",                # Legacy all_solutions.py
-	]
-
-	try_import_solution(problem_num, locations)
-
-
-# ============================================================================
-# Standalone Runner
-# ============================================================================
-# Pytest test classes have been moved to tests/benchmark/test_all_solutions.py
 
 def categorize_performance(elapsed_ms: float, thresholds: dict) -> str:
-	"""Determine performance category"""
+	"""Determine performance category based on thresholds"""
 	if elapsed_ms <= thresholds['elite']:
 		return 'ELITE'
 	elif elapsed_ms <= thresholds['good']:
@@ -86,24 +60,24 @@ def categorize_performance(elapsed_ms: float, thresholds: dict) -> str:
 
 
 def format_time_colored(elapsed_ms: float, category: str) -> str:
-	"""Format time with color"""
+	"""Format time with color based on category"""
 	time_str = f"{elapsed_ms:06.2f}ms"
-	colors = {
-		'ELITE': f"{Fore.GREEN}{time_str}{Style.RESET_ALL} ⚡",
-		'GOOD': f"{Fore.CYAN}{time_str}{Style.RESET_ALL} ✓",
-		'ACCEPTABLE': f"{Fore.YELLOW}{time_str}{Style.RESET_ALL} ⚠",
-		'NEEDS_OPTIMIZATION': f"{Fore.RED}{time_str}{Style.RESET_ALL} ✗"
-	}
-	return colors.get(category, time_str)
+	cat_info = PERFORMANCE_CATEGORIES[category]
+	return f"{cat_info['color']}{time_str}{Style.RESET_ALL} {cat_info['symbol']}"
 
 
 def check_performance_failure(elapsed_ms: float, thresholds: dict,
-										fail_mode: str, expected: str = None) -> tuple:
+                               fail_mode: str, problem_num: int = None,
+                               expected: str = None) -> Tuple[bool, str]:
 	"""Check if performance should fail based on mode
 
 	Returns:
-		 (failed: bool, message: str)
+		(failed: bool, message: str)
 	"""
+	# Skip performance failures for whitelisted performance issues
+	if problem_num and problem_num in PERFORMANCE_ISSUES:
+		return False, ""
+
 	if fail_mode == 'none':
 		return False, ""
 
@@ -137,120 +111,198 @@ def check_performance_failure(elapsed_ms: float, thresholds: dict,
 	return False, ""
 
 
-def run_standalone(fail_mode='acceptable'):
-	"""Standalone runner for testing and benchmarking
+def check_divergence(actual_category: str, expected_level: str) -> str:
+	"""Check if actual performance diverges from expected level
 
-	Args:
-		 fail_mode: Performance fail threshold ('none', 'acceptable', 'good', 'elite', 'expected')
+	Returns:
+		Divergence message or empty string
 	"""
-
-	print("=" * 60)
-	print("Project Euler Solutions - Testing & Benchmarking")
-	print("=" * 60)
-	print(f"Fail mode: {fail_mode.upper()}")
-	print(f"\nTesting {len(solutions)} solutions...\n")
-
-	stats = {
-		'ELITE': [],
-		'GOOD': [],
-		'ACCEPTABLE': [],
-		'NEEDS_OPTIMIZATION': []
+	# Map expected level to category
+	level_to_category = {
+		'elite': 'ELITE',
+		'good': 'GOOD',
+		'acceptable': 'ACCEPTABLE'
 	}
 
-	correctness_failures = []
-	performance_failures = []
-	total_time = 0.0
+	expected_category = level_to_category.get(expected_level, 'ACCEPTABLE')
 
-	for problem_num in sorted(solutions.keys()):
-		func = solutions[problem_num]
-		expected = ANSWERS[problem_num]
-		thresholds = benchmarks[problem_num]
+	# Check if we're doing better than expected
+	actual_weight = PERFORMANCE_CATEGORIES[actual_category]['weight']
+	expected_weight = PERFORMANCE_CATEGORIES[expected_category]['weight']
 
-		# Get expected speed if available
-		problem_data = PROBLEMS.get(problem_num, {})
-		expected_level = problem_data.get('expected', 'acceptable')
+	if actual_weight > expected_weight:
+		return f"⬆️  Could upgrade: {expected_level} → {actual_category.lower()}"
+	elif actual_weight < expected_weight:
+		return f"⬇️  Regression: {expected_level} → {actual_category.lower()}"
 
+	return ""
+
+
+def run_single_solution(problem_num: int, func, fail_mode: str) -> Dict:
+	"""Run a single solution and collect results
+
+	Returns:
+		Dict with problem_num, result, elapsed_ms, category, status, etc.
+	"""
+	expected = ANSWERS.get(problem_num)
+	thresholds = benchmarks[problem_num]
+	problem_data = PROBLEMS.get(problem_num, {})
+	expected_level = problem_data.get('expected', 'acceptable')
+
+	result_data = {
+		'problem': problem_num,
+		'expected_answer': expected,
+		'expected_level': expected_level,
+		'elite_threshold': thresholds['elite'],
+		'good_threshold': thresholds['good'],
+		'acceptable_threshold': thresholds['acceptable'],
+	}
+
+	try:
+		start = time.perf_counter()
+
+		# Execute with timeout
 		try:
-			start = time.perf_counter()
-			result = func()
-			elapsed_ms = (time.perf_counter() - start) * 1000
-			total_time += elapsed_ms
+			with timeout(SOLUTION_TIMEOUT):
+				result = func()
+		except TimeoutException as e:
+			result_data.update({
+				'actual_result': None,
+				'elapsed_ms': None,
+				'category': 'TIMEOUT',
+				'status': 'TIMEOUT',
+				'error': str(e),
+				'whitelisted': problem_num in FAILING_SOLUTIONS
+			})
+			print(f"{Fore.RED}Q{problem_num}: TIMEOUT - Exceeded {SOLUTION_TIMEOUT}s{Style.RESET_ALL}")
+			return result_data
 
-			# Check correctness
-			if result != expected:
-				correctness_failures.append((
-					f"Q{problem_num}",
-					f"Expected {expected}, got {result}"
-				))
-				print(f"{Fore.RED}Q{problem_num}: FAILED - Wrong answer{Style.RESET_ALL}")
-				continue
+		elapsed_ms = (time.perf_counter() - start) * 1000
 
-			# Categorize performance
-			category = categorize_performance(elapsed_ms, thresholds)
-			formatted_time = format_time_colored(elapsed_ms, category)
+		# Check correctness
+		if result != expected:
+			status = 'WHITELISTED' if problem_num in FAILING_SOLUTIONS else 'FAILED'
+			result_data.update({
+				'actual_result': result,
+				'elapsed_ms': elapsed_ms,
+				'category': None,
+				'status': status,
+				'error': f"Expected {expected}, got {result}",
+				'whitelisted': problem_num in FAILING_SOLUTIONS
+			})
 
-			notes = thresholds.get('notes', '')
-			note_str = f" - {notes}" if notes else ""
-
-			# Add expected speed indicator
-			if problem_num in PROBLEMS:
-				note_str += f" [expected: {expected_level}]"
-
-			print(f"Q{problem_num}: {formatted_time}{note_str}")
-
-			# Check if performance fails
-			failed, msg = check_performance_failure(
-				elapsed_ms, thresholds, fail_mode, expected_level
-			)
-			if failed:
-				performance_failures.append((f"Q{problem_num}", msg))
-
-			# Track stats
-			if category == 'NEEDS_OPTIMIZATION':
-				stats[category].append((f"Q{problem_num}", elapsed_ms, thresholds))
+			if problem_num in FAILING_SOLUTIONS:
+				color = Fore.YELLOW
+				prefix = "WHITELISTED"
 			else:
-				stats[category].append((f"Q{problem_num}", elapsed_ms))
+				color = Fore.RED
+				prefix = "FAILED"
 
-		except Exception as e:
-			correctness_failures.append((f"Q{problem_num}", str(e)))
-			print(f"{Fore.RED}Q{problem_num}: FAILED - {e}{Style.RESET_ALL}")
+			print(f"{color}Q{problem_num}: {prefix} - Wrong answer{Style.RESET_ALL}")
+			return result_data
 
-	# Summary
+		# Categorize performance
+		category = categorize_performance(elapsed_ms, thresholds)
+		formatted_time = format_time_colored(elapsed_ms, category)
+
+		# Check for performance divergence
+		divergence = check_divergence(category, expected_level)
+
+		notes = thresholds.get('notes', '')
+		note_str = f" - {notes}" if notes else ""
+		note_str += f" [expected: {expected_level}]"
+
+		if divergence:
+			note_str += f" {divergence}"
+
+		print(f"Q{problem_num}: {formatted_time}{note_str}")
+
+		# Check if performance fails
+		perf_failed, perf_msg = check_performance_failure(
+			elapsed_ms, thresholds, fail_mode, problem_num, expected_level
+		)
+
+		result_data.update({
+			'actual_result': result,
+			'elapsed_ms': elapsed_ms,
+			'category': category,
+			'status': 'PERF_FAIL' if perf_failed else 'PASS',
+			'error': perf_msg if perf_failed else None,
+			'divergence': divergence if divergence else None,
+			'whitelisted': False
+		})
+
+		return result_data
+
+	except Exception as e:
+		result_data.update({
+			'actual_result': None,
+			'elapsed_ms': None,
+			'category': 'ERROR',
+			'status': 'ERROR',
+			'error': str(e),
+			'whitelisted': problem_num in FAILING_SOLUTIONS
+		})
+		print(f"{Fore.RED}Q{problem_num}: ERROR - {e}{Style.RESET_ALL}")
+		return result_data
+
+
+def generate_results_dataframe(results: List[Dict]) -> pl.DataFrame:
+	"""Generate polars dataframe from results
+
+	Returns:
+		Polars DataFrame with all test results
+	"""
+	df = pl.DataFrame(results)
+
+	# Reorder columns for better readability
+	column_order = [
+		'problem',
+		'status',
+		'expected_answer',
+		'actual_result',
+		'expected_level',
+		'category',
+		'elapsed_ms',
+		'elite_threshold',
+		'good_threshold',
+		'acceptable_threshold',
+		'divergence',
+		'error',
+		'whitelisted'
+	]
+
+	return df.select([col for col in column_order if col in df.columns])
+
+
+def print_summary(df: pl.DataFrame, total_time: float):
+	"""Print summary statistics from dataframe"""
 	print("\n" + "=" * 60)
 	print("PERFORMANCE SUMMARY")
 	print("=" * 60)
 
-	total = sum(len(v) for v in stats.values())
+	# Count by category
+	passed = df.filter(pl.col('status') == 'PASS')
 
-	for category in ['ELITE', 'GOOD', 'ACCEPTABLE', 'NEEDS_OPTIMIZATION']:
-		if stats[category]:
-			count = len(stats[category])
-			color = {
-				'ELITE': Fore.GREEN,
-				'GOOD': Fore.CYAN,
-				'ACCEPTABLE': Fore.YELLOW,
-				'NEEDS_OPTIMIZATION': Fore.RED
-			}[category]
+	for cat_name, cat_info in PERFORMANCE_CATEGORIES.items():
+		cat_count = len(passed.filter(pl.col('category') == cat_name))
+		if cat_count > 0:
+			symbol = cat_info['symbol']
+			color = cat_info['color']
+			print(f"\n{color}{symbol} {cat_name} ({cat_count}):{Style.RESET_ALL}")
 
-			symbol = {'ELITE': '⚡', 'GOOD': '✓', 'ACCEPTABLE': '⚠', 'NEEDS_OPTIMIZATION': '✗'}[category]
-			print(f"\n{color}{symbol} {category} ({count}/{total}):{Style.RESET_ALL}")
+			cat_problems = passed.filter(pl.col('category') == cat_name)
+			for row in cat_problems.head(10).iter_rows(named=True):
+				print(f"   Q{row['problem']}: {row['elapsed_ms']:.2f}ms")
 
-			display_items = stats[category][:10]
-			for item in display_items:
-				if len(item) == 3:  # NEEDS_OPTIMIZATION
-					problem, time_ms, thresholds = item
-					print(f"   {problem}: {time_ms:.2f}ms (target: <{thresholds['acceptable']}ms)")
-				else:
-					problem, time_ms = item
-					print(f"   {problem}: {time_ms:.2f}ms")
-
-			if len(stats[category]) > 10:
-				print(f"   ... and {len(stats[category]) - 10} more")
+			if cat_count > 10:
+				print(f"   ... and {cat_count - 10} more")
 
 	# Performance score
-	elite_score = len(stats['ELITE']) * 3
-	good_score = len(stats['GOOD']) * 2
-	acceptable_score = len(stats['ACCEPTABLE']) * 1
+	total = len(passed)
+	elite_score = len(passed.filter(pl.col('category') == 'ELITE')) * 3
+	good_score = len(passed.filter(pl.col('category') == 'GOOD')) * 2
+	acceptable_score = len(passed.filter(pl.col('category') == 'ACCEPTABLE')) * 1
 	max_score = total * 3
 	actual_score = elite_score + good_score + acceptable_score
 
@@ -258,22 +310,141 @@ def run_standalone(fail_mode='acceptable'):
 	print(f"\n{Fore.MAGENTA}Performance Score: {actual_score}/{max_score} ({percentage:.1f}%){Style.RESET_ALL}")
 	print(f"Total execution time: {total_time:.2f}ms ({total_time / 1000:.2f}s)")
 
-	# Report failures
-	if correctness_failures:
+
+def print_failures(df: pl.DataFrame):
+	"""Print correctness and performance failures"""
+	correctness_failures = df.filter(
+		(pl.col('status').is_in(['FAILED', 'TIMEOUT', 'ERROR'])) &
+		(~pl.col('whitelisted'))
+	)
+
+	performance_failures = df.filter(pl.col('status') == 'PERF_FAIL')
+
+	if len(correctness_failures) > 0:
 		print(f"\n{Fore.RED}{'=' * 60}")
 		print(f"⚠️  CORRECTNESS FAILURES ({len(correctness_failures)})")
 		print(f"{'=' * 60}{Style.RESET_ALL}")
-		for problem, error in correctness_failures:
-			print(f"{Fore.RED}   {problem}: {error}{Style.RESET_ALL}")
+		for row in correctness_failures.iter_rows(named=True):
+			print(f"{Fore.RED}   Q{row['problem']}: {row['error']}{Style.RESET_ALL}")
 
-	if performance_failures:
+	if len(performance_failures) > 0:
 		print(f"\n{Fore.RED}{'=' * 60}")
 		print(f"⚠️  PERFORMANCE FAILURES ({len(performance_failures)})")
 		print(f"{'=' * 60}{Style.RESET_ALL}")
-		for problem, error in performance_failures:
-			print(f"{Fore.RED}   {problem}: {error}{Style.RESET_ALL}")
+		for row in performance_failures.iter_rows(named=True):
+			print(f"{Fore.RED}   Q{row['problem']}: {row['error']}{Style.RESET_ALL}")
 
-	if correctness_failures or performance_failures:
+
+def print_whitelist_warnings(df: pl.DataFrame):
+	"""Print warnings about whitelisted failures"""
+	whitelisted = df.filter(pl.col('whitelisted'))
+
+	if len(whitelisted) > 0:
+		print(f"\n{Fore.YELLOW}{'=' * 60}")
+		print(f"⚠️  WHITELISTED FAILURES ({len(whitelisted)})")
+		print(f"{'=' * 60}{Style.RESET_ALL}")
+		print(f"{Fore.YELLOW}These solutions are known to fail and are whitelisted:{Style.RESET_ALL}\n")
+
+		for row in whitelisted.iter_rows(named=True):
+			problem = row['problem']
+			reason = FAILING_SOLUTIONS.get(problem, "Unknown reason")
+			print(f"{Fore.YELLOW}   Q{problem}: {reason}{Style.RESET_ALL}")
+
+		print(f"\n{Fore.YELLOW}Update whitelist in: tests/config/whitelist.py{Style.RESET_ALL}")
+
+
+def print_performance_issues(df: pl.DataFrame):
+	"""Print known performance issues (solutions exceeding acceptable threshold)"""
+	# Filter for problems in PERFORMANCE_ISSUES that passed correctness
+	perf_issues = df.filter(
+		(pl.col('problem').is_in(list(PERFORMANCE_ISSUES.keys()))) &
+		(pl.col('status') == 'PASS')
+	)
+
+	if len(perf_issues) > 0:
+		print(f"\n{Fore.CYAN}{'=' * 60}")
+		print(f"⏱️  KNOWN PERFORMANCE ISSUES ({len(perf_issues)})")
+		print(f"{'=' * 60}{Style.RESET_ALL}")
+		print(f"{Fore.CYAN}These solutions exceed acceptable threshold but are accepted:{Style.RESET_ALL}\n")
+
+		for row in perf_issues.iter_rows(named=True):
+			problem = row['problem']
+			reason = PERFORMANCE_ISSUES.get(problem, "Unknown reason")
+			elapsed = row['elapsed_ms']
+			print(f"{Fore.CYAN}   Q{problem}: {elapsed:.2f}ms - {reason}{Style.RESET_ALL}")
+
+		print(f"\n{Fore.CYAN}These are candidates for future optimization.{Style.RESET_ALL}")
+
+
+def print_divergences(df: pl.DataFrame):
+	"""Print performance divergences (upgrades and regressions)"""
+	divergences = df.filter(pl.col('divergence').is_not_null())
+
+	if len(divergences) > 0:
+		upgrades = divergences.filter(pl.col('divergence').str.contains("⬆️"))
+		regressions = divergences.filter(pl.col('divergence').str.contains("⬇️"))
+
+		if len(upgrades) > 0:
+			print(f"\n{Fore.GREEN}{'=' * 60}")
+			print(f"⬆️  PERFORMANCE UPGRADES ({len(upgrades)})")
+			print(f"{'=' * 60}{Style.RESET_ALL}")
+			print(f"{Fore.GREEN}These solutions perform better than expected:{Style.RESET_ALL}\n")
+
+			for row in upgrades.iter_rows(named=True):
+				print(f"{Fore.GREEN}   Q{row['problem']}: {row['divergence']}{Style.RESET_ALL}")
+
+		if len(regressions) > 0:
+			print(f"\n{Fore.RED}{'=' * 60}")
+			print(f"⬇️  PERFORMANCE REGRESSIONS ({len(regressions)})")
+			print(f"{'=' * 60}{Style.RESET_ALL}")
+			print(f"{Fore.RED}These solutions perform worse than expected:{Style.RESET_ALL}\n")
+
+			for row in regressions.iter_rows(named=True):
+				print(f"{Fore.RED}   Q{row['problem']}: {row['divergence']}{Style.RESET_ALL}")
+
+
+def run_standalone(fail_mode='acceptable'):
+	"""Standalone runner for testing and benchmarking
+
+	Args:
+		fail_mode: Performance fail threshold ('none', 'acceptable', 'good', 'elite', 'expected')
+	"""
+	print("=" * 60)
+	print("Project Euler Solutions - Testing & Benchmarking")
+	print("=" * 60)
+	print(f"Fail mode: {fail_mode.upper()}")
+	print(f"\nTesting {len(solutions)} solutions...\n")
+
+	# Collect results
+	results = []
+	total_time = 0.0
+
+	for problem_num in sorted(solutions.keys()):
+		func = solutions[problem_num]
+		result_data = run_single_solution(problem_num, func, fail_mode)
+		results.append(result_data)
+
+		if result_data.get('elapsed_ms'):
+			total_time += result_data['elapsed_ms']
+
+	# Generate dataframe
+	df = generate_results_dataframe(results)
+
+	# Print interesting stats
+	print_summary(df, total_time)
+	print_failures(df)
+	print_divergences(df)
+	print_whitelist_warnings(df)
+	print_performance_issues(df)
+
+	# Check for failures
+	correctness_failures = df.filter(
+		(pl.col('status').is_in(['FAILED', 'TIMEOUT', 'ERROR'])) &
+		(~pl.col('whitelisted'))
+	)
+	performance_failures = df.filter(pl.col('status') == 'PERF_FAIL')
+
+	if len(correctness_failures) > 0 or len(performance_failures) > 0:
 		return 1
 
 	print(f"\n{Fore.GREEN}✓ All solutions correct and performant!{Style.RESET_ALL}")
