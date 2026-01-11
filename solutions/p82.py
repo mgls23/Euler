@@ -1,7 +1,6 @@
 import logging
 
 from solutions.euler.maths.matrix import debug_log_2d_matrix
-from solutions.euler.util.decorators import timed_function
 from solutions.euler.util.io_utils import datafiles
 
 NOT_CALCULATED = 2 ** 32 - 1  # Something arbitrarily big
@@ -107,5 +106,6 @@ def read_input_file():
 if __name__ == '__main__':
 	import sys
 
+	from solutions.euler.util.decorators import timed_function
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 	assert (timed_function(q82)() == 260324)

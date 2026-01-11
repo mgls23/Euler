@@ -1,8 +1,6 @@
 import logging
 from functools import lru_cache
 
-from solutions.euler.util.decorators import timed_function
-
 RED, GREEN, BLUE = 2, 3, 4
 
 
@@ -44,6 +42,7 @@ def q116(total_blocks=50):
 if __name__ == '__main__':
 	import sys
 
+	from solutions.euler.util.decorators import timed_function
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
 	assert (timed_function(q116)() == 20492570929)

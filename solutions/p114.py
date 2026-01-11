@@ -1,6 +1,5 @@
 import logging
 
-from solutions.euler.util.decorators import timed_function
 from solutions.p115 import dp_variable_min
 
 
@@ -81,6 +80,7 @@ def q114(number=50):
 if __name__ == '__main__':
 	import sys
 
+	from solutions.euler.util.decorators import timed_function
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
 	assert (timed_function(q114)(50) == 16475640049)

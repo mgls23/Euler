@@ -1,7 +1,4 @@
 from solutions.euler.maths.prime import generate_to_sieve
-from solutions.euler.util.decorators import timed_function
-
-
 def prime_summation_leaner(number):
 	prime_numbers = list(reversed(generate_to_sieve(number + 1)))
 
@@ -55,5 +52,6 @@ if __name__ == '__main__':
 	import logging
 	import sys
 
+	from solutions.euler.util.decorators import timed_function
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 	assert (timed_function(q77)() == 71)

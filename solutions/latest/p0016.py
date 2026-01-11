@@ -5,6 +5,7 @@ https://projecteuler.net/problem=16
 Find the sum of digits of 2^1000
 Answer: 1366
 """
+import logging
 
 
 def q16() -> int:
@@ -21,9 +22,6 @@ def q16() -> int:
 
 
 if __name__ == '__main__':
-	from tests.config.answers import ANSWERS
+	from solutions.euler.util.runner import run_solution
 
-	result = q16()
-	expected = ANSWERS[16]
-	assert result == expected, f"Expected {expected}, got {result}"
-	print(f"Problem 16: {result} ✓")
+	run_solution(q16, 16)

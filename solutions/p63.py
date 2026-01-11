@@ -1,8 +1,5 @@
 import logging
 
-from solutions.euler.util.decorators import timed_function
-
-
 def q63():
 	count = 0
 	for number in range(1, 10):
@@ -19,5 +16,6 @@ def q63():
 if __name__ == '__main__':
 	import sys
 
+	from solutions.euler.util.decorators import timed_function
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 	assert (timed_function(q63)() == 49)

@@ -1,6 +1,3 @@
-from solutions.euler.util.decorators import timed_function
-
-
 def is_partially_1_to_9_pandigital(number_string):
 	return len(set(number_string) - {'0'}) == len(number_string)
 
@@ -23,4 +20,5 @@ def q32():
 
 
 if __name__ == '__main__':
+	from solutions.euler.util.decorators import timed_function
 	assert (timed_function(q32)() == 45228)

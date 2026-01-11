@@ -23,14 +23,14 @@ Actual thresholds are defined per-problem in performance-benchmarks-modern.yaml
 # Format: problem_num: {'answer': value, 'expected': 'elite'|'good'|'acceptable'}
 PROBLEMS = {
 	1: {'answer': 233168, 'expected': 'elite'},
-	2: {'answer': 4613732, 'expected': 'good'},
+	2: {'answer': 4613732, 'expected': 'elite'},
 	3: {'answer': 6857, 'expected': 'elite'},
 	4: {'answer': 906609, 'expected': 'elite'},
 	5: {'answer': 232792560, 'expected': 'elite'},
 	6: {'answer': 25164150, 'expected': 'elite'},
-	7: {'answer': 104743, 'expected': 'good'},
+	7: {'answer': 104743, 'expected': 'elite'},
 	8: {'answer': 23514624000, 'expected': 'good'},
-	9: {'answer': 31875000, 'expected': 'good'},
+	9: {'answer': 31875000, 'expected': 'elite'},
 	10: {'answer': 142913828922, 'expected': 'good'},
 	11: {'answer': 70600674, 'expected': 'elite'},
 	12: {'answer': 76576500, 'expected': 'good'},

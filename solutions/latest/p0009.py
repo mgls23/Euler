@@ -1,7 +1,5 @@
 import logging
 
-from solutions.euler.util.decorators import timed_function
-
 
 def q9(perimeter=1000):
 	"""
@@ -33,8 +31,6 @@ def q9(perimeter=1000):
 
 
 if __name__ == '__main__':
-	import sys
+	from solutions.euler.util.runner import run_solution
 
-	log_format = '[%(levelname)s] %(asctime)s (%(name)s) %(pathname)s:%(lineno)d::%(funcName)s - %(message)s'
-	logging.basicConfig(stream=sys.stderr, level=logging.INFO, format=log_format)
-	assert timed_function(q9)() == 31875000
+	run_solution(q9, 9)

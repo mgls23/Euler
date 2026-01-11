@@ -2,9 +2,6 @@ import logging
 
 from solutions.euler.maths.palindromes import is_palindrome
 from solutions.euler.maths.prime import generate_to_sieve, is_prime_robin_miller
-from solutions.euler.util.decorators import timed_function
-
-
 def see_pattern():
 	prime_numbers = generate_to_sieve(10 ** 6)
 
@@ -50,5 +47,6 @@ def q808():
 if __name__ == '__main__':
 	import sys
 
+	from solutions.euler.util.decorators import timed_function
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 	assert (timed_function(q808)() == 3807504276997394)

@@ -19,6 +19,7 @@ Run standalone:
   python answers.py --fail-mode=expected         # Fail if doesn't meet expected speed
 """
 import argparse
+import shutil
 import sys
 import time
 from typing import Tuple, Dict, List
@@ -27,6 +28,7 @@ import polars as pl
 from colorama import init, Fore, Style
 from rich.console import Console
 from rich.table import Table
+from rich.text import Text
 
 from solutions_loader import load_solutions
 from tests.benchmark.config import benchmarks
@@ -48,6 +50,12 @@ PERFORMANCE_CATEGORIES = {
 	'GOOD': {'color': Fore.CYAN, 'symbol': '✓', 'weight': 2},
 	'ACCEPTABLE': {'color': Fore.YELLOW, 'symbol': '⚠', 'weight': 1},
 	'NEEDS_OPTIMIZATION': {'color': Fore.RED, 'symbol': '✗', 'weight': 0}
+}
+CATEGORY_STYLES = {
+	'ELITE': 'green',
+	'GOOD': 'cyan',
+	'ACCEPTABLE': 'yellow',
+	'NEEDS_OPTIMIZATION': 'red'
 }
 
 
@@ -178,6 +186,7 @@ def run_single_solution(problem_num: int, func, fail_mode: str) -> Dict:
 		'elite_threshold': thresholds['elite'],
 		'good_threshold': thresholds['good'],
 		'acceptable_threshold': thresholds['acceptable'],
+		'notes': thresholds.get('notes', ''),
 	}
 
 	try:
@@ -194,11 +203,10 @@ def run_single_solution(problem_num: int, func, fail_mode: str) -> Dict:
 				'category': 'TIMEOUT',
 				'status': 'TIMEOUT',
 				'error': str(e),
-				'whitelisted': problem_num in FAILING_SOLUTIONS
+				'whitelisted': problem_num in FAILING_SOLUTIONS,
+				'divergence': None,
+				'thresholds_line': None
 			})
-			if SHOW_WHITELISTED or problem_num not in FAILING_SOLUTIONS:
-				print(
-					f"{Fore.RED}{format_problem_num(problem_num)}: TIMEOUT - Exceeded {SOLUTION_TIMEOUT}s{Style.RESET_ALL}")
 			return result_data
 
 		elapsed_ms = (time.perf_counter() - start) * 1000
@@ -212,23 +220,14 @@ def run_single_solution(problem_num: int, func, fail_mode: str) -> Dict:
 				'category': None,
 				'status': status,
 				'error': f"Expected {expected}, got {result}",
-				'whitelisted': problem_num in FAILING_SOLUTIONS
+				'whitelisted': problem_num in FAILING_SOLUTIONS,
+				'divergence': None,
+				'thresholds_line': None
 			})
-
-			if problem_num in FAILING_SOLUTIONS:
-				color = Fore.YELLOW
-				prefix = "WHITELISTED"
-			else:
-				color = Fore.RED
-				prefix = "FAILED"
-
-			if SHOW_WHITELISTED or problem_num not in FAILING_SOLUTIONS:
-				print(f"{color}{format_problem_num(problem_num)}: {prefix} - Wrong answer{Style.RESET_ALL}")
 			return result_data
 
 		# Categorize performance
 		category = categorize_performance(elapsed_ms, thresholds)
-		formatted_time = format_time_colored(elapsed_ms, category)
 
 		# Check for performance divergence
 		divergence = check_divergence(category, expected_level, elapsed_ms, thresholds)
@@ -237,23 +236,9 @@ def run_single_solution(problem_num: int, func, fail_mode: str) -> Dict:
 		perf_failed, perf_msg = check_performance_failure(
 			elapsed_ms, thresholds, fail_mode, problem_num, expected_level
 		)
-
-		notes = thresholds.get('notes', '')
-		note_str = f" - {notes}" if notes else ""
-		note_str += f" [expected: {expected_level}]"
-
-		if divergence:
-			note_str += f" {divergence}"
-
-		print(f"{format_problem_num(problem_num)}: {formatted_time}{note_str}")
-
+		thresholds_line = None
 		if perf_failed or divergence or problem_num in PERFORMANCE_ISSUES:
-			print(
-				"    thresholds: "
-				f"elite <= {thresholds['elite']}ms | "
-				f"good <= {thresholds['good']}ms | "
-				f"acceptable <= {thresholds['acceptable']}ms"
-			)
+			thresholds_line = True
 
 		result_data.update({
 			'actual_result': result,
@@ -262,7 +247,8 @@ def run_single_solution(problem_num: int, func, fail_mode: str) -> Dict:
 			'status': 'PERF_FAIL' if perf_failed else 'PASS',
 			'error': perf_msg if perf_failed else None,
 			'divergence': divergence if divergence else None,
-			'whitelisted': False
+			'whitelisted': False,
+			'thresholds_line': thresholds_line
 		})
 
 		return result_data
@@ -274,10 +260,10 @@ def run_single_solution(problem_num: int, func, fail_mode: str) -> Dict:
 			'category': 'ERROR',
 			'status': 'ERROR',
 			'error': str(e),
-			'whitelisted': problem_num in FAILING_SOLUTIONS
+			'whitelisted': problem_num in FAILING_SOLUTIONS,
+			'divergence': None,
+			'thresholds_line': None
 		})
-		if SHOW_WHITELISTED or problem_num not in FAILING_SOLUTIONS:
-			print(f"{Fore.RED}{format_problem_num(problem_num)}: ERROR - {e}{Style.RESET_ALL}")
 		return result_data
 
 
@@ -301,8 +287,10 @@ def generate_results_dataframe(results: List[Dict]) -> pl.DataFrame:
 		'elite_threshold',
 		'good_threshold',
 		'acceptable_threshold',
+		'notes',
 		'divergence',
 		'error',
+		'thresholds_line',
 		'whitelisted'
 	]
 
@@ -361,41 +349,126 @@ def print_summary(df: pl.DataFrame, total_time: float, summary_rows: int):
 		counts_table.add_row(str(row['category']), str(row['count']))
 	console.print(counts_table)
 
-	# Tabular summary of passing solutions (limit to summary_rows)
-	if summary_rows > 0 and len(passed) > 0:
-		rows = min(summary_rows, len(passed))
-		table = (
-			passed
-			.select(['problem', 'category', 'elapsed_ms', 'expected_level'])
-			.with_columns(
-				pl.concat_str(
-					[pl.lit("Q"), pl.col('problem').cast(pl.Utf8).str.zfill(PROBLEM_PAD)]
-				).alias('problem'),
-				pl.col('category').str.to_lowercase(),
-				pl.col('expected_level').str.to_lowercase(),
-				weight_expr.alias('weight')
-			)
-			.sort(['weight', 'elapsed_ms'], descending=[True, False])
-			.drop('weight')
-			.head(rows)
-		)
-		perf_table = Table(
-			title=f"Performance Summary (top {rows})",
-			show_header=True,
-			header_style="bold"
-		)
-		perf_table.add_column("problem")
-		perf_table.add_column("category")
-		perf_table.add_column("elapsed_ms", justify="right")
-		perf_table.add_column("expected_level")
-		for row in table.iter_rows(named=True):
-			perf_table.add_row(
-				str(row['problem']),
-				str(row['category']),
-				f"{row['elapsed_ms']:.6f}",
-				str(row['expected_level'])
-			)
-		console.print(perf_table)
+
+# Performance summary table removed per user preference.
+
+
+def print_results_table(df: pl.DataFrame):
+	"""Print per-solution results as a rich table."""
+	terminal_width = shutil.get_terminal_size(fallback=(160, 24)).columns
+	console = Console(width=max(160, terminal_width))
+	rows_df = df
+	if not SHOW_WHITELISTED:
+		rows_df = rows_df.filter(~pl.col('whitelisted'))
+	rows_df = rows_df.sort('problem')
+
+	def max_len(values: List[str], minimum: int, maximum: int | None = None) -> int:
+		max_value = max((len(v) for v in values), default=minimum)
+		width = max(minimum, max_value)
+		if maximum is not None:
+			width = min(maximum, width)
+		return width
+
+	problem_vals = [str(row['problem']) for row in rows_df.iter_rows(named=True)]
+	runtime_vals = [
+		f"{row['elapsed_ms']:06.2f}ms" if row['elapsed_ms'] is not None else "-"
+		for row in rows_df.iter_rows(named=True)
+	]
+	status_vals = [
+		f"{PERFORMANCE_CATEGORIES[row['category']]['symbol']} {row['status'].lower()}"
+		if row.get('category') in PERFORMANCE_CATEGORIES
+		else f"✗ {row.get('status', '-').lower()}"
+		for row in rows_df.iter_rows(named=True)
+	]
+	note_vals = [(row.get('notes') or "-") for row in rows_df.iter_rows(named=True)]
+	grade_vals = [
+		(row.get('category') or row.get('status') or "-").lower()
+		for row in rows_df.iter_rows(named=True)
+	]
+	exp_vals = [
+		(row.get('expected_level') or "-").lower()
+		for row in rows_df.iter_rows(named=True)
+	]
+	recommendation_vals = [
+		"neutral"
+		for _ in rows_df.iter_rows(named=True)
+	]
+
+	id_width = max_len(problem_vals + ["id"], minimum=2)
+	ms_width = max_len(runtime_vals + ["ms"], minimum=8)
+	state_width = max_len(status_vals + ["state"], minimum=12, maximum=28)
+	note_width = max_len(note_vals + ["note"], minimum=24, maximum=60)
+	grade_width = max_len(grade_vals + ["grade"], minimum=5)
+	exp_width = max_len(exp_vals + ["expected"], minimum=8)
+	rec_width = max_len(recommendation_vals + ["recommendation"], minimum=7)
+
+	total_width = (
+		id_width + ms_width + state_width + note_width +
+		grade_width + exp_width + rec_width
+	)
+	console = Console(width=max(160, total_width + 3 * 8))
+
+	results_table = Table(title="Solution Results", show_header=True, header_style="bold", expand=False)
+	results_table.add_column("id", no_wrap=True, justify="right", width=id_width)
+	results_table.add_column("ms", no_wrap=True, justify="right", width=ms_width)
+	results_table.add_column("state", no_wrap=True, width=state_width)
+	results_table.add_column("note", overflow="ellipsis", no_wrap=True, width=note_width)
+	results_table.add_column("grade", no_wrap=True, width=grade_width)
+	results_table.add_column("expected", no_wrap=True, width=exp_width)
+	results_table.add_column("recommendation", no_wrap=True, justify="center", width=rec_width)
+
+	for row in rows_df.iter_rows(named=True):
+		problem = str(row['problem'])
+		elapsed = row['elapsed_ms']
+		runtime = f"{elapsed:06.2f}ms" if elapsed is not None else "-"
+		category = row.get('category')
+		status = row.get('status', '')
+		expected = (row.get('expected_level') or '-').lower()
+		notes = row.get('notes') or ''
+		explanation = notes or "-"
+		thresholds_line = row.get('thresholds_line')
+
+		if category in PERFORMANCE_CATEGORIES:
+			emoji = PERFORMANCE_CATEGORIES[category]['symbol']
+			grade = category.lower()
+			row_style = CATEGORY_STYLES.get(category, None)
+		else:
+			emoji = '✗'
+			grade = status.lower() if status else '-'
+			row_style = 'red'
+
+		if status == 'WHITELISTED':
+			row_style = 'yellow'
+
+		state = f"{emoji} {status.lower() if status else '-'}"
+		state_text = Text(state, style=row_style) if row_style else state
+		row_values = [problem]
+		if row_style:
+			row_values.append(Text(runtime, style=row_style))
+		else:
+			row_values.append(runtime)
+		row_values.extend([state_text, explanation])
+
+		level_weights = {'elite': 3, 'good': 2, 'acceptable': 1}
+		grade_weight = level_weights.get(grade)
+		expected_weight = level_weights.get(expected)
+
+		grade_text = grade
+		expected_text = expected
+		recommendation = ""
+		if grade_weight is not None and expected_weight is not None:
+			if grade_weight < expected_weight:
+				grade_text = Text(grade, style="yellow")
+				expected_text = Text(expected, style="yellow")
+				recommendation = Text("regress", style="yellow")
+			elif grade_weight > expected_weight:
+				grade_text = Text(grade, style="green")
+				expected_text = Text(expected, style="green")
+				recommendation = Text("upgrade", style="green")
+		row_values.extend([grade_text, expected_text, recommendation])
+		results_table.add_row(*row_values)
+
+	console.print(results_table)
 
 
 def print_failures(df: pl.DataFrame):
@@ -471,6 +544,7 @@ def print_divergences(df: pl.DataFrame):
 	divergences = df.filter(pl.col('divergence').is_not_null())
 
 	if len(divergences) > 0:
+		console = Console(width=max(160, shutil.get_terminal_size(fallback=(160, 24)).columns))
 		upgrades = divergences.filter(pl.col('divergence').str.contains("⬆️"))
 		regressions = divergences.filter(pl.col('divergence').str.contains("⬇️"))
 
@@ -480,8 +554,21 @@ def print_divergences(df: pl.DataFrame):
 			print(f"{'=' * 60}{Style.RESET_ALL}")
 			print(f"{Fore.GREEN}These solutions perform better than expected:{Style.RESET_ALL}\n")
 
+			table = Table(show_header=True, header_style="bold")
+			table.add_column("id", justify="right")
+			table.add_column("rec")
+			table.add_column("elite", justify="right")
+			table.add_column("good", justify="right")
+			table.add_column("acc", justify="right")
 			for row in upgrades.iter_rows(named=True):
-				print(f"{Fore.GREEN}   {format_problem_num(row['problem'])}: {row['divergence']}{Style.RESET_ALL}")
+				table.add_row(
+					str(row['problem']),
+					row['divergence'].replace("⬆️  Could upgrade:", "").strip(),
+					str(row['elite_threshold']),
+					str(row['good_threshold']),
+					str(row['acceptable_threshold']),
+				)
+			console.print(table)
 
 		if len(regressions) > 0:
 			print(f"\n{Fore.RED}{'=' * 60}")
@@ -489,28 +576,63 @@ def print_divergences(df: pl.DataFrame):
 			print(f"{'=' * 60}{Style.RESET_ALL}")
 			print(f"{Fore.RED}These solutions perform worse than expected:{Style.RESET_ALL}\n")
 
+			table = Table(show_header=True, header_style="bold")
+			table.add_column("id", justify="right")
+			table.add_column("rec")
+			table.add_column("elite", justify="right")
+			table.add_column("good", justify="right")
+			table.add_column("acc", justify="right")
 			for row in regressions.iter_rows(named=True):
-				print(f"{Fore.RED}   {format_problem_num(row['problem'])}: {row['divergence']}{Style.RESET_ALL}")
+				table.add_row(
+					str(row['problem']),
+					row['divergence'].replace("⬇️  Regression:", "").strip(),
+					str(row['elite_threshold']),
+					str(row['good_threshold']),
+					str(row['acceptable_threshold']),
+				)
+			console.print(table)
 
 
-def run_standalone(fail_mode='acceptable', summary_rows=20):
+def parse_categories(value: str) -> List[str]:
+	"""Parse comma-separated category list."""
+	if not value:
+		return []
+
+	return [item.strip().lower() for item in value.split(",") if item.strip()]
+
+
+def run_standalone(fail_mode='acceptable', summary_rows=20,
+						 include_categories=None, exclude_categories=None):
 	"""Standalone runner for testing and benchmarking
 
 	Args:
 		fail_mode: Performance fail threshold ('none', 'acceptable', 'good', 'elite', 'expected')
 		summary_rows: Number of rows to show in the tabular summary (0 disables)
+		include_categories: expected_level values to include (elite/good/acceptable)
+		exclude_categories: expected_level values to exclude (elite/good/acceptable)
 	"""
 	print("=" * 60)
 	print("Project Euler Solutions - Testing & Benchmarking")
 	print("=" * 60)
 	print(f"Fail mode: {fail_mode.upper()}")
-	print(f"\nTesting {len(solutions)} solutions...\n")
+	problem_nums = sorted(solutions.keys())
+	if include_categories:
+		problem_nums = [
+			num for num in problem_nums
+			if PROBLEMS.get(num, {}).get('expected') in include_categories
+		]
+	if exclude_categories:
+		problem_nums = [
+			num for num in problem_nums
+			if PROBLEMS.get(num, {}).get('expected') not in exclude_categories
+		]
+	print(f"\nTesting {len(problem_nums)} solutions...\n")
 
 	# Collect results
 	results = []
 	total_time = 0.0
 
-	for problem_num in sorted(solutions.keys()):
+	for problem_num in problem_nums:
 		func = solutions[problem_num]
 		result_data = run_single_solution(problem_num, func, fail_mode)
 		results.append(result_data)
@@ -520,6 +642,8 @@ def run_standalone(fail_mode='acceptable', summary_rows=20):
 
 	# Generate dataframe
 	df = generate_results_dataframe(results)
+
+	print_results_table(df)
 
 	# Print interesting stats
 	print_summary(df, total_time, summary_rows)
@@ -557,6 +681,23 @@ if __name__ == '__main__':
 		default=20,
 		help='Rows to show in performance summary table (0 disables)'
 	)
+	parser.add_argument(
+		'--include-categories',
+		type=str,
+		default='',
+		help='Comma-separated expected levels to include (elite,good,acceptable)'
+	)
+	parser.add_argument(
+		'--exclude-categories',
+		type=str,
+		default='',
+		help='Comma-separated expected levels to exclude (elite,good,acceptable)'
+	)
 	args = parser.parse_args()
 
-	sys.exit(run_standalone(fail_mode=args.fail_mode, summary_rows=args.summary_rows))
+	sys.exit(run_standalone(
+		fail_mode=args.fail_mode,
+		summary_rows=args.summary_rows,
+		include_categories=parse_categories(args.include_categories),
+		exclude_categories=parse_categories(args.exclude_categories)
+	))

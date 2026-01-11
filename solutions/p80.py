@@ -1,9 +1,6 @@
 import math
 from decimal import Decimal, getcontext
 
-from solutions.euler.util.decorators import timed_function
-
-
 def square_root_n(number, iteration_count=100000):
 	"""
 		- newton's method - not sure about the intricate details (like precision, and exit-condition)
@@ -40,6 +37,7 @@ if __name__ == '__main__':
 	import logging
 	import sys
 
+	from solutions.euler.util.decorators import timed_function
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 	assert (timed_function(digit_sum_of_100)(2) == 475)
 	assert (timed_function(q80)() == 40886)

@@ -1,7 +1,5 @@
 import logging
 
-from solutions.euler.util.decorators import timed_function
-
 SINGLE_DIGITS = {
 	0: '',
 	1: 'one',
@@ -94,5 +92,6 @@ def q17(start=1, up_to=1000):
 if __name__ == '__main__':
 	import sys
 
+	from solutions.euler.util.decorators import timed_function
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 	assert (timed_function(q17)() == 21124)

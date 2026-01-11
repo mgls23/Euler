@@ -2,8 +2,6 @@ import logging
 import math
 import sys
 
-from solutions.euler.util.decorators import timed_function
-
 # If the number is a power of 2, we know how this would be
 collatz_sequence = {int(math.pow(2, index - 1)): index for index in range(1, 1000)}
 
@@ -51,5 +49,6 @@ def q14(N=1_000_000):
 
 
 if __name__ == '__main__':
+	from solutions.euler.util.decorators import timed_function
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 	assert (timed_function(q14)() == 837799)

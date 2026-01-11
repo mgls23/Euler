@@ -1,6 +1,3 @@
-from solutions.euler.util.decorators import timed_function
-
-
 def q52(consecutive=6):
 	# 1 * 6 = 6 :: minimum is 100,000
 	for number1_digit in range(5, 100000):
@@ -19,4 +16,5 @@ def q52(consecutive=6):
 
 
 if __name__ == '__main__':
+	from solutions.euler.util.decorators import timed_function
 	assert (timed_function(q52)() == 142857)

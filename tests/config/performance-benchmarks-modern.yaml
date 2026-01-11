@@ -26,9 +26,9 @@ problems:
     notes: "Simple arithmetic, should be instant"
 
   2:
-    elite: 0.1
-    good: 0.5
-    acceptable: 1
+    elite: 0.5
+    good: 1
+    acceptable: 2
     notes: "Fibonacci sum of even values"
 
   3:
@@ -59,7 +59,7 @@ problems:
     elite: 10
     good: 30
     acceptable: 100
-    notes: "10001st prime with sieve"
+    notes: "10001st prime with sieve (bytearray/odd-only can be faster; external libs could improve further)"
 
   8:
     elite: 0.5

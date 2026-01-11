@@ -11,6 +11,10 @@ https://projecteuler.net/problem={N}
 Answer: {answer}
 """
 
+import logging
+
+from solutions.euler.util.decorators import timed_function
+
 
 def q{N}() -> int:
    """
@@ -24,7 +28,10 @@ def q{N}() -> int:
 
 
 if __name__ == '__main__':
-   result = q{N}()
-   print(f"{Description} = {result}")
-   assert result == {EXPECTED_ANSWER}
+   import sys
+   from tests.config.answers import ANSWERS
+
+   log_format = '[%(levelname)s] %(asctime)s (%(name)s) %(pathname)s:%(lineno)d::%(funcName)s - %(message)s'
+   logging.basicConfig(stream=sys.stderr, level=logging.INFO, format=log_format)
+   assert timed_function(q{N})() == ANSWERS[{N}]
 ```

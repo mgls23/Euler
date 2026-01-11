@@ -1,7 +1,4 @@
 from solutions.euler.strings.number_to_string import MILLION
-from solutions.euler.util.decorators import timed_function
-
-
 def coin_partition(number):
 	# TODO :: construct 2D matrix and use DP
 
@@ -29,6 +26,7 @@ if __name__ == '__main__':
 	import logging
 	import sys
 
+	from solutions.euler.util.decorators import timed_function
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 	assert (timed_function(coin_partition)(5) == 7)
 	assert (timed_function(q78)() == -1)

@@ -1,7 +1,4 @@
 from solutions.euler.maths.prime import is_prime_robin_miller
-from solutions.euler.util.decorators import timed_function
-
-
 def find_primes_with_runs(repeating_number: str, digit: int):
 	# All this for a drop of blood - for 5ms difference...
 	if primes := primes_with_runs_m_1(repeating_number, digit): return primes
@@ -71,5 +68,6 @@ if __name__ == '__main__':
 	import logging
 	import sys
 
+	from solutions.euler.util.decorators import timed_function
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 	assert (timed_function(q111)() == 612407567715)

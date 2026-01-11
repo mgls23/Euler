@@ -1,7 +1,4 @@
 from solutions.euler.maths.palindromes import is_palindrome
-from solutions.euler.util.decorators import timed_function
-
-
 def is_lychrel_number(number):
 	for _ in range(50):
 		number += int(str(number)[::-1])
@@ -15,5 +12,6 @@ def q55(upper_range=10 ** 4):
 
 
 if __name__ == '__main__':
+	from solutions.euler.util.decorators import timed_function
 	assert (not timed_function(is_lychrel_number)(349))
 	assert (timed_function(q55)() == 249)

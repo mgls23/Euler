@@ -1,6 +1,5 @@
 import logging
 
-from solutions.euler.util.decorators import timed_function
 from solutions.euler.util.io_utils import datafiles
 
 
@@ -73,5 +72,6 @@ def q89() -> int:
 if __name__ == '__main__':
 	import sys
 
+	from solutions.euler.util.decorators import timed_function
 	logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 	assert (timed_function(q89)() == 743)

@@ -1,6 +1,3 @@
-from solutions.euler.util.decorators import timed_function
-
-
 def find_digits(power, last_digit_index):
 	number = pow(2, power)
 	try:
@@ -83,6 +80,7 @@ if __name__ == '__main__':
 	import logging
 	import sys
 
+	from solutions.euler.util.decorators import timed_function
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 	# assert (timed_function(multiply_out_power_of_2)(2, 1) == 4)
 	# assert (timed_function(multiply_out_power_of_2)(10, 2) == 24)

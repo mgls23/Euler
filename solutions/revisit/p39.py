@@ -1,9 +1,6 @@
 from functools import reduce
 from math import gcd, sqrt
 
-from solutions.euler.util.decorators import timed_function
-
-
 # TODO :: after q9 is re-implemented after learning Euclidean formula - revisit this also
 #  This somewhat touches co-prime a,b - but the 'correct' answer seems much neater
 def q39(upper_bound_perimeter=1000):
@@ -38,6 +35,7 @@ def fits_fibonacci(max_perimeter=1000):
 
 
 if __name__ == '__main__':
+	from solutions.euler.util.decorators import timed_function
 	timed_function(fits_fibonacci)()
 
 	assert (timed_function(q39)(120) == 120)
