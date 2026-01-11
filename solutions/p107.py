@@ -5,7 +5,6 @@ from operator import itemgetter
 import networkx as nx
 import numpy as np
 
-from solutions.euler.util.decorators import timed_function
 from solutions.euler.util.graph_utils import adjacency_matrix_to_graph
 from solutions.euler.util.io_utils import datafiles
 
@@ -61,5 +60,6 @@ def q107():
 if __name__ == '__main__':
 	import sys
 
+	from solutions.euler.util.decorators import timed_function
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 	assert (timed_function(q107)() == 259679)

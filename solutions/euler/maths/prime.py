@@ -2,7 +2,7 @@ import collections
 import math
 import random
 
-from solutions.euler.util.decorators import memoised, timed_function
+from solutions.euler.util.decorators import timed_function
 
 
 class PrimeGenerator:
@@ -129,7 +129,7 @@ def _benchmark_for_generate_sie(lower_range_digit=6, upper_range_digit=7):
 @timed_function
 def _benchmark_generate_by_robin_miller(lower_range_digit=5, upper_range_digit=6):
 	return [number for number in range(10 ** lower_range_digit, 10 ** upper_range_digit) if
-					is_prime_robin_miller(number)]
+			  is_prime_robin_miller(number)]
 
 
 if __name__ == '__main__':

@@ -1,7 +1,4 @@
 from solutions.euler.sequence.polygonal import Pentagonal
-from solutions.euler.util.decorators import timed_function
-
-
 def q44():
 	pentagonal = Pentagonal()
 	pentagonal_numbers = [0, 1]
@@ -18,5 +15,6 @@ if __name__ == '__main__':
 	import logging
 	import sys
 
+	from solutions.euler.util.decorators import timed_function
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 	assert (timed_function(q44)() == 5482660)

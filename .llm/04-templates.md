@@ -11,7 +11,6 @@ https://projecteuler.net/problem={N}
 Answer: {answer}
 """
 
-
 def q{N}() -> int:
    """
    {Short description of approach}
@@ -24,7 +23,7 @@ def q{N}() -> int:
 
 
 if __name__ == '__main__':
-   result = q{N}()
-   print(f"{Description} = {result}")
-   assert result == {EXPECTED_ANSWER}
+   from solutions.euler.util.runner import run_solution
+
+   run_solution(q{N}, {N})
 ```

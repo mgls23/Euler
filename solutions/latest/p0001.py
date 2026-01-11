@@ -6,6 +6,7 @@ Find the sum of all the multiples of 3 or 5 below 1000.
 
 Solution uses Gaussian summation with inclusion-exclusion principle.
 """
+
 from solutions.euler.maths.sigma import sigma_n
 
 
@@ -51,9 +52,6 @@ def q1(upper_bound: int = 999) -> int:
 
 
 if __name__ == '__main__':
-	from tests.config.answers import ANSWERS
+	from solutions.euler.util.runner import run_solution
 
-	result = q1()
-	expected = ANSWERS[1]
-	assert result == expected, f"Expected {expected}, got {result}"
-	print(f"Problem 1: {result} ✓")
+	run_solution(q1, 1)

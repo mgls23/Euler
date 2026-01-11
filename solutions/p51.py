@@ -2,9 +2,6 @@ import logging
 from itertools import combinations
 
 from solutions.euler.maths.prime import generate_to_sieve
-from solutions.euler.util.decorators import timed_function
-
-
 def q51() -> int:
 	prime_numbers = generate_to_sieve(10 ** 7)
 
@@ -40,5 +37,6 @@ def q51() -> int:
 if __name__ == '__main__':
 	import sys
 
+	from solutions.euler.util.decorators import timed_function
 	logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 	assert (timed_function(q51)() == 121313)

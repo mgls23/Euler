@@ -1,7 +1,4 @@
 from solutions.euler.strings.number_to_string import MILLION
-from solutions.euler.util.decorators import timed_function
-
-
 def q85(upper_bound=2 * MILLION):
 	def calculate_ways(tuple_):
 		w, h = tuple_
@@ -21,5 +18,6 @@ if __name__ == '__main__':
 	import logging
 	import sys
 
+	from solutions.euler.util.decorators import timed_function
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 	assert (timed_function(q85)() == 2772)

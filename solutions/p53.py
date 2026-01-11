@@ -1,8 +1,5 @@
 from math import factorial
 
-from solutions.euler.util.decorators import timed_function
-
-
 # If this extended (such that ncr_requirement can be smaller than n, this function will need to be modified
 def find_first_non_fitting_r(n, ncr_needs_to_be, starting_r):
 	top = factorial(n) // factorial(n - starting_r)  # Special optimisation in factorial is fast
@@ -36,4 +33,5 @@ def q53(upper_range=100, ncr_requirement=10 ** 6):
 
 
 if __name__ == '__main__':
+	from solutions.euler.util.decorators import timed_function
 	assert (timed_function(q53)() == 4075)

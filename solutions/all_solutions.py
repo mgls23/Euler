@@ -34,32 +34,6 @@ from solutions.euler.util.dates import get_number_of_days_in_month
 from solutions.euler.util.io_utils import datafiles
 
 
-def q1():
-	from solutions.euler.maths.sigma import sigma_n
-
-	def sigma_n_with_multiplier(upper_bound: int, multiples_of: int):
-		""" Finds sum of all `multiples_of` from 1 to upper bound
-		Taking the example of multiples_of=3,
-
-				3   +   6   +   9   +   12  +   ...   3n
-		= (3x1) + (3x2) + (3x3) + (3x4) +   ... (3xn)
-		= 3 x (1+2+3+ ... n)
-		= 3 x sigma(1 -> n)
-		= `multiples_of` * sigma(n)
-		"""
-		# Catch negative n cases as well as 0 case here
-		if upper_bound < multiples_of: return 0
-		return multiples_of * sigma_n(upper_bound // multiples_of)
-
-	number_up_to = 999
-
-	multiples_of_3 = sigma_n_with_multiplier(number_up_to, 3)
-	multiples_of_5 = sigma_n_with_multiplier(number_up_to, 5)
-	multiples_of_15 = sigma_n_with_multiplier(number_up_to, 15)
-
-	return (multiples_of_3 + multiples_of_5) - multiples_of_15
-
-
 def q2():
 	from solutions.euler.maths.fibonacci import NFibonacciIterator
 

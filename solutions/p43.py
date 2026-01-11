@@ -2,9 +2,6 @@ import logging
 import sys
 from math import ceil
 
-from solutions.euler.util.decorators import timed_function
-
-
 def is_partially_pandigital(number_string):
 	return len(set(number_string)) == len(number_string)
 
@@ -91,5 +88,6 @@ def q43():
 
 
 if __name__ == '__main__':
+	from solutions.euler.util.decorators import timed_function
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 	assert (timed_function(q43)() == 16695334890)

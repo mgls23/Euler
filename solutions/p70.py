@@ -5,9 +5,6 @@ from math import sqrt, ceil
 
 from solutions.euler.maths.prime import generate_to_sieve
 from solutions.euler.maths.ungrouped import _phi
-from solutions.euler.util.decorators import timed_function
-
-
 # Not tested - need to be profiled
 def ranged_phi(upper_limit):
 	prime_numbers = generate_to_sieve(upper_limit)
@@ -46,4 +43,5 @@ def q70(given_number=10 ** 7):
 
 
 if __name__ == '__main__':
+	from solutions.euler.util.decorators import timed_function
 	assert (timed_function(q70)() == 8319823)

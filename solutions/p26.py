@@ -2,9 +2,6 @@ import logging
 import sys
 
 from solutions.euler.maths.prime import generate_to_sieve
-from solutions.euler.util.decorators import timed_function
-
-
 def _string_division_verbose(dividend: int, divisor: int) -> int:
 	# INIT -- all words share len() -- satisfying...
 	iteration = 0
@@ -67,6 +64,7 @@ def q26():
 
 
 if __name__ == '__main__':
+	from solutions.euler.util.decorators import timed_function
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
 	for prime in generate_to_sieve(100):

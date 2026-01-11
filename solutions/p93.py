@@ -2,9 +2,6 @@ import itertools
 import logging
 from operator import add, mul, sub, truediv
 
-from solutions.euler.util.decorators import timed_function
-
-
 def find_combinations(numbers):
 	operators = [add, sub, mul, truediv]
 	chosen = []
@@ -55,5 +52,6 @@ def q93():
 if __name__ == '__main__':
 	import sys
 
+	from solutions.euler.util.decorators import timed_function
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 	assert (timed_function(q93)() == '1258')

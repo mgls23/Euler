@@ -1,6 +1,3 @@
-from solutions.euler.util.decorators import timed_function
-
-
 def continued_fraction_has_odd_periods(number):
 	# https://projecteuler.net/thread=64 - mathgod optimisation
 	always_true_offset = [+1]
@@ -50,6 +47,7 @@ if __name__ == '__main__':
 	import logging
 	import sys
 
+	from solutions.euler.util.decorators import timed_function
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 	assert (timed_function(find_fraction_representation_of_root)(23) == (4, [1, 3, 1, 8]))
 	assert (timed_function(q64)(13 + 1) == 4)

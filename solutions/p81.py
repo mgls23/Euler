@@ -2,7 +2,6 @@ import logging
 from itertools import accumulate
 from typing import List
 
-from solutions.euler.util.decorators import timed_function
 from solutions.euler.util.io_utils import parse_matrix
 
 
@@ -52,5 +51,6 @@ def q81() -> int:
 if __name__ == '__main__':
 	import sys
 
+	from solutions.euler.util.decorators import timed_function
 	logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 	assert (timed_function(q81)() == 427337)

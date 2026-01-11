@@ -1,7 +1,6 @@
 import math
 
 from solutions.euler.strings.number_to_string import SPECIAL_MODULO, BILLION
-from solutions.euler.util.decorators import timed_function
 from solutions.p72 import geometric_sum
 
 
@@ -75,6 +74,7 @@ if __name__ == '__main__':
 	import logging
 	import sys
 
+	from solutions.euler.util.decorators import timed_function
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 	# assert (timed_function(big_s_brute_force)(20) == 1074)
 	# assert (timed_function(big_s_efficient)(20) == 1074)

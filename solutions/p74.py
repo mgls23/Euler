@@ -1,8 +1,5 @@
 from math import factorial
 
-from solutions.euler.util.decorators import timed_function
-
-
 def brute_force():
 	def repeating_terms(number):
 		pattern = []
@@ -65,5 +62,6 @@ if __name__ == '__main__':
 	import logging
 	import sys
 
+	from solutions.euler.util.decorators import timed_function
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 	assert (timed_function(p74)() == 402)

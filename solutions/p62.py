@@ -1,9 +1,6 @@
 from collections import Counter
 
 from solutions.euler.sequence.polynomial import Polynomial
-from solutions.euler.util.decorators import timed_function
-
-
 def q62(number_of_matches=5):
 	cube_generator = Polynomial(3)
 
@@ -21,6 +18,7 @@ if __name__ == '__main__':
 	import logging
 	import sys
 
+	from solutions.euler.util.decorators import timed_function
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 	assert (timed_function(q62)() == 127035954683)
 	assert (timed_function(q62)(25) == 10293651443192768)  # Runs in around 1 second

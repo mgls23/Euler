@@ -3,7 +3,6 @@ import re
 import sys
 from collections import Counter
 
-from solutions.euler.util.decorators import timed_function
 from solutions.euler.util.io_utils import datafiles
 
 ROW_SIZE = 3
@@ -154,5 +153,6 @@ def q96():
 
 
 if __name__ == '__main__':
+	from solutions.euler.util.decorators import timed_function
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 	assert timed_function(q96)() == 24702

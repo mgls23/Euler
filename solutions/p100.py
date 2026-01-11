@@ -1,6 +1,3 @@
-from solutions.euler.util.decorators import timed_function
-
-
 def generate_x_candidate(start):
 	""" n * (n-1) = X :: only X that satisfies condition is viable X """
 	x_candidate = start
@@ -26,5 +23,6 @@ if __name__ == '__main__':
 	import logging
 	import sys
 
+	from solutions.euler.util.decorators import timed_function
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 	assert (timed_function(q100)() == -1)

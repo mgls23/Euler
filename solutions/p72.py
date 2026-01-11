@@ -1,6 +1,3 @@
-from solutions.euler.util.decorators import timed_function
-
-
 def q72(number=1000000):
 	visited = list(range(number + 1))
 	summed = 0
@@ -36,6 +33,7 @@ if __name__ == '__main__':
 	import logging
 	import sys
 
+	from solutions.euler.util.decorators import timed_function
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
 	# assert (timed_function(geometric_sum)(3, 3, 2) == 12)

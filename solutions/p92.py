@@ -2,8 +2,6 @@ import logging
 import math
 
 from solutions.euler.strings.number_to_string import MILLION, TEN
-from solutions.euler.util.decorators import timed_function
-
 INPUT = TEN * MILLION
 
 
@@ -97,6 +95,7 @@ def most_optimal_answer():
 if __name__ == '__main__':
 	import sys
 
+	from solutions.euler.util.decorators import timed_function
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 	assert (timed_function(q92)() == 8581146)
 	# assert (timed_function(most_optimal_answer)() == 8581146)

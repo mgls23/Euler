@@ -1,9 +1,3 @@
-import logging
-import sys
-
-from solutions.euler.util.decorators import timed_function
-
-
 def q16_what_they_want():
 	""" Q16 :: Digit of 2^1000"""
 	# Do not use this method of digit sum - it's much faster to use
@@ -35,5 +29,6 @@ def q16():
 
 
 if __name__ == '__main__':
-	logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
-	assert (timed_function(q16)() == 121313)
+	from solutions.euler.util.runner import run_solution
+
+	run_solution(q16, 16)

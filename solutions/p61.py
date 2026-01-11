@@ -5,9 +5,6 @@ from collections import deque
 from itertools import permutations
 
 from solutions.euler.sequence.polygonal import Triangle, Square, Pentagonal, Hexagonal, Heptagonal, Octagonal, Polygonal
-from solutions.euler.util.decorators import timed_function
-
-
 class PolygonalNode:
 	def __init__(self, polygonal_degree: int, number: int):
 		self.polygonal_degree = polygonal_degree
@@ -75,6 +72,7 @@ def q61(digits=4):
 if __name__ == '__main__':
 	import sys
 
+	from solutions.euler.util.decorators import timed_function
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 	assert (timed_function(Triangle.to_index)(Triangle(), 10 ** 3) == 44.224154547626725)
 

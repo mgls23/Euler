@@ -1,9 +1,6 @@
 import logging
 
 from solutions.euler.strings.number_to_string import MILLION
-from solutions.euler.util.decorators import timed_function
-
-
 def dp_variable_min(total_blocks, minimum_block_size):
 	""" This is just p114 but with variable minimum_block size
 	Minor adjustments have been made
@@ -46,6 +43,7 @@ def q115(m=50):
 if __name__ == '__main__':
 	import sys
 
+	from solutions.euler.util.decorators import timed_function
 	logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 	assert (timed_function(q115)(10) == 57)
 	assert (timed_function(q115)(50) == 168)
