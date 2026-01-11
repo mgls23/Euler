@@ -1,0 +1,13 @@
+# Test Dependencies
+# Includes production dependencies plus testing infrastructure
+
+# Include production dependencies
+-r base.txt
+
+# Testing framework
+pytest
+
+# Test infrastructure dependencies
+pyyaml     # Performance benchmark configuration
+polars     # Structured test results and analysis
+colorama   # Colored terminal output

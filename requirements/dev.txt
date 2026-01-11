@@ -1,0 +1,18 @@
+# Development Dependencies
+# Includes production dependencies plus development tools
+
+# Include production dependencies
+-r base.txt
+
+# Scientific computing (not needed for core solutions)
+scipy      # Advanced scientific computing
+sympy      # Symbolic mathematics
+
+# Visualization and debugging
+deepdiff   # Deep comparison for debugging
+matplotlib # Data visualization
+
+# Jupyter notebook development
+jupyter
+notebook
+jupyterlab

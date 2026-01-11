@@ -1,0 +1,8 @@
+# Production Dependencies
+# Core libraries for Project Euler solutions
+
+# For matrices & numerical computation
+numpy<2  # Pin to 1.x until 2.x compatibility tested
+
+# For graph algorithms
+networkx

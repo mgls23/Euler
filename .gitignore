@@ -1,8 +1,36 @@
+# Python
 *.pyc
-venv
-.idea
-.ipynb_checkpoints
+__pycache__/
+*.py[cod]
+*$py.class
 
-# Non-negotiable
-.claude
+# Virtual Environments
+venv/
+venv*/
+env/
+ENV/
+.venv/
+
+# IDEs
+.idea/
+.vscode/
+.run/
+*.swp
+*.swo
+*~
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
 .DS_Store
+Thumbs.db
+
+# Project-specific
+# Non-negotiable (keep these commented out)
+# .claude

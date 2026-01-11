@@ -1,3 +1,0 @@
-# For Matrices & Graphs
-numpy<2 # We will eventually get to it, but this breaks others
-networkx

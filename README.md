@@ -1,71 +1,160 @@
-# Project Euler
+# Project Euler Solutions
 
-My own implementation of Project Euler [https://projecteuler.net/archives], a set of mathematical computational
-challenges.
+My implementation of [Project Euler](https://projecteuler.net/archives) challenges - a collection of mathematical and
+computational problems.
+
+**Status:** 102 solutions implemented | 85 passing | Performance: 76.5%
+
+## Quick Start
+
+### Installation
+
+```bash
+# Install production dependencies
+pip install -r requirements/base.txt
+
+# Install test dependencies (recommended)
+pip install -r requirements/test.txt
+
+# Install development dependencies (optional - includes Jupyter, visualization tools)
+pip install -r requirements/dev.txt
+```
+
+### Running Solutions
+
+```bash
+# Run a specific solution
+python -m solutions.latest.p0001
+
+# Test all solutions with benchmarking
+python answers.py
+
+# Strict mode: fail if performance doesn't meet expected levels
+python answers.py --fail-mode=expected
+```
 
 ## Testing
 
-Run all solutions and benchmarks:
+The project includes comprehensive testing infrastructure with automated correctness validation and performance
+benchmarking.
+
+### Quick Test Commands
 
 ```bash
-python answers.py                        # Test all 102 solutions (5s timeout per solution)
-python answers.py --fail-mode=expected   # Strict mode: fail if doesn't meet expected speed
+# Stage 1: Unit tests (fast)
+./scripts/run-unit-tests.sh
+
+# Stage 2: All solutions + benchmarks (~11s)
+./scripts/run-all-solutions.sh
+
+# Custom fail modes
+FAIL_MODE=none ./scripts/run-all-solutions.sh      # Only fail on correctness
+FAIL_MODE=good ./scripts/run-all-solutions.sh      # Fail if exceeds 200ms
+FAIL_MODE=elite ./scripts/run-all-solutions.sh     # Fail if exceeds 50ms
 ```
 
-See `scripts/README.md` for complete testing documentation.
+### Testing Features
+
+- ✅ **102 solutions tested** with 5-second timeout per solution
+- ✅ **Performance monitoring** - Automatic upgrade/regression detection
+- ✅ **Whitelist system** - Known failures tracked without blocking
+- ✅ **Git hooks** - Automated testing on commit/push
+- ✅ **CI/CD integration** - GitHub Actions workflow
+
+See [`scripts/README.md`](scripts/README.md) for complete testing documentation.
 
 ## Requirements
 
-To run this project, you'll need the latest version of Python. Currently, this is Python 3.11 or above.
+### Python Version
 
-### Python 3.11
+**Minimum:** Python 3.11 or above
 
-* walrus operator (:=)
+The codebase uses modern Python features:
 
-### Python 3.9
+- **Python 3.11+**: Walrus operator (`:=`)
+- **Python 3.9+**: `functools.cache`, `functools.lru_cache`, type hinting (no `from typing import X`)
+- **Python 3.8+**: `math.prod`
 
-* functools.cache
-* functools.lru_cache
-* type hinting (no need to do from typing import X)
+### Dependencies
 
-### Python 3.8
+**Production:**
 
-* math.prod
+- `numpy` - Numerical computation and matrices
+- `networkx` - Graph algorithms
 
-## Technical Debt
+**Testing (optional):**
 
-I used Project Euler to get better at programming, and this includes my early days of programming.
-There are a lot of legacy + ugly code I haven't got around to fixing.
+- `pytest` - Testing framework
+- `pyyaml` - Benchmark configuration
+- `polars` - Structured test results
+- `colorama` - Colored output
 
-I'll get around to re-writing all solutions in jupyter notebook. One-day.
+## Project Structure
 
-## Styling
-
-Everything is formatted using my Pycharm editor (project settings is saved).
-
-### Functional > comprehension
-
-In general, I think functional is more readable than comprehension.
-
-But if I need to create a lambda or function just because it takes in 2 arguments or something trivial,
-I'd prefer list comprehension for example, it's not really all that neat to do this in functional
-when it would be in list comprehension. For example,
-
-```python
-result = [transform(x, z) for (x, y, z) in iterable if condition(y)]
+```
+.
+├── answers.py              # Main test runner (102 solutions)
+├── solutions_loader.py     # Multi-location solution import
+├── solutions/              # Solution implementations
+│   ├── latest/            # Latest implementations (priority)
+│   ├── renewed/           # Refactored solutions
+│   ├── revisit/           # Revisited solutions
+│   └── notebook/          # Jupyter notebooks
+├── tests/                  # Testing infrastructure
+│   ├── benchmark/         # Benchmark tests
+│   ├── config/            # Test configuration
+│   └── unit/              # Unit tests
+└── scripts/               # Test scripts and git hooks
 ```
 
-### TABS > spaces
+## Development Philosophy
 
-TL;DR - You can specify what indentation is to your preference. End of discussion.
+### Code Style
 
-#### Long version
+**Formatted using:** PyCharm project settings (included in repo)
 
-Some communities like having 4 spaces. Which looks really cool until you meet the community which also uses json / yaml,
-and they insist on 2. And when you finally get around to kind of getting used to all the nested scope (which one is
-the continuation of the function I was looking at? JSON at least mandates curly brackets, unlike Python, so count again 
-and look closer) there are those who just don't give a damn, compromise (i.e. annoy both sides) and go with 3 spaces.
-To be fair, that's the one I agree with the most. 2 looks too cramped, 4 looks too spaced out. 3 is just right.
+**Functional > Comprehension**
 
-Anyway, the only way to be happy once and for all is to define your own tab width, which is infinitely easier if we 
-enforce tabs as rule. Also, Guido never actually insisted on spaces. 
+Prefer functional programming for readability, but use comprehensions when they're clearer:
+
+```python
+# Comprehension is clearer for complex transformations
+result = [transform(x, z) for (x, y, z) in iterable if condition(y)]
+
+# Functional is clearer for simple transformations
+result = map(transform, iterable)
+```
+
+**Tabs > Spaces**
+
+Using tabs allows developers to set their preferred indentation width.
+
+### Technical Debt
+
+This project spans my programming journey from early days to present. Some legacy code exists that hasn't been
+refactored yet. Improvements are ongoing through:
+
+- Migrating solutions to `solutions/latest/`
+- Adding comprehensive test coverage
+- Refactoring with modern Python patterns
+- Converting solutions to Jupyter notebooks (in progress)
+
+## Documentation
+
+Detailed documentation in `.llm/` directory:
+
+- [Testing Guide](.llm/06-testing-guide.md) - Comprehensive testing documentation
+- [Coding Preferences](.llm/01-coding-preferences.md) - Code style and patterns
+- [Project Direction](.llm/03-project-direction.md) - Goals and roadmap
+
+## Contributing
+
+This is a personal learning project, but feel free to:
+
+- Open issues for bugs or suggestions
+- Submit PRs for improvements
+- Use the code for your own learning
+
+## License
+
+Personal project - feel free to use for learning purposes.
