@@ -1,0 +1,22 @@
+# LLM Code Review Preferences
+
+## Variable Naming
+- **Suggest** better names, but **work with existing** unless clear ROI
+
+## Always Suggest
+- **Math clarity**: Simplify formulas (e.g., `d * (10**d - 10**(d-1))` → `d * 9 * 10**(d-1)`)
+- **Modernization**: Use modern Python (e.g., `math.prod` over `reduce(mul, ...)`)
+- **Bug fixes**: Off-by-one, range issues, etc.
+
+## Style Notes
+- Prefer `n + 1` over magic numbers when accounting for range exclusivity
+
+## Commit Message Style
+- Format: `[Problem#] Short description (#PR)`
+- Include `(#PR)` only if a PR was made
+- Omit PR reference for minor fixes / direct commits
+- Separate commits for orthogonal changes
+- Examples:
+  - `[9] Pythagorean Triplet (#37)`
+  - `[14] Collatz Sequence + generate_to_sieve`
+  - `Fix Failing CI (update requirements.txt) (#38)`
