@@ -1,357 +1,294 @@
-import os
-import time
-from typing import Dict, Tuple, List
+"""Comprehensive testing and benchmarking for all Project Euler solutions
 
-import yaml
+Standalone runner for:
+- Correctness testing
+- Performance benchmarking (using performance-benchmarks-modern.yaml)
+- Colored output and performance categorization
+
+Pytest test classes are in tests/benchmark/test_all_solutions.py
+
+Run standalone:
+  python answers.py                              # Default: fail-mode=acceptable
+  python answers.py --fail-mode=none             # Never fail on performance
+  python answers.py --fail-mode=acceptable       # Fail if exceeds acceptable
+  python answers.py --fail-mode=good             # Fail if exceeds good
+  python answers.py --fail-mode=elite            # Fail if exceeds elite
+  python answers.py --fail-mode=expected         # Fail if doesn't meet expected speed
+"""
+import argparse
+import sys
+import time
+
 from colorama import init, Fore, Style
 
-from solutions.euler.p0014 import q14
-from solutions.p0016 import q16
-from solutions.p26 import q26
+from tests.config.answers import PROBLEMS, ANSWERS
+from tests.benchmark.config import benchmarks
 
 # Initialize colorama for colored output
 init(autoreset=True)
 
-from solutions.all_solutions import *
-from solutions.p105 import q105
-from solutions.p106 import q106
-from solutions.p107 import q107
-from solutions.p111 import q111
-from solutions.p112 import q112
-from solutions.p113 import q113
-from solutions.p114 import q114
-from solutions.p115 import q115
-from solutions.p116 import q116
-from solutions.p17 import q17
-from solutions.p0031 import q31
-from solutions.p32 import q32
-from solutions.p38 import q38
-from solutions.p43 import q43
-from solutions.p44 import q44
-from solutions.p47 import q47
-from solutions.p51 import q51
-from solutions.p52 import q52
-from solutions.p53 import q53
-from solutions.p54 import q54
-from solutions.p55 import q55
-from solutions.p57 import q57
-from solutions.p61 import q61
-from solutions.p63 import q63
-from solutions.p64 import q64
-from solutions.p65 import q65
-from solutions.p68 import q68
-from solutions.p69 import q69
-from solutions.p70 import q70
-from solutions.p72 import q72
-from solutions.p77 import q77
-from solutions.p79 import q79
-from solutions.p80 import q80
-from solutions.p81 import q81
-from solutions.p82 import q82
-from solutions.p83 import q83
-from solutions.p85 import q85
-from solutions.p87 import q87
-from solutions.p89 import q89
-from solutions.p92 import q92
-from solutions.p93 import q93
-from solutions.p96 import q96
-from solutions.p97 import q97
-from solutions.renewed.functional import *
-from solutions.renewed.simple import *
-from solutions.revisit.p39 import q39
-from solutions.latest.p0009 import q9
+# Import all available solutions (problems 1-116)
+# Priority order: latest > renewed > revisit > root solutions > all_solutions
+solutions = {}
 
-ANSWERS = {
-	q1: 233168,
-	q2: 4613732,
-	q3: 6857,
-	q4: 906609,
-	q5: 232792560,
-	q6: 25164150,
-	q7: 104743,
-	q8: 23514624000,
-	q9: 31875000,
-	q10: 142913828922,
-	q11: 70600674,
-	q12: 76576500,
-	q13: 5537376230,
-	q14: 837799,
-	q15: 137846528820,
-	q16: 1366,
-	q17: 21124,
-	q18: 1074,
-	q19: 171,
-	q20: 648,
-	q21: 31626,
-	q22: 871198282,
-	q23: 4179871,
-	q24: 2783915460,
-	q25: 4782,
-	q26: 983,
-	q27: -59231,
-	q28: 669171001,
-	q29: 9183,
-	q30: 443839,
-	q31: 73682,
-	q32: 45228,
-	q33: 100,
-	q34: 40730,
-	q35: 55,
-	q36: 872187,
-	q37: 748317,
-	q38: 932718654,
-	q39: 840,
-	q40: 210,
-	q41: 7652413,
-	q42: 162,
-	q43: 16695334890,
-	q44: 5482660,
-	q45: 1533776805,
-	q46: 5777,
-	q47: 134043,
-	q48: 9110846700,
-	q49: 296962999629,
-	q50: 997651,
-	q51: 121313,
-	q52: 142857,
-	q53: 4075,
-	q54: 376,
-	q55: 249,
-	q56: 972,
-	q57: 153,
-	q58: 26241,
-	q59: 129448,
-	q60: 26033,
-	q61: 28684,
-	q62: 127035954683,
-	q63: 49,
-	q64: 1322,
-	q65: 272,
+def try_import_solution(problem_num: int, locations: list) -> bool:
+	"""Try to import solution from multiple locations in priority order
 
-	q67: 7273,
-	q68: 6531031914842725,
-	q69: 510510,
-	q70: 8319823,
-	q71: 428570,
-	q72: 303963552391,
+	Args:
+		problem_num: Problem number
+		locations: List of (module_path, func_name) tuples to try
 
-	# q74: 402,
+	Returns:
+		True if solution was imported, False otherwise
+	"""
+	func_name = f'q{problem_num}'
 
-	q76: 190569291,
-	q77: 71,
+	for module_path in locations:
+		try:
+			module = __import__(module_path, fromlist=[func_name])
+			func = getattr(module, func_name)
+			solutions[problem_num] = func
+			return True
+		except (ImportError, AttributeError):
+			continue
 
-	q79: 73162890,
-	q80: 40886,
-	q81: 427337,
-	q82: 260324,
-	q83: 425185,
-	# q84: 101524,
-	q85: 2772,
+	return False
 
-	q87: 1097343,
+for problem_num in range(1, 117):
+	# Define priority order of locations to check
+	locations = [
+		f"solutions.latest.p{problem_num:04d}",  # Latest implementations
+		f"solutions.renewed.simple",              # Renewed simple versions
+		f"solutions.renewed.functional",          # Renewed functional versions
+		f"solutions.revisit.p{problem_num}",     # Revisited solutions
+		f"solutions.p{problem_num}",             # Root level pX.py files
+		f"solutions.p{problem_num:04d}",         # Root level pXXXX.py files
+		"solutions.all_solutions",                # Legacy all_solutions.py
+	]
 
-	q89: 743,
-
-	q92: 8581146,
-	q93: 1258,
-
-	q96: 24702,
-	q97: 8739992577,
-
-	q105: 73702,
-	q106: 21384,
-	q107: 259679,
-	q108: 180180,
-	# q109: 38182,
-	q110: 9350130049860600,
-	q111: 612407567715,
-	q112: 1587000,
-	q113: 51161058134250,
-	q114: 16475640049,
-	q115: 168,
-	q116: 20492570929,
-}
-
-IGNORE = [
-	# Incorrect answers - fix them
-	q27, q50, q58, q68, q79, q82, q83, q97,
-	# Unacceptably long
-	q37,
-]
-
-KNOWN_TO_TAKE_LONG = [
-	q14, q23, q44, q60, q96, q108, q110, q112,
-]
+	try_import_solution(problem_num, locations)
 
 
-def load_benchmarks(filepath: str = "performance-benchmarks-modern.yaml") -> Dict:
-	"""Load performance benchmarks from YAML file."""
-	try:
-		with open(filepath, 'r') as f:
-			return yaml.safe_load(f)
+# ============================================================================
+# Standalone Runner
+# ============================================================================
+# Pytest test classes have been moved to tests/benchmark/test_all_solutions.py
 
-	except FileNotFoundError:
-		logging.warning(f"Benchmark file {filepath} not found. Using default thresholds.")
-		return {
-			'global_thresholds': {
-				'elite': 10,
-				'good': 100,
-				'acceptable': 1000
-			},
-			'problems': {}
-		}
+def categorize_performance(elapsed_ms: float, thresholds: dict) -> str:
+	"""Determine performance category"""
+	if elapsed_ms <= thresholds['elite']:
+		return 'ELITE'
+	elif elapsed_ms <= thresholds['good']:
+		return 'GOOD'
+	elif elapsed_ms <= thresholds['acceptable']:
+		return 'ACCEPTABLE'
+	return 'NEEDS_OPTIMIZATION'
 
 
-def get_performance_category(time_ms: float, problem_num: int, benchmarks: Dict) -> Tuple[str, Dict]:
-	"""Determine performance category for a given solution time."""
-	# Extract problem number from function name (e.g., q1 -> 1)
-	if problem_num in benchmarks['problems']:
-		thresholds = benchmarks['problems'][problem_num]
-	else:
-		thresholds = benchmarks['global_thresholds']
-
-	if time_ms <= thresholds['elite']:
-		return 'ELITE', thresholds
-	elif time_ms <= thresholds['good']:
-		return 'GOOD', thresholds
-	elif time_ms <= thresholds['acceptable']:
-		return 'ACCEPTABLE', thresholds
-	else:
-		return 'NEEDS_OPTIMIZATION', thresholds
+def format_time_colored(elapsed_ms: float, category: str) -> str:
+	"""Format time with color"""
+	time_str = f"{elapsed_ms:06.2f}ms"
+	colors = {
+		'ELITE': f"{Fore.GREEN}{time_str}{Style.RESET_ALL} ⚡",
+		'GOOD': f"{Fore.CYAN}{time_str}{Style.RESET_ALL} ✓",
+		'ACCEPTABLE': f"{Fore.YELLOW}{time_str}{Style.RESET_ALL} ⚠",
+		'NEEDS_OPTIMIZATION': f"{Fore.RED}{time_str}{Style.RESET_ALL} ✗"
+	}
+	return colors.get(category, time_str)
 
 
-def format_time_with_color(time_ms: float, category: str) -> str:
-	"""Format time with appropriate color based on performance category."""
-	time_str = f"{time_ms:06.2f}ms"
+def check_performance_failure(elapsed_ms: float, thresholds: dict,
+										fail_mode: str, expected: str = None) -> tuple:
+	"""Check if performance should fail based on mode
 
-	if category == 'ELITE':
-		return f"{Fore.GREEN}{time_str}{Style.RESET_ALL} ⚡"
-	elif category == 'GOOD':
-		return f"{Fore.CYAN}{time_str}{Style.RESET_ALL} ✓"
-	elif category == 'ACCEPTABLE':
-		return f"{Fore.YELLOW}{time_str}{Style.RESET_ALL} ⚠"
-	else:  # NEEDS_OPTIMIZATION
-		return f"{Fore.RED}{time_str}{Style.RESET_ALL} ✗"
+	Returns:
+		 (failed: bool, message: str)
+	"""
+	if fail_mode == 'none':
+		return False, ""
+
+	# If expected mode, check against expected speed level
+	if fail_mode == 'expected' and expected:
+		threshold_key = expected
+		threshold_value = thresholds[threshold_key]
+		if elapsed_ms >= threshold_value:
+			return True, (
+				f"{elapsed_ms:.2f}ms exceeds expected '{expected}' "
+				f"threshold ({threshold_value}ms)"
+			)
+		return False, ""
+
+	# Regular fail modes
+	threshold_map = {
+		'elite': 'elite',
+		'good': 'good',
+		'acceptable': 'acceptable'
+	}
+
+	if fail_mode in threshold_map:
+		threshold_key = threshold_map[fail_mode]
+		threshold_value = thresholds[threshold_key]
+		if elapsed_ms >= threshold_value:
+			return True, (
+				f"{elapsed_ms:.2f}ms exceeds {threshold_key} "
+				f"threshold ({threshold_value}ms)"
+			)
+
+	return False, ""
 
 
-def print_performance_summary(performance_stats: Dict[str, List]):
-	"""Print a summary of performance statistics."""
-	print("\n" + "=" * 60)
-	print("PERFORMANCE SUMMARY")
+def run_standalone(fail_mode='acceptable'):
+	"""Standalone runner for testing and benchmarking
+
+	Args:
+		 fail_mode: Performance fail threshold ('none', 'acceptable', 'good', 'elite', 'expected')
+	"""
+
 	print("=" * 60)
+	print("Project Euler Solutions - Testing & Benchmarking")
+	print("=" * 60)
+	print(f"Fail mode: {fail_mode.upper()}")
+	print(f"\nTesting {len(solutions)} solutions...\n")
 
-	total = sum(len(v) for v in performance_stats.values())
-
-	if performance_stats['ELITE']:
-		print(f"{Fore.GREEN}⚡ ELITE ({len(performance_stats['ELITE'])}/{total}):{Style.RESET_ALL}")
-		for problem, time_ms in performance_stats['ELITE']:
-			print(f"   {problem}: {time_ms:.2f}ms")
-
-	if performance_stats['GOOD']:
-		print(f"{Fore.CYAN}✓ GOOD ({len(performance_stats['GOOD'])}/{total}):{Style.RESET_ALL}")
-		for problem, time_ms in performance_stats['GOOD']:
-			print(f"   {problem}: {time_ms:.2f}ms")
-
-	if performance_stats['ACCEPTABLE']:
-		print(f"{Fore.YELLOW}⚠ ACCEPTABLE ({len(performance_stats['ACCEPTABLE'])}/{total}):{Style.RESET_ALL}")
-		for problem, time_ms in performance_stats['ACCEPTABLE']:
-			print(f"   {problem}: {time_ms:.2f}ms")
-
-	if performance_stats['NEEDS_OPTIMIZATION']:
-		print(
-			f"{Fore.RED}✗ NEEDS OPTIMIZATION ({len(performance_stats['NEEDS_OPTIMIZATION'])}/{total}):{Style.RESET_ALL}")
-		for problem, time_ms, thresholds in performance_stats['NEEDS_OPTIMIZATION']:
-			print(f"   {problem}: {time_ms:.2f}ms (target: <{thresholds['acceptable']}ms)")
-
-	# Performance score
-	elite_score = len(performance_stats['ELITE']) * 3
-	good_score = len(performance_stats['GOOD']) * 2
-	acceptable_score = len(performance_stats['ACCEPTABLE']) * 1
-	max_score = total * 3
-	actual_score = elite_score + good_score + acceptable_score
-
-	percentage = (actual_score / max_score * 100) if max_score > 0 else 0
-	print(f"\n{Fore.MAGENTA}Performance Score: {actual_score}/{max_score} ({percentage:.1f}%){Style.RESET_ALL}")
-
-
-def _solve_and_check_answers(my_implementations, ignored_questions, benchmarks):
-	tested_questions_count = 0
-	flagged_questions = []
-	performance_stats = {
+	stats = {
 		'ELITE': [],
 		'GOOD': [],
 		'ACCEPTABLE': [],
 		'NEEDS_OPTIMIZATION': []
 	}
-	start_run_time = time.time()
 
-	for question_number, answer in my_implementations.items():
-		question_name = question_number.__name__.capitalize()
-		if question_name in ignored_questions:
-			continue
+	correctness_failures = []
+	performance_failures = []
+	total_time = 0.0
 
-		# Extract problem number for benchmark lookup
-		problem_num = int(question_name[1:])  # Remove 'Q' prefix
+	for problem_num in sorted(solutions.keys()):
+		func = solutions[problem_num]
+		expected = ANSWERS[problem_num]
+		thresholds = benchmarks[problem_num]
 
-		start_question_time = time.time()
-		solution = int(question_number())
-		assert solution == answer, f'{question_name}::{solution} != {answer}'
+		# Get expected speed if available
+		problem_data = PROBLEMS.get(problem_num, {})
+		expected_level = problem_data.get('expected', 'acceptable')
 
-		question_time_taken = (time.time() - start_question_time) * 1000
+		try:
+			start = time.perf_counter()
+			result = func()
+			elapsed_ms = (time.perf_counter() - start) * 1000
+			total_time += elapsed_ms
 
-		# Get performance category
-		category, thresholds = get_performance_category(question_time_taken, problem_num, benchmarks)
+			# Check correctness
+			if result != expected:
+				correctness_failures.append((
+					f"Q{problem_num}",
+					f"Expected {expected}, got {result}"
+				))
+				print(f"{Fore.RED}Q{problem_num}: FAILED - Wrong answer{Style.RESET_ALL}")
+				continue
 
-		# Format and print with color
-		formatted_time = format_time_with_color(question_time_taken, category)
+			# Categorize performance
+			category = categorize_performance(elapsed_ms, thresholds)
+			formatted_time = format_time_colored(elapsed_ms, category)
 
-		# Add notes if available
-		notes = ""
-		if problem_num in benchmarks['problems'] and 'notes' in benchmarks['problems'][problem_num]:
-			notes = f" - {benchmarks['problems'][problem_num]['notes']}"
+			notes = thresholds.get('notes', '')
+			note_str = f" - {notes}" if notes else ""
 
-		print(f'Solved {question_name} in {formatted_time}{notes}')
+			# Add expected speed indicator
+			if problem_num in PROBLEMS:
+				note_str += f" [expected: {expected_level}]"
 
-		# Track performance statistics
-		if category == 'NEEDS_OPTIMIZATION':
-			performance_stats[category].append((question_name, question_time_taken, thresholds))
-			flagged_questions.append((question_name, question_time_taken))
-		else:
-			performance_stats[category].append((question_name, question_time_taken))
+			print(f"Q{problem_num}: {formatted_time}{note_str}")
 
-		tested_questions_count += 1
+			# Check if performance fails
+			failed, msg = check_performance_failure(
+				elapsed_ms, thresholds, fail_mode, expected_level
+			)
+			if failed:
+				performance_failures.append((f"Q{problem_num}", msg))
 
-	print(f'\nChecked {tested_questions_count} Problems')
-	print(f'Ignored :: {sorted(ignored_questions)}')
-	print(f'Run Time :: {(time.time() - start_run_time) * 1000:.2f}ms')
+			# Track stats
+			if category == 'NEEDS_OPTIMIZATION':
+				stats[category].append((f"Q{problem_num}", elapsed_ms, thresholds))
+			else:
+				stats[category].append((f"Q{problem_num}", elapsed_ms))
 
-	# Print performance summary
-	print_performance_summary(performance_stats)
+		except Exception as e:
+			correctness_failures.append((f"Q{problem_num}", str(e)))
+			print(f"{Fore.RED}Q{problem_num}: FAILED - {e}{Style.RESET_ALL}")
 
-	return flagged_questions
+	# Summary
+	print("\n" + "=" * 60)
+	print("PERFORMANCE SUMMARY")
+	print("=" * 60)
 
+	total = sum(len(v) for v in stats.values())
 
-def warn_about_long_questions(flagged_questions):
-	if flagged_questions:
+	for category in ['ELITE', 'GOOD', 'ACCEPTABLE', 'NEEDS_OPTIMIZATION']:
+		if stats[category]:
+			count = len(stats[category])
+			color = {
+				'ELITE': Fore.GREEN,
+				'GOOD': Fore.CYAN,
+				'ACCEPTABLE': Fore.YELLOW,
+				'NEEDS_OPTIMIZATION': Fore.RED
+			}[category]
+
+			symbol = {'ELITE': '⚡', 'GOOD': '✓', 'ACCEPTABLE': '⚠', 'NEEDS_OPTIMIZATION': '✗'}[category]
+			print(f"\n{color}{symbol} {category} ({count}/{total}):{Style.RESET_ALL}")
+
+			display_items = stats[category][:10]
+			for item in display_items:
+				if len(item) == 3:  # NEEDS_OPTIMIZATION
+					problem, time_ms, thresholds = item
+					print(f"   {problem}: {time_ms:.2f}ms (target: <{thresholds['acceptable']}ms)")
+				else:
+					problem, time_ms = item
+					print(f"   {problem}: {time_ms:.2f}ms")
+
+			if len(stats[category]) > 10:
+				print(f"   ... and {len(stats[category]) - 10} more")
+
+	# Performance score
+	elite_score = len(stats['ELITE']) * 3
+	good_score = len(stats['GOOD']) * 2
+	acceptable_score = len(stats['ACCEPTABLE']) * 1
+	max_score = total * 3
+	actual_score = elite_score + good_score + acceptable_score
+
+	percentage = (actual_score / max_score * 100) if max_score > 0 else 0
+	print(f"\n{Fore.MAGENTA}Performance Score: {actual_score}/{max_score} ({percentage:.1f}%){Style.RESET_ALL}")
+	print(f"Total execution time: {total_time:.2f}ms ({total_time / 1000:.2f}s)")
+
+	# Report failures
+	if correctness_failures:
 		print(f"\n{Fore.RED}{'=' * 60}")
-		print(f"⚠️  PERFORMANCE ISSUES DETECTED")
+		print(f"⚠️  CORRECTNESS FAILURES ({len(correctness_failures)})")
 		print(f"{'=' * 60}{Style.RESET_ALL}")
-		for question, time_ms in flagged_questions:
-			print(f"{Fore.RED}   {question}: {time_ms:.2f}ms - NEEDS OPTIMIZATION{Style.RESET_ALL}")
+		for problem, error in correctness_failures:
+			print(f"{Fore.RED}   {problem}: {error}{Style.RESET_ALL}")
 
+	if performance_failures:
+		print(f"\n{Fore.RED}{'=' * 60}")
+		print(f"⚠️  PERFORMANCE FAILURES ({len(performance_failures)})")
+		print(f"{'=' * 60}{Style.RESET_ALL}")
+		for problem, error in performance_failures:
+			print(f"{Fore.RED}   {problem}: {error}{Style.RESET_ALL}")
 
-def check_answers(light_mode):
-	logging.basicConfig(format="[%(levelname)6s] %(message)s", stream=sys.stderr, level=logging.WARN)
+	if correctness_failures or performance_failures:
+		return 1
 
-	# Load benchmarks
-	benchmarks = load_benchmarks()
-
-	ignore_list = light_mode and IGNORE + KNOWN_TO_TAKE_LONG or IGNORE
-	ignored_questions = list(sorted(map(lambda q: q.__name__.capitalize(), ignore_list)))
-
-	flagged_questions = _solve_and_check_answers(ANSWERS, ignored_questions=ignored_questions, benchmarks=benchmarks)
-	warn_about_long_questions(flagged_questions)
+	print(f"\n{Fore.GREEN}✓ All solutions correct and performant!{Style.RESET_ALL}")
+	return 0
 
 
 if __name__ == '__main__':
-	check_answers(light_mode=int(os.getenv("LIGHT_MODE", 0)) == 1)
+	parser = argparse.ArgumentParser(description='Test and benchmark Project Euler solutions')
+	parser.add_argument(
+		'--fail-mode',
+		type=str,
+		default='acceptable',
+		choices=['none', 'acceptable', 'good', 'elite', 'expected'],
+		help='Performance threshold for failure (default: acceptable)'
+	)
+	args = parser.parse_args()
+
+	sys.exit(run_standalone(fail_mode=args.fail_mode))

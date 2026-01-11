@@ -3,6 +3,17 @@
 My own implementation of Project Euler [https://projecteuler.net/archives], a set of mathematical computational
 challenges.
 
+## Testing
+
+Run all solutions and benchmarks:
+
+```bash
+python answers.py                        # Test all 98 solutions
+python answers.py --fail-mode=expected   # Strict mode: fail if doesn't meet expected speed
+```
+
+See `scripts/README.md` for complete testing documentation.
+
 ## Requirements
 
 To run this project, you'll need the latest version of Python. Currently, this is Python 3.11 or above.

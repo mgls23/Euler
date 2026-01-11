@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Git post-commit hook - runs all solutions with benchmarking after committing
+
+echo ""
+echo "Running post-commit hook: All Solutions + Benchmarking"
+echo ""
+
+# Get the script directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Run all solutions with benchmarking (Stage 2)
+# Use lenient mode for post-commit (report issues but don't fail)
+FAIL_MODE=none "$SCRIPT_DIR/run-all-solutions.sh" || true
+
+echo ""
+echo "✓ Post-commit checks complete!"

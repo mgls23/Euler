@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Git pre-commit hook - runs unit tests before committing
+
+echo "Running pre-commit hook: Unit Tests"
+echo ""
+
+# Get the script directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Run unit tests
+"$SCRIPT_DIR/run-unit-tests.sh"
+
+exit $?
