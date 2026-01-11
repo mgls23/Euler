@@ -25,6 +25,8 @@ from typing import Tuple, Dict, List
 
 import polars as pl
 from colorama import init, Fore, Style
+from rich.console import Console
+from rich.table import Table
 
 from solutions_loader import load_solutions
 from tests.benchmark.config import benchmarks
@@ -38,6 +40,7 @@ init(autoreset=True)
 # Load solutions
 solutions = load_solutions()
 print(f"Loaded {len(solutions)} solutions: {sorted(solutions.keys())}")
+PROBLEM_PAD = max(3, len(str(max(solutions.keys())))) if solutions else 3
 
 # Performance categories with thresholds
 PERFORMANCE_CATEGORIES = {
@@ -64,6 +67,11 @@ def format_time_colored(elapsed_ms: float, category: str) -> str:
 	time_str = f"{elapsed_ms:06.2f}ms"
 	cat_info = PERFORMANCE_CATEGORIES[category]
 	return f"{cat_info['color']}{time_str}{Style.RESET_ALL} {cat_info['symbol']}"
+
+
+def format_problem_num(problem_num: int) -> str:
+	"""Format problem number with zero padding for output."""
+	return f"Q{problem_num:0{PROBLEM_PAD}d}"
 
 
 def check_performance_failure(elapsed_ms: float, thresholds: dict,
@@ -111,7 +119,14 @@ def check_performance_failure(elapsed_ms: float, thresholds: dict,
 	return False, ""
 
 
-def check_divergence(actual_category: str, expected_level: str) -> str:
+# Hysteresis to avoid flip-flopping near thresholds.
+DIVERGENCE_MARGIN = 0.2
+# Skip printing per-solution lines and summary for whitelisted failures.
+SHOW_WHITELISTED = False
+
+
+def check_divergence(actual_category: str, expected_level: str,
+							elapsed_ms: float, thresholds: dict) -> str:
 	"""Check if actual performance diverges from expected level
 
 	Returns:
@@ -130,9 +145,16 @@ def check_divergence(actual_category: str, expected_level: str) -> str:
 	actual_weight = PERFORMANCE_CATEGORIES[actual_category]['weight']
 	expected_weight = PERFORMANCE_CATEGORIES[expected_category]['weight']
 
-	if actual_weight > expected_weight:
+	expected_threshold = thresholds.get(expected_level)
+	if expected_threshold is None:
+		return ""
+
+	upgrade_cutoff = expected_threshold * (1 - DIVERGENCE_MARGIN)
+	regression_cutoff = expected_threshold * (1 + DIVERGENCE_MARGIN)
+
+	if actual_weight > expected_weight and elapsed_ms <= upgrade_cutoff:
 		return f"⬆️  Could upgrade: {expected_level} → {actual_category.lower()}"
-	elif actual_weight < expected_weight:
+	elif actual_weight < expected_weight and elapsed_ms >= regression_cutoff:
 		return f"⬇️  Regression: {expected_level} → {actual_category.lower()}"
 
 	return ""
@@ -174,7 +196,9 @@ def run_single_solution(problem_num: int, func, fail_mode: str) -> Dict:
 				'error': str(e),
 				'whitelisted': problem_num in FAILING_SOLUTIONS
 			})
-			print(f"{Fore.RED}Q{problem_num}: TIMEOUT - Exceeded {SOLUTION_TIMEOUT}s{Style.RESET_ALL}")
+			if SHOW_WHITELISTED or problem_num not in FAILING_SOLUTIONS:
+				print(
+					f"{Fore.RED}{format_problem_num(problem_num)}: TIMEOUT - Exceeded {SOLUTION_TIMEOUT}s{Style.RESET_ALL}")
 			return result_data
 
 		elapsed_ms = (time.perf_counter() - start) * 1000
@@ -198,7 +222,8 @@ def run_single_solution(problem_num: int, func, fail_mode: str) -> Dict:
 				color = Fore.RED
 				prefix = "FAILED"
 
-			print(f"{color}Q{problem_num}: {prefix} - Wrong answer{Style.RESET_ALL}")
+			if SHOW_WHITELISTED or problem_num not in FAILING_SOLUTIONS:
+				print(f"{color}{format_problem_num(problem_num)}: {prefix} - Wrong answer{Style.RESET_ALL}")
 			return result_data
 
 		# Categorize performance
@@ -206,7 +231,12 @@ def run_single_solution(problem_num: int, func, fail_mode: str) -> Dict:
 		formatted_time = format_time_colored(elapsed_ms, category)
 
 		# Check for performance divergence
-		divergence = check_divergence(category, expected_level)
+		divergence = check_divergence(category, expected_level, elapsed_ms, thresholds)
+
+		# Check if performance fails
+		perf_failed, perf_msg = check_performance_failure(
+			elapsed_ms, thresholds, fail_mode, problem_num, expected_level
+		)
 
 		notes = thresholds.get('notes', '')
 		note_str = f" - {notes}" if notes else ""
@@ -215,12 +245,15 @@ def run_single_solution(problem_num: int, func, fail_mode: str) -> Dict:
 		if divergence:
 			note_str += f" {divergence}"
 
-		print(f"Q{problem_num}: {formatted_time}{note_str}")
+		print(f"{format_problem_num(problem_num)}: {formatted_time}{note_str}")
 
-		# Check if performance fails
-		perf_failed, perf_msg = check_performance_failure(
-			elapsed_ms, thresholds, fail_mode, problem_num, expected_level
-		)
+		if perf_failed or divergence or problem_num in PERFORMANCE_ISSUES:
+			print(
+				"    thresholds: "
+				f"elite <= {thresholds['elite']}ms | "
+				f"good <= {thresholds['good']}ms | "
+				f"acceptable <= {thresholds['acceptable']}ms"
+			)
 
 		result_data.update({
 			'actual_result': result,
@@ -243,7 +276,8 @@ def run_single_solution(problem_num: int, func, fail_mode: str) -> Dict:
 			'error': str(e),
 			'whitelisted': problem_num in FAILING_SOLUTIONS
 		})
-		print(f"{Fore.RED}Q{problem_num}: ERROR - {e}{Style.RESET_ALL}")
+		if SHOW_WHITELISTED or problem_num not in FAILING_SOLUTIONS:
+			print(f"{Fore.RED}{format_problem_num(problem_num)}: ERROR - {e}{Style.RESET_ALL}")
 		return result_data
 
 
@@ -275,28 +309,18 @@ def generate_results_dataframe(results: List[Dict]) -> pl.DataFrame:
 	return df.select([col for col in column_order if col in df.columns])
 
 
-def print_summary(df: pl.DataFrame, total_time: float):
+def print_summary(df: pl.DataFrame, total_time: float, summary_rows: int):
 	"""Print summary statistics from dataframe"""
 	print("\n" + "=" * 60)
 	print("PERFORMANCE SUMMARY")
 	print("=" * 60)
 
-	# Count by category
 	passed = df.filter(pl.col('status') == 'PASS')
+	if len(passed) == 0:
+		print(f"\n{Fore.YELLOW}No passing solutions to summarize.{Style.RESET_ALL}")
+		return
 
-	for cat_name, cat_info in PERFORMANCE_CATEGORIES.items():
-		cat_count = len(passed.filter(pl.col('category') == cat_name))
-		if cat_count > 0:
-			symbol = cat_info['symbol']
-			color = cat_info['color']
-			print(f"\n{color}{symbol} {cat_name} ({cat_count}):{Style.RESET_ALL}")
-
-			cat_problems = passed.filter(pl.col('category') == cat_name)
-			for row in cat_problems.head(10).iter_rows(named=True):
-				print(f"   Q{row['problem']}: {row['elapsed_ms']:.2f}ms")
-
-			if cat_count > 10:
-				print(f"   ... and {cat_count - 10} more")
+	console = Console()
 
 	# Performance score
 	total = len(passed)
@@ -309,6 +333,69 @@ def print_summary(df: pl.DataFrame, total_time: float):
 	percentage = (actual_score / max_score * 100) if max_score > 0 else 0
 	print(f"\n{Fore.MAGENTA}Performance Score: {actual_score}/{max_score} ({percentage:.1f}%){Style.RESET_ALL}")
 	print(f"Total execution time: {total_time:.2f}ms ({total_time / 1000:.2f}s)")
+
+	# Category counts (tabular)
+	category_weights = {
+		'elite': 3,
+		'good': 2,
+		'acceptable': 1,
+		'needs_optimization': 0
+	}
+	weight_expr = pl.col('category').map_elements(
+		lambda cat: category_weights.get(cat, -1),
+		return_dtype=pl.Int64
+	)
+	counts = (
+		passed
+		.with_columns(pl.col('category').str.to_lowercase())
+		.group_by('category')
+		.agg(pl.len().alias('count'))
+		.with_columns(weight_expr.alias('weight'))
+		.sort('weight', descending=True)
+		.drop('weight')
+	)
+	counts_table = Table(title="Category Counts", show_header=True, header_style="bold")
+	counts_table.add_column("category")
+	counts_table.add_column("count", justify="right")
+	for row in counts.iter_rows(named=True):
+		counts_table.add_row(str(row['category']), str(row['count']))
+	console.print(counts_table)
+
+	# Tabular summary of passing solutions (limit to summary_rows)
+	if summary_rows > 0 and len(passed) > 0:
+		rows = min(summary_rows, len(passed))
+		table = (
+			passed
+			.select(['problem', 'category', 'elapsed_ms', 'expected_level'])
+			.with_columns(
+				pl.concat_str(
+					[pl.lit("Q"), pl.col('problem').cast(pl.Utf8).str.zfill(PROBLEM_PAD)]
+				).alias('problem'),
+				pl.col('category').str.to_lowercase(),
+				pl.col('expected_level').str.to_lowercase(),
+				weight_expr.alias('weight')
+			)
+			.sort(['weight', 'elapsed_ms'], descending=[True, False])
+			.drop('weight')
+			.head(rows)
+		)
+		perf_table = Table(
+			title=f"Performance Summary (top {rows})",
+			show_header=True,
+			header_style="bold"
+		)
+		perf_table.add_column("problem")
+		perf_table.add_column("category")
+		perf_table.add_column("elapsed_ms", justify="right")
+		perf_table.add_column("expected_level")
+		for row in table.iter_rows(named=True):
+			perf_table.add_row(
+				str(row['problem']),
+				str(row['category']),
+				f"{row['elapsed_ms']:.6f}",
+				str(row['expected_level'])
+			)
+		console.print(perf_table)
 
 
 def print_failures(df: pl.DataFrame):
@@ -325,18 +412,21 @@ def print_failures(df: pl.DataFrame):
 		print(f"⚠️  CORRECTNESS FAILURES ({len(correctness_failures)})")
 		print(f"{'=' * 60}{Style.RESET_ALL}")
 		for row in correctness_failures.iter_rows(named=True):
-			print(f"{Fore.RED}   Q{row['problem']}: {row['error']}{Style.RESET_ALL}")
+			print(f"{Fore.RED}   {format_problem_num(row['problem'])}: {row['error']}{Style.RESET_ALL}")
 
 	if len(performance_failures) > 0:
 		print(f"\n{Fore.RED}{'=' * 60}")
 		print(f"⚠️  PERFORMANCE FAILURES ({len(performance_failures)})")
 		print(f"{'=' * 60}{Style.RESET_ALL}")
 		for row in performance_failures.iter_rows(named=True):
-			print(f"{Fore.RED}   Q{row['problem']}: {row['error']}{Style.RESET_ALL}")
+			print(f"{Fore.RED}   {format_problem_num(row['problem'])}: {row['error']}{Style.RESET_ALL}")
 
 
 def print_whitelist_warnings(df: pl.DataFrame):
 	"""Print warnings about whitelisted failures"""
+	if not SHOW_WHITELISTED:
+		return
+
 	whitelisted = df.filter(pl.col('whitelisted'))
 
 	if len(whitelisted) > 0:
@@ -348,7 +438,7 @@ def print_whitelist_warnings(df: pl.DataFrame):
 		for row in whitelisted.iter_rows(named=True):
 			problem = row['problem']
 			reason = FAILING_SOLUTIONS.get(problem, "Unknown reason")
-			print(f"{Fore.YELLOW}   Q{problem}: {reason}{Style.RESET_ALL}")
+			print(f"{Fore.YELLOW}   {format_problem_num(problem)}: {reason}{Style.RESET_ALL}")
 
 		print(f"\n{Fore.YELLOW}Update whitelist in: tests/config/whitelist.py{Style.RESET_ALL}")
 
@@ -371,7 +461,7 @@ def print_performance_issues(df: pl.DataFrame):
 			problem = row['problem']
 			reason = PERFORMANCE_ISSUES.get(problem, "Unknown reason")
 			elapsed = row['elapsed_ms']
-			print(f"{Fore.CYAN}   Q{problem}: {elapsed:.2f}ms - {reason}{Style.RESET_ALL}")
+			print(f"{Fore.CYAN}   {format_problem_num(problem)}: {elapsed:.2f}ms - {reason}{Style.RESET_ALL}")
 
 		print(f"\n{Fore.CYAN}These are candidates for future optimization.{Style.RESET_ALL}")
 
@@ -391,7 +481,7 @@ def print_divergences(df: pl.DataFrame):
 			print(f"{Fore.GREEN}These solutions perform better than expected:{Style.RESET_ALL}\n")
 
 			for row in upgrades.iter_rows(named=True):
-				print(f"{Fore.GREEN}   Q{row['problem']}: {row['divergence']}{Style.RESET_ALL}")
+				print(f"{Fore.GREEN}   {format_problem_num(row['problem'])}: {row['divergence']}{Style.RESET_ALL}")
 
 		if len(regressions) > 0:
 			print(f"\n{Fore.RED}{'=' * 60}")
@@ -400,14 +490,15 @@ def print_divergences(df: pl.DataFrame):
 			print(f"{Fore.RED}These solutions perform worse than expected:{Style.RESET_ALL}\n")
 
 			for row in regressions.iter_rows(named=True):
-				print(f"{Fore.RED}   Q{row['problem']}: {row['divergence']}{Style.RESET_ALL}")
+				print(f"{Fore.RED}   {format_problem_num(row['problem'])}: {row['divergence']}{Style.RESET_ALL}")
 
 
-def run_standalone(fail_mode='acceptable'):
+def run_standalone(fail_mode='acceptable', summary_rows=20):
 	"""Standalone runner for testing and benchmarking
 
 	Args:
 		fail_mode: Performance fail threshold ('none', 'acceptable', 'good', 'elite', 'expected')
+		summary_rows: Number of rows to show in the tabular summary (0 disables)
 	"""
 	print("=" * 60)
 	print("Project Euler Solutions - Testing & Benchmarking")
@@ -431,7 +522,7 @@ def run_standalone(fail_mode='acceptable'):
 	df = generate_results_dataframe(results)
 
 	# Print interesting stats
-	print_summary(df, total_time)
+	print_summary(df, total_time, summary_rows)
 	print_failures(df)
 	print_divergences(df)
 	print_whitelist_warnings(df)
@@ -460,6 +551,12 @@ if __name__ == '__main__':
 		choices=['none', 'acceptable', 'good', 'elite', 'expected'],
 		help='Performance threshold for failure (default: acceptable)'
 	)
+	parser.add_argument(
+		'--summary-rows',
+		type=int,
+		default=20,
+		help='Rows to show in performance summary table (0 disables)'
+	)
 	args = parser.parse_args()
 
-	sys.exit(run_standalone(fail_mode=args.fail_mode))
+	sys.exit(run_standalone(fail_mode=args.fail_mode, summary_rows=args.summary_rows))
