@@ -551,21 +551,48 @@ mv unittests/euler/ tests/unit/euler/
 - **Benchmarks:** `benchmark_p001.py`, `TestP001Performance`
 - **Config:** `answers.py`, `ANSWERS` dict
 
+## Running Tests
+
+### Run All Tests
+Use the test script (same commands CI runs):
+
+```bash
+./scripts/run-tests.sh
+```
+
+### Run Specific Test Suites
+```bash
+pytest tests/unit/ -v          # Unit tests only
+pytest tests/benchmark/ -v     # Benchmark tests only
+pytest tests/unit/euler/ -v    # Library tests only
+```
+
+## Git Hooks
+
+Install git hooks to automatically run tests before pushing:
+
+```bash
+./scripts/install-hooks.sh
+```
+
+This installs:
+- **pre-push**: Runs all tests before pushing to remote (prevents breaking CI)
+
+**Location:** Hooks are stored in `scripts/` for version control, then installed to `.git/hooks/`
+
 ## CI/CD Integration
 
 **File:** `.github/workflows/run-unit-tests.yml`
 
-The GitHub Actions workflow has been updated to use the new test structure:
+The GitHub Actions workflow uses the same test script as git hooks:
 
 ```yaml
-- name: Run unit tests
-  run: pytest tests/unit/ -v
-
-- name: Run benchmark tests
-  run: pytest tests/benchmark/ -v
+- name: Run tests
+  run: ./scripts/run-tests.sh
 ```
 
 This ensures:
+- Identical test commands locally and in CI
 - All unit tests (including integration test) run on every push
 - Benchmarks verify performance thresholds
 - Self-verifying solutions are tested automatically
