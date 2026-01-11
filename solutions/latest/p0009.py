@@ -4,6 +4,16 @@ from solutions.euler.util.decorators import timed_function
 
 
 def q9(perimeter=1000):
+	"""
+	"Brute force" method: we can bound c
+	  - a + b + c = perimeter    # Rules of triangle
+	  - a ^ 2 + b ^ 2 = c ^ 2    # Pythagoras
+
+	c has to be bigger  than perimeter // 3 (because a + b + c = perimeter, and a < b < c)
+	c has to be smaller than perimeter // 2 (otherwise, a and b cannot be big enough to be triangle)
+
+	This is an introduction to Euclidean formula, but overkill for this question
+	"""
 	min_c, max_c = perimeter // 3, perimeter // 2
 	logging.debug("min_c=%s, max_c=%s", min_c, max_c)
 
@@ -14,59 +24,12 @@ def q9(perimeter=1000):
 		for a in range(min_a, max_a + 1):
 			b = perimeter - a - c
 
+			# Assumes only 1 solution, as given by the question
 			if a * a + b * b == c * c:
 				logging.info("S=%s::%s", perimeter, (a, b, c))
 				return a * b * c
 
 	raise ValueError("No solution found")
-
-
-def sieve_of_factors(upper_bound: int):
-	factors = [set() for _ in range(upper_bound + 1)]
-
-	# For 2s
-	factors[2::2] = [{2} for _ in range(upper_bound // 2)]
-
-	# For everything else
-	for number in range(3, upper_bound + 1, 2):
-		if not factors[number]:
-			for other in range(number, upper_bound + 1, number):
-				factors[other].add(number)
-
-	return factors
-
-
-def generate_coprime_pairs(upper_bound: int):
-	factors = sieve_of_factors(upper_bound)
-	for m in range(upper_bound):
-		for n in range(1, m):
-			if n not in factors[m]:
-				yield m, n
-
-
-def euclid_formula(upper_bound):
-	primitive_triples, all_triples = set(), set()
-
-	for m, n in generate_coprime_pairs(upper_bound=int(upper_bound ** 0.5) + 1):
-		if 1 != (number_of_odd := len(list(filter(lambda x: x % 2 == 0, (m, n))))):
-			continue
-
-		a = m * m - n * n
-		b = 2 * m * n
-		c = m * m + n * n
-
-		# assert a * a + b * b == c * c
-		for k in range(1, (upper_bound // (a + b + c)) + 1):
-			if k == 1:
-				logging.info("Primitive Triplet: %s, m,n= %s", (a, b, c), (m, n))
-				primitive_triples.add(tuple(sorted((a, b, c))))
-
-			ka, kb, kc = k * a, k * b, k * c
-			logging.info("  - %s", (ka, kb, kc))
-			if (ka + kb + kc) <= upper_bound:
-				all_triples.add(tuple(sorted((ka, kb, kc))))
-
-	return all_triples
 
 
 if __name__ == '__main__':

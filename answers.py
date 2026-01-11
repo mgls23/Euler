@@ -59,7 +59,7 @@ from solutions.p97 import q97
 from solutions.renewed.functional import *
 from solutions.renewed.simple import *
 from solutions.revisit.p39 import q39
-from solutions.p0009 import q9
+from solutions.latest.p0009 import q9
 
 ANSWERS = {
 	q1: 233168,

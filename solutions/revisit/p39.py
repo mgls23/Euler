@@ -29,7 +29,7 @@ def fits_fibonacci(max_perimeter=1000):
 
 	# b is the bigger side (than a), and c is hypotenuse
 	for bigger_leg in range(1, max_perimeter // 2):
-		for smaller_leg in range(1, bigger_leg + 1):
+		for smaller_leg in range(1, bigger_leg):
 			hypotenuse = sqrt(smaller_leg ** 2 + bigger_leg ** 2)
 			if hypotenuse.is_integer() and reduce(gcd, [smaller_leg, bigger_leg, int(hypotenuse)]) == 1:
 				possible.append((smaller_leg, bigger_leg, int(hypotenuse)))
@@ -40,5 +40,5 @@ def fits_fibonacci(max_perimeter=1000):
 if __name__ == '__main__':
 	timed_function(fits_fibonacci)()
 
-	# assert (timed_function(q39)(120) == 120)
-	# assert (timed_function(q39)() == 840)
+	assert (timed_function(q39)(120) == 120)
+	assert (timed_function(q39)() == 840)
