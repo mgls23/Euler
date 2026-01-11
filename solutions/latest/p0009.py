@@ -1,5 +1,7 @@
 import logging
 
+from solutions.euler.util.decorators import timed_function
+
 
 def q9(perimeter=1000):
 	min_c, max_c = perimeter // 3, perimeter // 2
