@@ -1,0 +1,356 @@
+/*
+ * Custom Jupyter Notebook Styling for Project Euler
+ * Optimized for mathematical content and code readability
+ */
+
+/* ===== GLOBAL TYPOGRAPHY ===== */
+:root {
+    --notebook-bg: #fafafa;
+    --cell-bg: #ffffff;
+    --text-primary: #2c3e50;
+    --text-secondary: #7f8c8d;
+    --accent-blue: #3498db;
+    --accent-green: #27ae60;
+    --accent-orange: #e67e22;
+    --code-bg: #f8f9fa;
+    --border-color: #e1e4e8;
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+body {
+    background-color: var(--notebook-bg) !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+}
+
+/* ===== NOTEBOOK CONTAINER ===== */
+div#notebook-container {
+    width: 85%;
+    max-width: 1100px;
+    padding: 30px;
+    box-shadow: none;
+}
+
+div#notebook {
+    padding-top: 20px;
+}
+
+/* ===== CELL STYLING ===== */
+div.cell {
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    margin: 15px 0;
+    padding: 0;
+    box-shadow: var(--shadow);
+    background-color: var(--cell-bg);
+    transition: box-shadow 0.2s ease;
+}
+
+div.cell:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+div.cell.selected,
+div.cell.selected.jupyter-soft-selected {
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+/* ===== CODE CELLS ===== */
+div.input_area {
+    border-radius: 4px;
+    background-color: var(--code-bg) !important;
+    border: none;
+    padding: 12px;
+}
+
+div.CodeMirror {
+    font-family: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Menlo, Courier, monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    background-color: transparent !important;
+}
+
+/* Code syntax highlighting improvements */
+.cm-s-ipython .cm-keyword { color: #d73a49; font-weight: 600; }
+.cm-s-ipython .cm-atom { color: #005cc5; }
+.cm-s-ipython .cm-number { color: #005cc5; }
+.cm-s-ipython .cm-def { color: #6f42c1; font-weight: 500; }
+.cm-s-ipython .cm-variable { color: #24292e; }
+.cm-s-ipython .cm-operator { color: #d73a49; }
+.cm-s-ipython .cm-comment { color: #6a737d; font-style: italic; }
+.cm-s-ipython .cm-string { color: #032f62; }
+.cm-s-ipython .cm-builtin { color: #005cc5; font-weight: 500; }
+.cm-s-ipython .cm-property { color: #e36209; }
+
+/* ===== OUTPUT CELLS ===== */
+div.output_wrapper {
+    border: none;
+    background-color: #f6f8fa;
+    border-radius: 0 0 4px 4px;
+    margin-top: 8px;
+}
+
+div.output_area pre {
+    font-family: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Menlo, Courier, monospace;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--text-primary);
+    background-color: transparent;
+    border: none;
+    padding: 12px;
+}
+
+div.output_text {
+    color: #24292e;
+}
+
+/* ===== MARKDOWN CELLS ===== */
+div.text_cell_render {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--text-primary);
+    padding: 20px 24px;
+}
+
+/* Headings */
+div.text_cell_render h1 {
+    font-size: 2.2em;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-top: 0.5em;
+    margin-bottom: 0.6em;
+    border-bottom: 3px solid var(--accent-blue);
+    padding-bottom: 0.3em;
+}
+
+div.text_cell_render h2 {
+    font-size: 1.75em;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0.2em;
+}
+
+div.text_cell_render h3 {
+    font-size: 1.4em;
+    font-weight: 600;
+    color: var(--accent-blue);
+    margin-top: 0.8em;
+    margin-bottom: 0.4em;
+}
+
+div.text_cell_render h4 {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-top: 0.6em;
+}
+
+/* Paragraphs and text */
+div.text_cell_render p {
+    margin: 1em 0;
+}
+
+div.text_cell_render strong {
+    color: var(--accent-orange);
+    font-weight: 600;
+}
+
+div.text_cell_render em {
+    color: var(--text-secondary);
+}
+
+/* Lists */
+div.text_cell_render ul,
+div.text_cell_render ol {
+    margin: 1em 0;
+    padding-left: 2em;
+}
+
+div.text_cell_render li {
+    margin: 0.5em 0;
+}
+
+/* Code in markdown */
+div.text_cell_render code {
+    background-color: #f1f3f5;
+    color: #e83e8c;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: "SF Mono", Monaco, Menlo, monospace;
+    font-size: 0.9em;
+    border: 1px solid #e1e4e8;
+}
+
+div.text_cell_render pre {
+    background-color: var(--code-bg);
+    padding: 16px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    overflow-x: auto;
+    margin: 1.5em 0;
+}
+
+div.text_cell_render pre code {
+    background-color: transparent;
+    color: var(--text-primary);
+    padding: 0;
+    border: none;
+    font-size: 0.9em;
+}
+
+/* Blockquotes */
+div.text_cell_render blockquote {
+    border-left: 4px solid var(--accent-blue);
+    background-color: #f8f9fa;
+    padding: 12px 20px;
+    margin: 1.5em 0;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+/* Links */
+div.text_cell_render a {
+    color: var(--accent-blue);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease;
+}
+
+div.text_cell_render a:hover {
+    border-bottom-color: var(--accent-blue);
+}
+
+/* Tables */
+div.text_cell_render table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1.5em 0;
+}
+
+div.text_cell_render th,
+div.text_cell_render td {
+    border: 1px solid var(--border-color);
+    padding: 10px 15px;
+    text-align: left;
+}
+
+div.text_cell_render th {
+    background-color: #f6f8fa;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+div.text_cell_render tr:hover {
+    background-color: #f6f8fa;
+}
+
+/* ===== MATHEMATICAL CONTENT ===== */
+/* MathJax equations */
+.MathJax_Display {
+    margin: 1.5em 0 !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.MathJax {
+    font-size: 1.1em !important;
+}
+
+/* Inline math */
+.text_cell_render .MathJax_Preview {
+    color: var(--accent-green);
+}
+
+/* ===== PROMPT AREA ===== */
+div.prompt {
+    font-family: "SF Mono", Monaco, monospace;
+    font-size: 12px;
+    min-width: 11ex;
+    padding: 8px 8px 0 8px;
+    text-align: right;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+div.input_prompt {
+    color: var(--accent-blue);
+}
+
+div.output_prompt {
+    color: var(--accent-green);
+}
+
+/* ===== TOOLBAR ===== */
+div.toolbar {
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--cell-bg);
+    padding: 8px;
+}
+
+/* ===== SCROLLBAR STYLING ===== */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* ===== ERROR MESSAGES ===== */
+div.output_stderr {
+    background-color: #fff5f5;
+    border-left: 3px solid #e74c3c;
+}
+
+/* ===== WIDGETS ===== */
+.widget-label {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+/* ===== EXECUTED CELL INDICATOR ===== */
+div.cell.code_cell.rendered {
+    background-color: var(--cell-bg);
+}
+
+/* ===== PERFORMANCE BADGES (custom styling for output) ===== */
+div.text_cell_render .performance-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.85em;
+    font-weight: 600;
+    margin-left: 8px;
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+    div#notebook-container {
+        width: 100%;
+        padding: 0;
+    }
+
+    div.cell {
+        page-break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+
+    div.prompt {
+        display: none;
+    }
+}

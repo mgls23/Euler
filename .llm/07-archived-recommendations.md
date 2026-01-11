@@ -1,4 +1,6 @@
-# Claude Code Review: Project Euler Solutions
+# Claude Code Review: Project Euler Solutions (Archived)
+
+> **Note:** This document contains historical code review recommendations from an earlier phase of the project. Many recommendations have been addressed, particularly around testing infrastructure. See `06-testing-guide.md` and `03-project-direction.md` for current state.
 
 ## Executive Summary
 

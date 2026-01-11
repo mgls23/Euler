@@ -40,9 +40,14 @@ jobs:
     - name: Set PythonPath
       run: echo "PYTHONPATH=${PYTHONPATH}:solutions/" >> $GITHUB_ENV
 
-    - name: Test with pytest
-      run: pytest unittests
+    - name: Stage 1 - Run Unit Tests
+      run: |
+        chmod +x ./scripts/run-unit-tests.sh
+        ./scripts/run-unit-tests.sh
 
-    - name: Check Solutions
-      run: python answers.py
+    - name: Stage 2 - Run All Solutions + Benchmarking
+      run: |
+        chmod +x ./scripts/run-all-solutions.sh
+        # Use most lenient threshold for now (only fail on correctness, not performance)
+        FAIL_MODE=none ./scripts/run-all-solutions.sh
       
