@@ -5,7 +5,7 @@ def champernownes_constant(n):
 	while n > upper_limit:
 		digit += 1
 		n -= upper_limit
-		upper_limit = digit * (10 ** digit - 10 ** (digit - 1))
+		upper_limit = digit * 9 * (10 ** (digit - 1))
 
 	n -= 1
 
@@ -16,9 +16,8 @@ def champernownes_constant(n):
 	return int(str(original_number)[digit_index])
 
 
-def brute_force():
-	from functools import reduce
-	from operator import mul
+def brute_force(number=1_000_000):
+	from math import prod
 
-	decimal = ''.join(map(str, range(1000000)))
-	return reduce(mul, map(lambda power: decimal[10 ** power], range(7)))
+	decimal = ''.join(map(str, range(number + 1)))
+	return prod(int(decimal[10 ** power]) for power in range(7))
