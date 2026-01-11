@@ -2,3 +2,4 @@
 
 pytest
 pyyaml
+polars

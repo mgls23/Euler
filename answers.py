@@ -29,7 +29,7 @@ from colorama import init, Fore, Style
 from solutions_loader import load_solutions
 from tests.benchmark.config import benchmarks
 from tests.config.answers import PROBLEMS, ANSWERS
-from tests.config.whitelist import FAILING_SOLUTIONS, PARAMETER_ISSUES, PERFORMANCE_ISSUES
+from tests.config.whitelist import FAILING_SOLUTIONS, PERFORMANCE_ISSUES
 from tests.test_utils import SOLUTION_TIMEOUT, TimeoutException, timeout
 
 # Initialize colorama for colored output
@@ -67,8 +67,8 @@ def format_time_colored(elapsed_ms: float, category: str) -> str:
 
 
 def check_performance_failure(elapsed_ms: float, thresholds: dict,
-                               fail_mode: str, problem_num: int = None,
-                               expected: str = None) -> Tuple[bool, str]:
+										fail_mode: str, problem_num: int = None,
+										expected: str = None) -> Tuple[bool, str]:
 	"""Check if performance should fail based on mode
 
 	Returns:
