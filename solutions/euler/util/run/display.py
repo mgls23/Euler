@@ -128,7 +128,13 @@ def print_results_table(df: pl.DataFrame):
                 grade_text = Text(grade, style="green")
                 expected_text = Text(expected, style="green")
                 recommendation = Text("upgrade", style="green")
-        state = f"{emoji} {status.lower() if status else '-'}"
+
+        # Show category for performance categories, status otherwise
+        if category in PERFORMANCE_CATEGORIES:
+            state = f"{emoji} {grade}"
+        else:
+            state = f"{emoji} {status.lower() if status else '-'}"
+
         if recommendation:
             state = f"{state} ({recommendation})"
         state_text = Text(state, style=row_style) if row_style else state
@@ -245,17 +251,28 @@ def print_performance_issues(df: pl.DataFrame):
     )
 
     if len(perf_issues) > 0:
+        console = Console(width=max(160, shutil.get_terminal_size(fallback=(160, 24)).columns))
         print(f"\n{Fore.CYAN}{'=' * 60}")
         print(f"\u23f1\ufe0f  KNOWN PERFORMANCE ISSUES ({len(perf_issues)})")
         print(f"{'=' * 60}{Style.RESET_ALL}")
         print(f"{Fore.CYAN}These solutions exceed acceptable threshold but are accepted:{Style.RESET_ALL}\n")
 
+        table = Table(show_header=True, header_style="bold")
+        table.add_column("id", justify="right")
+        table.add_column("ms", justify="right")
+        table.add_column("reason")
+
         for row in perf_issues.iter_rows(named=True):
             problem = row['problem']
             reason = PERFORMANCE_ISSUES.get(problem, "Unknown reason")
             elapsed = row['elapsed_ms']
-            print(f"{Fore.CYAN}   {format_problem_num(problem)}: {elapsed:.2f}ms - {reason}{Style.RESET_ALL}")
+            table.add_row(
+                str(problem),
+                f"{elapsed:.2f}ms",
+                reason
+            )
 
+        console.print(table)
         print(f"\n{Fore.CYAN}These are candidates for future optimization.{Style.RESET_ALL}")
 
 
@@ -266,7 +283,11 @@ def print_divergences(df: pl.DataFrame):
     if len(divergences) > 0:
         console = Console(width=max(160, shutil.get_terminal_size(fallback=(160, 24)).columns))
         upgrades = divergences.filter(pl.col('divergence').str.contains("\u2b06\ufe0f"))
-        regressions = divergences.filter(pl.col('divergence').str.contains("\u2b07\ufe0f"))
+        # Filter out known performance issues from regressions
+        regressions = divergences.filter(
+            pl.col('divergence').str.contains("\u2b07\ufe0f") &
+            (~pl.col('problem').is_in(list(PERFORMANCE_ISSUES.keys())))
+        )
 
         if len(upgrades) > 0:
             print(f"\n{Fore.GREEN}{'=' * 60}")

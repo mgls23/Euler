@@ -18,10 +18,17 @@ Run standalone:
   python answers.py --fail-mode=elite            # Fail if exceeds elite
   python answers.py --fail-mode=expected         # Fail if doesn't meet expected speed
 """
+import logging
 import sys
 
 import polars as pl
 from colorama import init, Fore, Style
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(message)s'
+)
 
 from solutions_loader import load_solutions
 from tests.config.answers import PROBLEMS
