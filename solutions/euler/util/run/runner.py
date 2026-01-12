@@ -99,6 +99,16 @@ def run_single_solution(problem_num: int, func, fail_mode: str) -> Dict:
 		if perf_failed or divergence or problem_num in PERFORMANCE_ISSUES:
 			thresholds_line = True
 
+		# Log performance issues with thresholds
+		if problem_num in PERFORMANCE_ISSUES:
+			reason = PERFORMANCE_ISSUES[problem_num]
+			logger.warning(
+				f"{format_problem_num(problem_num)}: {elapsed_ms:.2f}ms - {reason}\n"
+				f"  Thresholds: elite ≤{thresholds['elite']}ms, "
+				f"good ≤{thresholds['good']}ms, "
+				f"acceptable ≤{thresholds['acceptable']}ms"
+			)
+
 		result_data.update({
 			'actual_result': result,
 			'elapsed_ms': elapsed_ms,
