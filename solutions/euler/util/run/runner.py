@@ -1,5 +1,7 @@
 """Solution runner and result collection for Project Euler solutions."""
 
+import contextlib
+import io
 import logging
 import time
 from typing import Dict, List
@@ -52,7 +54,8 @@ def run_single_solution(problem_num: int, func, fail_mode: str) -> Dict:
 		# Execute with timeout
 		try:
 			logger.info(f"Running {format_problem_num(problem_num)}")
-			with timeout(SOLUTION_TIMEOUT):
+			# Suppress stdout to hide debug prints from solution code
+			with timeout(SOLUTION_TIMEOUT), contextlib.redirect_stdout(io.StringIO()):
 				result = func()
 		except TimeoutException as e:
 			result_data.update({
@@ -98,16 +101,6 @@ def run_single_solution(problem_num: int, func, fail_mode: str) -> Dict:
 		thresholds_line = None
 		if perf_failed or divergence or problem_num in PERFORMANCE_ISSUES:
 			thresholds_line = True
-
-		# Log performance issues with thresholds
-		if problem_num in PERFORMANCE_ISSUES:
-			reason = PERFORMANCE_ISSUES[problem_num]
-			logger.warning(
-				f"{format_problem_num(problem_num)}: {elapsed_ms:.2f}ms - {reason}\n"
-				f"  Thresholds: elite ≤{thresholds['elite']}ms, "
-				f"good ≤{thresholds['good']}ms, "
-				f"acceptable ≤{thresholds['acceptable']}ms"
-			)
 
 		result_data.update({
 			'actual_result': result,

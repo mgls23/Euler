@@ -24,9 +24,9 @@ import sys
 import polars as pl
 from colorama import init, Fore, Style
 
-# Configure logging
+# Configure logging (CRITICAL level to suppress all logs during execution)
 logging.basicConfig(
-    level=logging.WARNING,
+    level=logging.CRITICAL,
     format='%(message)s'
 )
 
