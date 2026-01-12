@@ -260,7 +260,10 @@ def print_performance_issues(df: pl.DataFrame):
         table = Table(show_header=True, header_style="bold")
         table.add_column("id", justify="right")
         table.add_column("ms", justify="right")
-        table.add_column("reason")
+        table.add_column("note")
+        table.add_column("elite", justify="right")
+        table.add_column("good", justify="right")
+        table.add_column("acc", justify="right")
 
         for row in perf_issues.iter_rows(named=True):
             problem = row['problem']
@@ -269,7 +272,10 @@ def print_performance_issues(df: pl.DataFrame):
             table.add_row(
                 str(problem),
                 f"{elapsed:.2f}ms",
-                reason
+                reason,
+                str(row['elite_threshold']),
+                str(row['good_threshold']),
+                str(row['acceptable_threshold']),
             )
 
         console.print(table)
@@ -297,13 +303,15 @@ def print_divergences(df: pl.DataFrame):
 
             table = Table(show_header=True, header_style="bold")
             table.add_column("id", justify="right")
-            table.add_column("rec")
+            table.add_column("ms", justify="right")
+            table.add_column("recommendation")
             table.add_column("elite", justify="right")
             table.add_column("good", justify="right")
             table.add_column("acc", justify="right")
             for row in upgrades.iter_rows(named=True):
                 table.add_row(
                     str(row['problem']),
+                    f"{row['elapsed_ms']:.2f}ms",
                     row['divergence'].replace("\u2b06\ufe0f  Could upgrade:", "").strip(),
                     str(row['elite_threshold']),
                     str(row['good_threshold']),

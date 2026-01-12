@@ -26,7 +26,7 @@ from colorama import init, Fore, Style
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.WARNING,
     format='%(message)s'
 )
 
